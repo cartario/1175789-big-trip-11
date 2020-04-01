@@ -317,33 +317,33 @@ const createEventEditTemplate = () => {
   `);
 };
 
-//ключевые узлы
+// ключевые узлы
 const tripControlsElement = document.querySelector(`.trip-controls`);
 const titleFilterEvents = tripControlsElement.querySelector(`h2:nth-child(2)`);
 const tripEvents = document.querySelector(`.trip-events`);
 
-//ф-я отрисовки
+// ф-я отрисовки
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-//отрисовка
+// отрисовка
 render(tripControlsElement, createTripInfoTemplate(), `beforebegin`);
 render(titleFilterEvents, createTripTabs(), `beforebegin`);
 render(titleFilterEvents, createTripFiltersTemplate(), `afterend`);
 render(tripEvents, createTripSort(), `beforeend`);
 
-//отрисовка точек маршрута
+// отрисовка точек маршрута
 const renderEvents = () => {
   for (let i = 0; i < TOTAL_EVENTS; i++) {
-  render(tripEvents, createTripEvent(), `beforeend`);
-  };
+    render(tripEvents, createTripEvent(), `beforeend`);
+  }
 };
 
 renderEvents();
 
-//ключевой узел
+// ключевой узел
 const tripEventsList = tripEvents.querySelector(`.trip-events__list`);
 
-//отрисовка формы создания/редактирования
+// отрисовка формы создания/редактирования
 render(tripEventsList, createEventEditTemplate(), `beforeend`);
