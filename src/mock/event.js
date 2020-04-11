@@ -37,13 +37,22 @@ const generatePhotosArray = (limit) => {
     });
 };
 
-const dateFrom = ``;
-const dateTo = ``;
-
 const destination = {
   name: getRandomArrayItem(DESTINATION_POINTS),
   description: getRandomArrayItem(DESCRIPTION_ITEMS),
   photos: generatePhotosArray(13),
+};
+
+const getRandomTime = () => {
+  const targetTime = new Date();
+  const sign = Math.random() > 0.5 ? 1 : -1;
+  const diffValueHours = sign * getRandomInt(0, 12);
+  const diffValueMinutes = sign * getRandomInt(0, 30);
+  targetTime.setHours(targetTime.getHours() + diffValueHours);
+  targetTime.setMinutes(targetTime.getMinutes() + diffValueMinutes);
+
+  return targetTime;
+
 };
 
 const generateEvent = () => {
@@ -51,8 +60,8 @@ const generateEvent = () => {
     id: getRandomInt(0, 10),
     eventType: getRandomArrayItem(EVENT_TYPES),
     offers: getRandomArrayItem(offerItems),
-    dateFrom,
-    dateTo,
+    dateFrom: getRandomTime(),
+    dateTo: getRandomTime(),
     destination,
     basePrice: getRandomInt(0, 500),
     isFavorite: Math.random() > 0.5,

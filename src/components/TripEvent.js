@@ -1,29 +1,29 @@
 import {MONTH_NAMES} from "../const.js";
+import {getDateTimeFormat, getTimeFormat} from "../utils.js";
 
 export const createTripEvent = (event) => {
   const {
     eventType,
     destination,
     offers,
+    dateFrom,
+    dateTo,
     basePrice,
 
-    id,
+
   } = event;
 
-  const dueDate = new Date();
-  const getDateTrip = () => {
-    return `${MONTH_NAMES[dueDate.getMonth()].toUpperCase()} ${dueDate.getDate()}`;
+  const dayCounter = 1;
 
-  };
+  const isDateCorrect = (dateTo - dateFrom) > 0 ? true : false;
 
-  const date = getDateTrip();
-
-  const dateTime = `2020-03-18`;
-  const startTime = `${dueDate.getHours()}:00`;
-  const dateTimeStart = `2021-03-18`;
-  const endTime = `${dueDate.getHours() + 1}:00`;
-  const dateTimeEnd = `2022-03-18`;
-  const durationTime = `30M`;
+  const dateDay = getDateTimeFormat(dateFrom);
+  const date = `${MONTH_NAMES[dateFrom.getMonth()]} ${dateFrom.getDate()}`;
+  const startTime = getTimeFormat(dateFrom);
+  const dateStart = getDateTimeFormat(dateFrom);
+  const endTime = getTimeFormat(dateTo);
+  const dateEnd = getDateTimeFormat(dateTo);
+  const durationTime = isDateCorrect ? `${(dateTo - dateFrom) / 60000}M` : `дата окончания меньше даты начала`;
 
   const selectedOffers = () => {
     return `
@@ -42,8 +42,8 @@ export const createTripEvent = (event) => {
       <li class="trip-days__item  day">
 
         <div class="day__info">
-          <span class="day__counter">${id}</span>
-          <time class="day__date" datetime="${dateTime}">${date}</time>
+          <span class="day__counter">${dayCounter}</span>
+          <time class="day__date" datetime="${dateDay}">${date}</time>
         </div>
 
         <ul class="trip-events__list">
@@ -57,9 +57,9 @@ export const createTripEvent = (event) => {
 
               <div class="event__schedule">
                 <p class="event__time">
-                  <time class="event__start-time" datetime="${dateTimeStart}">${startTime}</time>
+                  <time class="event__start-time" datetime="${dateStart}">${startTime}</time>
                   —
-                  <time class="event__end-time" datetime="${dateTimeEnd}">${endTime}</time>
+                  <time class="event__end-time" datetime="${dateEnd}">${endTime}</time>
                 </p>
                 <p class="event__duration">${durationTime}</p>
               </div>
