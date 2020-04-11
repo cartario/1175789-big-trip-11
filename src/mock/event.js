@@ -1,6 +1,6 @@
 import {EVENT_TYPES, DESTINATION_POINTS, DESCRIPTION_ITEMS} from "../const.js";
 
-const getRandomInt = (min, max) => {
+export const getRandomInt = (min, max) => {
   return min + Math.floor(Math.random() * (max - min));
 };
 

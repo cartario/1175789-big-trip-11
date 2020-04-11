@@ -5,11 +5,14 @@ import {createTripFiltersTemplate} from "./components/TripFiltersTemplate.js";
 import {createTripSort} from "./components/TripSort.js";
 import {createTripTabs} from "./components/TripTabs.js";
 import {generateEvents} from "./mock/event.js";
+import {generateFilters} from "./mock/filter.js";
 
 
-const TOTAL_EVENTS = 8;
+const TOTAL_EVENTS = 5;
 
 const events = generateEvents(TOTAL_EVENTS);
+const filters = generateFilters();
+
 
 // ключевые узлы
 const tripControlsElement = document.querySelector(`.trip-controls`);
@@ -24,7 +27,7 @@ const render = (container, template, place) => {
 // отрисовка
 render(tripControlsElement, createTripInfoTemplate(), `beforebegin`);
 render(titleFilterEvents, createTripTabs(), `beforebegin`);
-render(titleFilterEvents, createTripFiltersTemplate(), `afterend`);
+render(titleFilterEvents, createTripFiltersTemplate(filters), `afterend`);
 render(tripEvents, createTripSort(), `beforeend`);
 
 // отрисовка точек маршрута
