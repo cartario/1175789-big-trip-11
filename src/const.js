@@ -1,7 +1,7 @@
 const EVENT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`,
   `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
 
-const DESTINATION_POINTS = [`Amsterdam`, `Paris`, `Geneva`];
+const DESTINATION_POINTS = [`Amsterdam`, `Paris`, `Geneva`, `Moscow`, `Sochi`];
 
 const DESCRIPTION_ITEMS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
