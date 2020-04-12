@@ -1,4 +1,9 @@
-export const createTripInfoTemplate = () => {
+export const createTripInfoTemplate = (events) => {
+
+  const totalPrice = events.reduce((acc, event) => {
+    return acc + event.basePrice;
+  }, 0);
+
   return (
     `
     <section class="trip-main__trip-info  trip-info">
@@ -9,7 +14,7 @@ export const createTripInfoTemplate = () => {
       </div>
 
       <p class="trip-info__cost">
-        Total: €&nbsp;<span class="trip-info__cost-value">1230</span>
+        Total: €&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>
       </p>
     </section>
     `

@@ -25,7 +25,7 @@ const render = (container, template, place) => {
 };
 
 // отрисовка
-render(tripControlsElement, createTripInfoTemplate(), `beforebegin`);
+render(tripControlsElement, createTripInfoTemplate(events), `beforebegin`);
 render(titleFilterEvents, createTripTabs(), `beforebegin`);
 render(titleFilterEvents, createTripFiltersTemplate(filters), `afterend`);
 render(tripEvents, createTripSort(), `beforeend`);
