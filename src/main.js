@@ -43,4 +43,6 @@ renderEvents();
 const tripEventsList = tripEvents.querySelector(`.trip-events__list`);
 
 // отрисовка формы создания/редактирования
-render(tripEventsList, createEventEditTemplate(), `beforeend`);
+render(tripEventsList, createEventEditTemplate(events[0]), `beforeend`);
+
+console.log(events[0]);
