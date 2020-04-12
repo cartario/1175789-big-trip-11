@@ -1,5 +1,5 @@
-import {MONTH_NAMES, EVENT_TYPES, DESTINATION_POINTS, DESCRIPTION_ITEMS} from "../const.js";
-import {getDateTimeFormat, getTimeFormat} from "../utils.js";
+import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
+
 
 const getRandomInt = (min, max) => {
   return min + Math.floor(Math.random() * (max - min));
@@ -14,7 +14,7 @@ const eventTypeToggle = () => {
             src="img/icons/${eventTypeEditCard[getRandomInt(0, eventTypeEditCard.length - 1)]}.png" alt="Event type icon">
           </label>
 <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
-          `
+          `;
 };
 
 const eventTypeToggleMarkup = eventTypeToggle();
@@ -25,7 +25,7 @@ const createEventTransferMarkup = (type, id = 1) => {
   <div class="event__type-item">
     <input id="event-type-${type}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
     <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type}-${id}">${type}</label>
-  </div>`
+  </div>`;
 };
 
 const createEventActivityMarkup = (type, id = 1) => {
@@ -33,30 +33,27 @@ const createEventActivityMarkup = (type, id = 1) => {
     <div class="event__type-item">
       <input id="event-type-${type}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
       <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type}-${id}">${type}</label>
-    </div>`
+    </div>`;
 };
 
-  const createOptionsDestination = (city) => {
+const createOptionsDestination = (city) => {
   return `
     <option value="${city}"></option>
-    `
-  };
+    `;
+};
 
-  const optionsDestinationMarkup = DESTINATION_POINTS.map((it) => createOptionsDestination(it)).join(`\n`);
+const optionsDestinationMarkup = DESTINATION_POINTS.map((it) => createOptionsDestination(it)).join(`\n`);
 
 export const createEventEditTemplate = (event) => {
   const {
     id,
     eventType,
     destination,
-    offers,
     dateFrom,
     dateTo,
     basePrice,
     isFavorite,
   } = event;
-
-
 
 
   const eventTransferMarkup = eventTypeEditCard.slice(0, 7).map((it) => createEventTransferMarkup(it)).join(`\n`);
@@ -75,7 +72,7 @@ export const createEventEditTemplate = (event) => {
         </label>
         <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${dateTo}">
       </div>
-    `
+    `;
   };
 
   const destinationTimeMarkup = createDestinationTime();
@@ -89,28 +86,28 @@ export const createEventEditTemplate = (event) => {
                 +
                 €&nbsp;<span class="event__offer-price">${price}</span>
               </label>
-            </div>`
+            </div>`;
   };
 
   const offersEditCard = [{
-  title: `Order Uber`,
-  price: 20,
-}, {
-  title: `Add luggage`,
-  price: 30,
-}, {
-  title: `Switch to comfort class`,
-  price: 100,
-}, {
-  title: `Add meal`,
-  price: 15,
-}, {
-  title: `Choose seats`,
-  price: 5,
-}, {
-  title: `Travel by train`,
-  price: 40,
-}];
+    title: `Order Uber`,
+    price: 20,
+  }, {
+    title: `Add luggage`,
+    price: 30,
+  }, {
+    title: `Switch to comfort class`,
+    price: 100,
+  }, {
+    title: `Add meal`,
+    price: 15,
+  }, {
+    title: `Choose seats`,
+    price: 5,
+  }, {
+    title: `Travel by train`,
+    price: 40,
+  }];
 
   const availableOffersMarkup = offersEditCard.map((it) => creatAvaibleOffers(it.title, it.price));
 
