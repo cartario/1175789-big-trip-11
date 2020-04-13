@@ -10,7 +10,9 @@ import {generateFilters} from "./mock/filter.js";
 
 const TOTAL_EVENTS = 5;
 
-const events = generateEvents(TOTAL_EVENTS);
+const eventsSource = generateEvents(TOTAL_EVENTS);
+const events = eventsSource.slice().sort((a, b) => (Date.parse(a.dateFrom) - Date.parse(b.dateFrom)));
+
 const filters = generateFilters();
 
 
