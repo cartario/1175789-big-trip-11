@@ -15,7 +15,6 @@ const events = eventsSource.slice().sort((a, b) => (Date.parse(a.dateFrom) - Dat
 
 const filters = generateFilters();
 
-
 // ключевые узлы
 const tripControlsElement = document.querySelector(`.trip-controls`);
 const titleFilterEvents = tripControlsElement.querySelector(`h2:nth-child(2)`);
@@ -37,13 +36,7 @@ const tripDaysElement = tripEvents.querySelector(`.trip-days__item`);
 const tripEventsList = tripDaysElement.querySelector(`.trip-events__list`);
 
 // отрисовка точек маршрута
-const renderEvents = () => {
-  for (let i = 1; i < TOTAL_EVENTS; i++) {
-    render(tripEventsList, createTripEvent(events[i]), `beforeend`);
-  }
-};
-
-renderEvents();
+events.forEach((it) => render(tripEventsList, createTripEvent(it), `beforeend`));
 
 const tripEventsItem = tripEvents.querySelector(`.trip-events__item`);
 // отрисовка формы создания/редактирования
