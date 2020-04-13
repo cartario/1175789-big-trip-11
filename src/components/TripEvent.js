@@ -15,7 +15,7 @@ export const createTripEvent = (event) => {
 
   const dayCounter = 1;
 
-  const isDateCorrect = (dateTo - dateFrom) > 0 ? true : false;
+  const isDateCorrect = (dateTo - dateFrom) > 0;
 
   const dateDay = getDateTimeFormat(dateFrom);
   const date = `${MONTH_NAMES[dateFrom.getMonth()]} ${dateFrom.getDate()}`;

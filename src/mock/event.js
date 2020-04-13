@@ -10,7 +10,7 @@ const getRandomArrayItem = (array) => {
   return array[getRandomInt(0, array.length - 1)];
 };
 
-const offerItems = [{
+export const offerItems = [{
   title: `Order Uber`,
   price: 20,
 }, {

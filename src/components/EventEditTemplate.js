@@ -1,5 +1,24 @@
 import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
 
+const offersEditCard = [{
+  title: `Order Uber`,
+  price: 20,
+}, {
+  title: `Add luggage`,
+  price: 30,
+}, {
+  title: `Switch to comfort class`,
+  price: 100,
+}, {
+  title: `Add meal`,
+  price: 15,
+}, {
+  title: `Choose seats`,
+  price: 5,
+}, {
+  title: `Travel by train`,
+  price: 40,
+}];
 
 const getRandomInt = (min, max) => {
   return min + Math.floor(Math.random() * (max - min));
@@ -8,13 +27,14 @@ const getRandomInt = (min, max) => {
 const eventTypeEditCard = EVENT_TYPES;
 
 const eventTypeToggle = () => {
-  return `<label class="event__type  event__type-btn" for="event-type-toggle-1">
-            <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17"
-            src="img/icons/${eventTypeEditCard[getRandomInt(0, eventTypeEditCard.length - 1)]}.png" alt="Event type icon">
-          </label>
-<input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
-          `;
+  return `
+  <label class="event__type  event__type-btn" for="event-type-toggle-1">
+    <span class="visually-hidden">Choose event type</span>
+    <img class="event__type-icon" width="17" height="17"
+    src="img/icons/${eventTypeEditCard[getRandomInt(0, eventTypeEditCard.length - 1)]}.png" alt="Event type icon">
+  </label>
+  <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+  `;
 };
 
 const eventTypeToggleMarkup = eventTypeToggle();
@@ -79,35 +99,16 @@ export const createEventEditTemplate = (event) => {
 
   const creatAvaibleOffers = (offer, price) => {
     const isChecked = Math.random() > 0.5;
-    return `<div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${id}" type="checkbox" name="event-offer-luggage" ${isChecked ? `checked` : ``}>
-              <label class="event__offer-label" for="event-offer-luggage-${id}">
-                <span class="event__offer-title">${offer}</span>
-                +
-                €&nbsp;<span class="event__offer-price">${price}</span>
-              </label>
-            </div>`;
+    return `
+      <div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${id}" type="checkbox" name="event-offer-luggage" ${isChecked ? `checked` : ``}>
+        <label class="event__offer-label" for="event-offer-luggage-${id}">
+          <span class="event__offer-title">${offer}</span>
+          +
+          €&nbsp;<span class="event__offer-price">${price}</span>
+        </label>
+      </div>`;
   };
-
-  const offersEditCard = [{
-    title: `Order Uber`,
-    price: 20,
-  }, {
-    title: `Add luggage`,
-    price: 30,
-  }, {
-    title: `Switch to comfort class`,
-    price: 100,
-  }, {
-    title: `Add meal`,
-    price: 15,
-  }, {
-    title: `Choose seats`,
-    price: 5,
-  }, {
-    title: `Travel by train`,
-    price: 40,
-  }];
 
   const availableOffersMarkup = offersEditCard.map((it) => creatAvaibleOffers(it.title, it.price));
 
