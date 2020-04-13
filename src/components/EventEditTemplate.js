@@ -113,7 +113,7 @@ export const createEventEditTemplate = (event) => {
   const availableOffersMarkup = offersEditCard.map((it) => creatAvaibleOffers(it.title, it.price));
 
   return (`
-  <li class="trip-events__item">
+
     <form class="event  event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
@@ -183,6 +183,6 @@ export const createEventEditTemplate = (event) => {
         </section>
       </section>
     </form>
-  </li>
+
   `);
 };
