@@ -60,7 +60,7 @@ const generateDestination = () => {
 const getRandomTime = () => {
   const targetTime = new Date();
   const sign = Math.random() > 0.5 ? 1 : -1;
-  const diffValueHours = sign * getRandomInt(0, 12);
+  const diffValueHours = sign * getRandomInt(24, 144);
   const diffValueMinutes = sign * getRandomInt(0, 30);
   targetTime.setHours(targetTime.getHours() + diffValueHours);
   targetTime.setMinutes(targetTime.getMinutes() + diffValueMinutes);
