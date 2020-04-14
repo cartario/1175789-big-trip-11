@@ -36,7 +36,7 @@ const tripDaysElement = tripEvents.querySelector(`.trip-days__item`);
 const tripEventsList = tripDaysElement.querySelector(`.trip-events__list`);
 
 // отрисовка точек маршрута
-events.forEach((it) => render(tripEventsList, createTripEvent(it), `beforeend`));
+events.slice(1).forEach((it) => render(tripEventsList, createTripEvent(it), `beforeend`));
 
 const tripEventsItem = tripEvents.querySelector(`.trip-events__item`);
 // отрисовка формы создания/редактирования

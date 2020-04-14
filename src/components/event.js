@@ -1,4 +1,4 @@
-import {getDateTimeFormat, getTimeFormat} from "../utils.js";
+import {getDateTimeFormat, getTimeFormat, getTimeFormatDHM} from "../utils.js";
 
 export const createTripEvent = (event) => {
   const {
@@ -15,7 +15,7 @@ export const createTripEvent = (event) => {
   const dateStart = getDateTimeFormat(dateFrom);
   const endTime = getTimeFormat(dateTo);
   const dateEnd = getDateTimeFormat(dateTo);
-  const durationTime = isDateCorrect ? `${(dateTo - dateFrom) / 60000}M` : `дата окончания меньше даты начала`;
+  const durationTime = isDateCorrect ? getTimeFormatDHM(dateTo - dateFrom) : `дата окончания меньше даты начала`;
 
   const selectedOffers = (title, price) => {
     return `

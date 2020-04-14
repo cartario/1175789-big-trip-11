@@ -2,6 +2,20 @@ const castTimeFormat = (value) => {
   return value < 10 ? `0${value}` : value;
 };
 
+export const getTimeFormatDHM = (dateMs) => {
+  let date = dateMs / 60000;
+  if (date < 60 && date >= 0) {
+    date = `${date}M`;
+  }
+  if (date < 1440 && date >= 60) {
+    date = `${castTimeFormat(Math.floor(date/60))}H ${castTimeFormat(date%60)}M`
+  }
+  if (date < 86400 && date >= 1000) {
+    date = `${castTimeFormat(Math.floor(date / 1440))}D ${castTimeFormat(Math.floor((date%1440)/60))}H ${castTimeFormat((date%1440)%60)}M`
+  }
+  return date;
+};
+
 const getDateTimeFormat = (date) => {
   return `${date.getFullYear()}-${castTimeFormat(1 + date.getMonth())}-${date.getDate()}`;
 };
