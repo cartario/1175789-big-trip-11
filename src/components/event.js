@@ -1,4 +1,3 @@
-// import {MONTH_NAMES} from "../const.js";
 import {getDateTimeFormat, getTimeFormat} from "../utils.js";
 
 export const createTripEvent = (event) => {
@@ -9,30 +8,30 @@ export const createTripEvent = (event) => {
     dateFrom,
     dateTo,
     basePrice,
-
   } = event;
 
   const isDateCorrect = (dateTo - dateFrom) > 0;
-
-  // const dateDay = getDateTimeFormat(dateFrom);
-  // const date = `${MONTH_NAMES[dateFrom.getMonth()]} ${dateFrom.getDate()}`;
   const startTime = getTimeFormat(dateFrom);
   const dateStart = getDateTimeFormat(dateFrom);
   const endTime = getTimeFormat(dateTo);
   const dateEnd = getDateTimeFormat(dateTo);
   const durationTime = isDateCorrect ? `${(dateTo - dateFrom) / 60000}M` : `дата окончания меньше даты начала`;
 
-  const selectedOffers = () => {
+  const selectedOffers = (title, price) => {
     return `
     <li class="event__offer">
-      <span class="event__offer-title">${offers.title}</span>
+      <span class="event__offer-title">${title}</span>
       +
-      €&nbsp;<span class="event__offer-price">${offers.price}</span>
+      €&nbsp;<span class="event__offer-price">${price}</span>
     </li>
     `;
   };
 
-  const selectedOffersMarkup = selectedOffers();
+  const selectedOffersMarkup = () => {
+    return offers.map((it) => selectedOffers(it.title, it.price)).join(`\n`);
+  };
+
+  const offersMarkup = selectedOffersMarkup();
 
   return (`
 
@@ -60,7 +59,7 @@ export const createTripEvent = (event) => {
         <h4 class="visually-hidden">Offers:</h4>
 
         <ul class="event__selected-offers">
-          ${selectedOffersMarkup}
+          ${offersMarkup}
 
         </ul>
 

@@ -1,37 +1,11 @@
 import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
 
-const offersEditCard = [{
-  title: `Order Uber`,
-  price: 20,
-}, {
-  title: `Add luggage`,
-  price: 30,
-}, {
-  title: `Switch to comfort class`,
-  price: 100,
-}, {
-  title: `Add meal`,
-  price: 15,
-}, {
-  title: `Choose seats`,
-  price: 5,
-}, {
-  title: `Travel by train`,
-  price: 40,
-}];
-
-const getRandomInt = (min, max) => {
-  return min + Math.floor(Math.random() * (max - min));
-};
-
-const eventTypeEditCard = EVENT_TYPES;
-
 const eventTypeToggle = () => {
   return `
   <label class="event__type  event__type-btn" for="event-type-toggle-1">
     <span class="visually-hidden">Choose event type</span>
     <img class="event__type-icon" width="17" height="17"
-    src="img/icons/${eventTypeEditCard[getRandomInt(0, eventTypeEditCard.length - 1)]}.png" alt="Event type icon">
+    src="img/icons/${EVENT_TYPES[0]}.png" alt="Event type icon">
   </label>
   <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
   `;
@@ -67,6 +41,7 @@ const optionsDestinationMarkup = DESTINATION_POINTS.map((it) => createOptionsDes
 export const createEventEditTemplate = (event) => {
   const {
     id,
+    offers,
     eventType,
     destination,
     dateFrom,
@@ -75,9 +50,8 @@ export const createEventEditTemplate = (event) => {
     isFavorite,
   } = event;
 
-
-  const eventTransferMarkup = eventTypeEditCard.slice(0, 7).map((it) => createEventTransferMarkup(it)).join(`\n`);
-  const eventActivityMarkup = eventTypeEditCard.slice(7).map((it) => createEventActivityMarkup(it)).join(`\n`);
+  const eventTransferMarkup = EVENT_TYPES.slice(0, 7).map((it) => createEventTransferMarkup(it)).join(`\n`);
+  const eventActivityMarkup = EVENT_TYPES.slice(7).map((it) => createEventActivityMarkup(it)).join(`\n`);
 
   const createDestinationTime = () => {
     return `
@@ -97,12 +71,12 @@ export const createEventEditTemplate = (event) => {
 
   const destinationTimeMarkup = createDestinationTime();
 
-  const creatAvaibleOffers = (offer, price) => {
+  const creatAvaibleOffers = (offer, price, index) => {
     const isChecked = Math.random() > 0.5;
     return `
       <div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${id}" type="checkbox" name="event-offer-luggage" ${isChecked ? `checked` : ``}>
-        <label class="event__offer-label" for="event-offer-luggage-${id}">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${index}-1" type="checkbox" name="event-offer-luggage" ${isChecked ? `checked` : ``}>
+        <label class="event__offer-label" for="event-offer-${index}-1">
           <span class="event__offer-title">${offer}</span>
           +
           €&nbsp;<span class="event__offer-price">${price}</span>
@@ -110,7 +84,7 @@ export const createEventEditTemplate = (event) => {
       </div>`;
   };
 
-  const availableOffersMarkup = offersEditCard.map((it) => creatAvaibleOffers(it.title, it.price));
+  const availableOffersMarkup = offers.map((it, i) => creatAvaibleOffers(it.title, it.price, i)).join(`\n`);
 
   return (`
 

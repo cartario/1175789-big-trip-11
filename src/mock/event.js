@@ -1,16 +1,8 @@
 import {EVENT_TYPES, DESTINATION_POINTS, DESCRIPTION_ITEMS} from "../const.js";
+import {getRandomInt, getRandomArrayItem, getShuffleArray, getRandomTime} from "../utils.js";
 
-// генерит случайное число
-export const getRandomInt = (min, max) => {
-  return min + Math.floor(Math.random() * (max - min));
-};
 
-// генерит случайный элемент массива
-const getRandomArrayItem = (array) => {
-  return array[getRandomInt(0, array.length - 1)];
-};
-
-export const offerItems = [{
+const offerItems = [{
   title: `Order Uber`,
   price: 20,
 }, {
@@ -56,25 +48,12 @@ const generateDestination = () => {
     photos: generatePhotosObject()};
 };
 
-// генерит случайные dateFrom, dateTo
-const getRandomTime = () => {
-  const targetTime = new Date();
-  const sign = Math.random() > 0.5 ? 1 : -1;
-  const diffValueHours = sign * getRandomInt(24, 144);
-  const diffValueMinutes = sign * getRandomInt(0, 30);
-  targetTime.setHours(targetTime.getHours() + diffValueHours);
-  targetTime.setMinutes(targetTime.getMinutes() + diffValueMinutes);
-
-  return targetTime;
-
-};
-
 // генерит общую структуру одного обьекта
 const generateEvent = () => {
   return {
     id: getRandomInt(0, 10),
     eventType: getRandomArrayItem(EVENT_TYPES),
-    offers: getRandomArrayItem(offerItems),
+    offers: getShuffleArray(offerItems, getRandomInt(0, offerItems.length)),
     dateFrom: getRandomTime(),
     dateTo: getRandomTime(),
     destination: generateDestination(),
