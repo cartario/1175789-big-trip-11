@@ -8,6 +8,7 @@ import {generateEvents} from "./mock/event.js";
 import {generateFilters} from "./mock/filter.js";
 import {createTripDays} from "./components/trip-days.js";
 import {createBoardTemplate} from "./components/board.js";
+import {RenderPosition, renderS} from "./utils.js";
 
 const TOTAL_EVENTS = 5;
 

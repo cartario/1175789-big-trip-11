@@ -63,4 +63,20 @@ const createElement = (template) => {
 
 };
 
-export {getDateTimeFormat, getTimeFormat, getRandomInt, getRandomArrayItem, getShuffleArray, getRandomTime, createElement};
+const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+};
+
+const renderS = (container, element, place) => {
+  switch (place) {
+    case (RenderPosition.AFTERBEGIN):
+      container.prepend(element);
+      break;
+    case (RenderPosition.BEFOREEND):
+      container.append(element);
+      break;
+  }
+};
+
+export {getDateTimeFormat, getTimeFormat, getRandomInt, getRandomArrayItem, getShuffleArray, getRandomTime, createElement, RenderPosition, renderS};
