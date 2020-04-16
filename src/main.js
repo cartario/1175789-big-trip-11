@@ -30,9 +30,13 @@ const renderTask = (event) => {
   const eventComponent = new EventComponent(event);
   const eventEditComponent = new EventEditComponent(event);
 
-  // const replaceEventToEdit = () => {
-  //   tripEventsList.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
-  // };
+  const eventRollupBtn = tripEventsList.querySelector(`.event__rollup-btn`);
+
+  const replaceEventToEdit = () => {
+    tripEventsList.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
+  };
+
+  eventRollupBtn.addEventListener(`click`, replaceEventToEdit);
 
   render(tripEventsList, eventComponent.getElement(), `beforeend`);
 };
