@@ -1,4 +1,4 @@
-import {createTripInfoTemplate} from "./components/trip-info.js";
+import TripInfoComponent from "./components/trip-info.js";
 import {createEventEditTemplate} from "./components/event-edit.js";
 import {createTripEvent} from "./components/event.js";
 import {createTripFiltersTemplate} from "./components/filters.js";
@@ -27,8 +27,10 @@ const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-// отрисовка
-render(tripMain, createTripInfoTemplate(events), `afterbegin`);
+renderS(tripMain, new TripInfoComponent(events).getElement(), RenderPosition.AFTERBEGIN);
+
+// // отрисовка
+// render(tripMain, createTripInfoTemplate(events), `afterbegin`);
 render(tripControlsElement, createTripTabs(), `beforeend`);
 render(tripControlsElement, createTripFiltersTemplate(filters), `beforeend`);
 
