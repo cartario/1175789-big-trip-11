@@ -81,7 +81,7 @@ const createEventEditTemplate = (event) => {
 
   const availableOffersMarkup = offers.map((it, i) => creatAvaibleOffers(it.title, it.price, i)).join(`\n`);
 
-  return (`<form class="event  event--edit" action="#" method="post">
+  return (`<li class="trip-events__item"><form class="event  event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
 
@@ -149,7 +149,7 @@ const createEventEditTemplate = (event) => {
           </div>
         </section>
       </section>
-    </form>`);
+    </form></li>`);
 };
 
 

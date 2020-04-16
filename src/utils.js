@@ -68,7 +68,7 @@ const RenderPosition = {
   BEFOREEND: `beforeend`,
 };
 
-const renderS = (container, element, place) => {
+const render = (container, element, place) => {
   switch (place) {
     case (RenderPosition.AFTERBEGIN):
       container.prepend(element);
@@ -79,4 +79,4 @@ const renderS = (container, element, place) => {
   }
 };
 
-export {getDateTimeFormat, getTimeFormat, getRandomInt, getRandomArrayItem, getShuffleArray, getRandomTime, createElement, RenderPosition, renderS};
+export {getDateTimeFormat, getTimeFormat, getRandomInt, getRandomArrayItem, getShuffleArray, getRandomTime, createElement, RenderPosition, render};

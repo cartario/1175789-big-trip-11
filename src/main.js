@@ -11,7 +11,7 @@ import {generateEvents} from "./mock/event.js";
 import {generateFilters} from "./mock/filter.js";
 
 
-import {RenderPosition, renderS} from "./utils.js";
+import {RenderPosition, render} from "./utils.js";
 
 const TOTAL_EVENTS = 5;
 
@@ -26,18 +26,29 @@ const tripMain = document.querySelector(`.trip-main`);
 const tripControlsElement = document.querySelector(`.trip-controls`);
 const tripEvents = document.querySelector(`.trip-events`);
 
-// отрисовка
-renderS(tripMain, new TripInfoComponent(events).getElement(), RenderPosition.AFTERBEGIN);
-renderS(tripControlsElement, new TripTabsComponent().getElement(), RenderPosition.BEFOREEND);
-renderS(tripControlsElement, new FiltersComponent(filters).getElement(), RenderPosition.BEFOREEND);
+const renderTask = (event) => {
+  const eventComponent = new EventComponent(event);
+  const eventEditComponent = new EventEditComponent(event);
 
-// renderS(tripEvents, new BoardComponent().getElement(), RenderPosition.BEFOREEND);
+  // const replaceEventToEdit = () => {
+  //   tripEventsList.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
+  // };
 
-renderS(tripEvents, new SortComponent().getElement(), RenderPosition.BEFOREEND);
+  render(tripEventsList, eventComponent.getElement(), `beforeend`);
+};
+
+const renderBoard = () => {
+  render(tripMain, new TripInfoComponent(events).getElement(), RenderPosition.AFTERBEGIN);
+  render(tripControlsElement, new TripTabsComponent().getElement(), RenderPosition.BEFOREEND);
+  render(tripControlsElement, new FiltersComponent(filters).getElement(), RenderPosition.BEFOREEND);
+  render(tripEvents, new SortComponent().getElement(), RenderPosition.BEFOREEND);
+  render(tripEvents, tripDaysComponent.getElement(), RenderPosition.BEFOREEND);
+  // отрисовка точек маршрута
+  events.forEach((event) => renderTask(event));
+
+};
 
 const tripDaysComponent = new TripDaysComponent(events);
 const tripEventsList = tripDaysComponent.getElement().querySelector(`.trip-events__list`);
-renderS(tripEvents, tripDaysComponent.getElement(), RenderPosition.BEFOREEND);
 
-// отрисовка точек маршрута
-events.forEach((event) => renderS(tripEventsList, new EventComponent(event).getElement(), `beforeend`));
+renderBoard();
