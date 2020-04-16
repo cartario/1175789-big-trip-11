@@ -1,6 +1,6 @@
-import {getDateTimeFormat, getTimeFormat, getTimeFormatDHM} from "../utils.js";
+import {getDateTimeFormat, getTimeFormat, getTimeFormatDHM, createElement} from "../utils.js";
 
-export const createTripEvent = (event) => {
+const createTripEvent = (event) => {
   const {
     eventType,
     destination,
@@ -18,13 +18,11 @@ export const createTripEvent = (event) => {
   const durationTime = isDateCorrect ? getTimeFormatDHM(dateTo - dateFrom) : `дата окончания меньше даты начала`;
 
   const selectedOffers = (title, price) => {
-    return `
-    <li class="event__offer">
+    return `<li class="event__offer">
       <span class="event__offer-title">${title}</span>
       +
       €&nbsp;<span class="event__offer-price">${price}</span>
-    </li>
-    `;
+    </li>`;
   };
 
   const selectedOffersMarkup = () => {
@@ -33,9 +31,7 @@ export const createTripEvent = (event) => {
 
   const offersMarkup = selectedOffersMarkup();
 
-  return (`
-
-    <li class="trip-events__item">
+  return (`<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42"
@@ -67,6 +63,27 @@ export const createTripEvent = (event) => {
           <span class="visually-hidden">Open event</span>
         </button>
       </div>
-    </li>
-  `);
+    </li>`);
 };
+
+export default class Event {
+  constructor(event) {
+    this._element = null;
+    this._event = event;
+  }
+
+  getTemplate() {
+    return createTripEvent(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -1,8 +1,8 @@
 import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
+import {createElement} from "../utils.js";
 
 const eventTypeToggle = () => {
-  return `
-  <label class="event__type  event__type-btn" for="event-type-toggle-1">
+  return `<label class="event__type  event__type-btn" for="event-type-toggle-1">
     <span class="visually-hidden">Choose event type</span>
     <img class="event__type-icon" width="17" height="17"
     src="img/icons/${EVENT_TYPES[0]}.png" alt="Event type icon">
@@ -14,8 +14,7 @@ const eventTypeToggle = () => {
 const eventTypeToggleMarkup = eventTypeToggle();
 
 const createEventTransferMarkup = (type, id = 1) => {
-  return `
-  <legend class="visually-hidden">Transfer</legend>
+  return `<legend class="visually-hidden">Transfer</legend>
   <div class="event__type-item">
     <input id="event-type-${type}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
     <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type}-${id}">${type}</label>
@@ -31,14 +30,13 @@ const createEventActivityMarkup = (type, id = 1) => {
 };
 
 const createOptionsDestination = (city) => {
-  return `
-    <option value="${city}"></option>
+  return `<option value="${city}"></option>
     `;
 };
 
 const optionsDestinationMarkup = DESTINATION_POINTS.map((it) => createOptionsDestination(it)).join(`\n`);
 
-export const createEventEditTemplate = (event) => {
+const createEventEditTemplate = (event) => {
   const {
     id,
     offers,
@@ -54,8 +52,7 @@ export const createEventEditTemplate = (event) => {
   const eventActivityMarkup = EVENT_TYPES.slice(7).map((it) => createEventActivityMarkup(it)).join(`\n`);
 
   const createDestinationTime = () => {
-    return `
-      <div class="event__field-group  event__field-group--time">
+    return `<div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-${id}">
           From
         </label>
@@ -65,16 +62,14 @@ export const createEventEditTemplate = (event) => {
           To
         </label>
         <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${dateTo}">
-      </div>
-    `;
+      </div>`;
   };
 
   const destinationTimeMarkup = createDestinationTime();
 
   const creatAvaibleOffers = (offer, price, index) => {
     const isChecked = Math.random() > 0.5;
-    return `
-      <div class="event__offer-selector">
+    return `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-${index}-1" type="checkbox" name="event-offer-luggage" ${isChecked ? `checked` : ``}>
         <label class="event__offer-label" for="event-offer-${index}-1">
           <span class="event__offer-title">${offer}</span>
@@ -86,9 +81,7 @@ export const createEventEditTemplate = (event) => {
 
   const availableOffersMarkup = offers.map((it, i) => creatAvaibleOffers(it.title, it.price, i)).join(`\n`);
 
-  return (`
-
-    <form class="event  event--edit" action="#" method="post">
+  return (`<form class="event  event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
 
@@ -156,7 +149,28 @@ export const createEventEditTemplate = (event) => {
           </div>
         </section>
       </section>
-    </form>
-
-  `);
+    </form>`);
 };
+
+
+export default class EventEdit {
+  constructor(event) {
+    this._element = null;
+    this._event = event;
+  }
+
+  getTemplate() {
+    return createEventEditTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

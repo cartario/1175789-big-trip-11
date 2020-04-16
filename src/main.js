@@ -1,13 +1,16 @@
 import TripInfoComponent from "./components/trip-info.js";
-import {createEventEditTemplate} from "./components/event-edit.js";
-import {createTripEvent} from "./components/event.js";
-import {createTripFiltersTemplate} from "./components/filters.js";
-import {createTripSort} from "./components/sort.js";
-import {createTripTabs} from "./components/trip-tabs.js";
+import TripTabsComponent from "./components/trip-tabs.js";
+import FiltersComponent from "./components/filters.js";
+// import BoardComponent from "./components/board.js";
+import TripDaysComponent from "./components/trip-days.js";
+import SortComponent from "./components/sort.js";
+import EventComponent from "./components/event.js";
+import EventEditComponent from "./components/event-edit.js";
+
 import {generateEvents} from "./mock/event.js";
 import {generateFilters} from "./mock/filter.js";
-import {createTripDays} from "./components/trip-days.js";
-import {createBoardTemplate} from "./components/board.js";
+
+
 import {RenderPosition, renderS} from "./utils.js";
 
 const TOTAL_EVENTS = 5;
@@ -17,32 +20,24 @@ const events = eventsSource.slice().sort((a, b) => (Date.parse(a.dateFrom) - Dat
 
 const filters = generateFilters();
 
+
 // ключевые узлы
 const tripMain = document.querySelector(`.trip-main`);
 const tripControlsElement = document.querySelector(`.trip-controls`);
 const tripEvents = document.querySelector(`.trip-events`);
 
-// ф-я отрисовки
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
-
+// отрисовка
 renderS(tripMain, new TripInfoComponent(events).getElement(), RenderPosition.AFTERBEGIN);
+renderS(tripControlsElement, new TripTabsComponent().getElement(), RenderPosition.BEFOREEND);
+renderS(tripControlsElement, new FiltersComponent(filters).getElement(), RenderPosition.BEFOREEND);
 
-// // отрисовка
-// render(tripMain, createTripInfoTemplate(events), `afterbegin`);
-render(tripControlsElement, createTripTabs(), `beforeend`);
-render(tripControlsElement, createTripFiltersTemplate(filters), `beforeend`);
+// renderS(tripEvents, new BoardComponent().getElement(), RenderPosition.BEFOREEND);
 
-render(tripEvents, createTripSort(), `beforeend`);
-render(tripEvents, createTripDays(events), `beforeend`);
+renderS(tripEvents, new SortComponent().getElement(), RenderPosition.BEFOREEND);
 
-const tripDaysElement = tripEvents.querySelector(`.trip-days__item`);
-const tripEventsList = tripDaysElement.querySelector(`.trip-events__list`);
+const tripDaysComponent = new TripDaysComponent(events);
+const tripEventsList = tripDaysComponent.getElement().querySelector(`.trip-events__list`);
+renderS(tripEvents, tripDaysComponent.getElement(), RenderPosition.BEFOREEND);
 
 // отрисовка точек маршрута
-events.slice(1).forEach((it) => render(tripEventsList, createTripEvent(it), `beforeend`));
-
-const tripEventsItem = tripEvents.querySelector(`.trip-events__item`);
-// отрисовка формы создания/редактирования
-render(tripEventsItem, createEventEditTemplate(events[0]), `beforeend`);
+events.forEach((event) => renderS(tripEventsList, new EventComponent(event).getElement(), `beforeend`));
