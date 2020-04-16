@@ -1,12 +1,13 @@
-import {createTripInfoTemplate} from "./components/TripInfoTemplate.js";
+import {createTripInfoTemplate} from "./components/trip-info.js";
 import {createEventEditTemplate} from "./components/event-edit.js";
 import {createTripEvent} from "./components/event.js";
-import {createTripFiltersTemplate} from "./components/TripFiltersTemplate.js";
-import {createTripSort} from "./components/TripSort.js";
-import {createTripTabs} from "./components/TripTabs.js";
+import {createTripFiltersTemplate} from "./components/filters.js";
+import {createTripSort} from "./components/sort.js";
+import {createTripTabs} from "./components/trip-tabs.js";
 import {generateEvents} from "./mock/event.js";
 import {generateFilters} from "./mock/filter.js";
-import {createTripDays} from "./components/tripDays.js";
+import {createTripDays} from "./components/trip-days.js";
+import {createBoardTemplate} from "./components/board.js";
 
 const TOTAL_EVENTS = 5;
 
@@ -16,8 +17,8 @@ const events = eventsSource.slice().sort((a, b) => (Date.parse(a.dateFrom) - Dat
 const filters = generateFilters();
 
 // ключевые узлы
+const tripMain = document.querySelector(`.trip-main`);
 const tripControlsElement = document.querySelector(`.trip-controls`);
-const titleFilterEvents = tripControlsElement.querySelector(`h2:nth-child(2)`);
 const tripEvents = document.querySelector(`.trip-events`);
 
 // ф-я отрисовки
@@ -26,9 +27,10 @@ const render = (container, template, place) => {
 };
 
 // отрисовка
-render(tripControlsElement, createTripInfoTemplate(events), `beforebegin`);
-render(titleFilterEvents, createTripTabs(), `beforebegin`);
-render(titleFilterEvents, createTripFiltersTemplate(filters), `afterend`);
+render(tripMain, createTripInfoTemplate(events), `afterbegin`);
+render(tripControlsElement, createTripTabs(), `beforeend`);
+render(tripControlsElement, createTripFiltersTemplate(filters), `beforeend`);
+
 render(tripEvents, createTripSort(), `beforeend`);
 render(tripEvents, createTripDays(events), `beforeend`);
 
