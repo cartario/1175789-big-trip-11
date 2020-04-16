@@ -55,4 +55,12 @@ const getRandomTime = () => {
 
 };
 
-export {getDateTimeFormat, getTimeFormat, getRandomInt, getRandomArrayItem, getShuffleArray, getRandomTime};
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+
+};
+
+export {getDateTimeFormat, getTimeFormat, getRandomInt, getRandomArrayItem, getShuffleArray, getRandomTime, createElement};
