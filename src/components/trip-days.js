@@ -18,9 +18,7 @@ const createTripDays = (events) => {
     createTripDaysMarkup(index + 1, it.dateFrom)
   ).join(`\n`);
 
-  return `<ul class="trip-days">
-      ${tripDaysMarkup}
-    </ul>`;
+  return `${tripDaysMarkup}`;
 };
 
 export default class TripDays {
