@@ -27,41 +27,57 @@ const tripControlsElement = document.querySelector(`.trip-controls`);
 const tripEvents = document.querySelector(`.trip-events`);
 
 const renderTask = (tripEventsList, event) => {
-
   const eventComponent = new EventComponent(event);
   const eventEditComponent = new EventEditComponent(event);
 
-  const eventRollupBtn = tripEventsList.querySelector(`.event__rollup-btn`);
+  const eventRollupBtn = eventComponent.getElement().querySelector(`.event__rollup-btn`);
+  const eventEditRollupBtn = eventEditComponent.getElement().querySelector(`.event__rollup-btn`);
 
   const replaceEventToEdit = () => {
     tripEventsList.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
   };
 
-  // eventRollupBtn.addEventListener(`click`, function () {
-  //   replaceEventToEdit();
-  // });
+  const replaceEditToEvent = () => {
+    tripEventsList.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
+  };
 
-  render(tripEventsList, eventComponent.getElement(), `beforeend`);
+  eventRollupBtn.addEventListener(`click`, function () {
+    replaceEventToEdit();
+  });
+
+  eventEditRollupBtn.addEventListener(`click`, function () {
+    replaceEditToEvent();
+  });
+
+  render(tripEventsList, eventComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
-const renderBoard = (boardComponent) => {
+const renderDay = () => {
 
-  render(tripMain, new TripInfoComponent(events).getElement(), RenderPosition.AFTERBEGIN);
-  render(tripControlsElement, new TripTabsComponent().getElement(), RenderPosition.BEFOREEND);
-  render(tripControlsElement, new FiltersComponent(filters).getElement(), RenderPosition.BEFOREEND);
+};
 
-  render(boardComponent.getElement(), tripDaysComponent.getElement(), RenderPosition.BEFOREEND);
-  const tripEventsList = tripDaysComponent.getElement().querySelector(`.trip-events__list`);
+const renderBoard = (boardComponent, events) => {
+  // const tripDaysComponent = new TripDaysComponent(events);
+  const tripEventsList = boardComponent.getElement().querySelector(`.trip-events__list`);
+
+console.log(tripEventsList);
+
+
+
+  // render(boardComponent.getElement(), tripDaysComponent.getElement(), RenderPosition.BEFOREEND);
+
   // отрисовка точек маршрута
   events.forEach((event) => renderTask(tripEventsList, event));
 
 };
 
-const tripDaysComponent = new TripDaysComponent(events);
+render(tripMain, new TripInfoComponent(events).getElement(), RenderPosition.AFTERBEGIN);
+render(tripControlsElement, new TripTabsComponent().getElement(), RenderPosition.BEFOREEND);
+render(tripControlsElement, new FiltersComponent(filters).getElement(), RenderPosition.BEFOREEND);
 
 const boardComponent = new BoardComponent();
 
 render(tripEvents, new SortComponent().getElement(), RenderPosition.BEFOREEND);
-render(tripEvents, boardComponent.getElement(), RenderPosition.BEFOREEND);
 
-renderBoard(boardComponent);
+render(tripEvents, boardComponent.getElement(), RenderPosition.BEFOREEND);
+renderBoard(boardComponent, events);

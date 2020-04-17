@@ -1,7 +1,8 @@
 import {createElement} from "../utils.js";
 
 const createBoardTemplate = () => {
-  return (`<ul class="trip-days"></ul>`);
+  return (`<ul class="trip-days"><ul class="trip-events__list">
+        </ul></ul>`);
 };
 
 export default class Board {
