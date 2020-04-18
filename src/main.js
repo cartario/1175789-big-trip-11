@@ -20,19 +20,20 @@ const events = eventsSource.slice().sort((a, b) => (Date.parse(a.dateFrom) - Dat
 
 const filters = generateFilters();
 
-
 // ключевые узлы
 const tripMain = document.querySelector(`.trip-main`);
 const tripControlsElement = document.querySelector(`.trip-controls`);
 const tripEvents = document.querySelector(`.trip-events`);
 
-const renderTask = (tripEventsList, event) => {
+const renderEvent = (tripEventsList, event) => {
   const eventComponent = new EventComponent(event);
   const eventEditComponent = new EventEditComponent(event);
 
+  // находит кнопку в dom-elementе eventComponent
   const eventRollupBtn = eventComponent.getElement().querySelector(`.event__rollup-btn`);
   const eventEditRollupBtn = eventEditComponent.getElement().querySelector(`.event__rollup-btn`);
 
+  // реализация замены
   const replaceEventToEdit = () => {
     tripEventsList.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
   };
@@ -49,35 +50,35 @@ const renderTask = (tripEventsList, event) => {
     replaceEditToEvent();
   });
 
+  // отрисовка eventComponent в dom-elemente tripEventsList
   render(tripEventsList, eventComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
-const renderDay = () => {
 
+const renderDay = (boardComponent, event) => {
+  const tripDaysComponent = new TripDaysComponent(event);
+  const tripEventsList = tripDaysComponent.getElement().querySelector(`.trip-events__list`);
+  render(boardComponent, tripDaysComponent.getElement(), RenderPosition.BEFOREEND);
+  events.forEach((event) => renderEvent(tripEventsList, event));
 };
+
 
 const renderBoard = (boardComponent, events) => {
-  // const tripDaysComponent = new TripDaysComponent(events);
-  const tripEventsList = boardComponent.getElement().querySelector(`.trip-events__list`);
+  render(tripMain, new TripInfoComponent(events).getElement(), RenderPosition.AFTERBEGIN);
+  render(tripControlsElement, new TripTabsComponent().getElement(), RenderPosition.BEFOREEND);
+  render(tripControlsElement, new FiltersComponent(filters).getElement(), RenderPosition.BEFOREEND);
 
-console.log(tripEventsList);
-
-
-
-  // render(boardComponent.getElement(), tripDaysComponent.getElement(), RenderPosition.BEFOREEND);
-
-  // отрисовка точек маршрута
-  events.forEach((event) => renderTask(tripEventsList, event));
-
+  events.forEach((event) => renderDay(boardComponent.getElement(), event));
 };
 
-render(tripMain, new TripInfoComponent(events).getElement(), RenderPosition.AFTERBEGIN);
-render(tripControlsElement, new TripTabsComponent().getElement(), RenderPosition.BEFOREEND);
-render(tripControlsElement, new FiltersComponent(filters).getElement(), RenderPosition.BEFOREEND);
 
+// создает доску
 const boardComponent = new BoardComponent();
 
 render(tripEvents, new SortComponent().getElement(), RenderPosition.BEFOREEND);
 
+// рендит доску в tripEvents
 render(tripEvents, boardComponent.getElement(), RenderPosition.BEFOREEND);
+
+// запускает ф-ю и передает в нее dom-element boardComponent
 renderBoard(boardComponent, events);

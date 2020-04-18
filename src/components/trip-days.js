@@ -1,34 +1,33 @@
 import {MONTH_NAMES} from "../const.js";
-import {createElement} from "../utils.js";
+import {createElement, dayCounterFormat} from "../utils.js";
 
-const createTripDays = (events) => {
-  const createTripDaysMarkup = (value, date) => {
-    const dueDate = `${MONTH_NAMES[date.getMonth()]} ${date.getDate()}`;
-    return `<li class="trip-days__item  day">
-        <div class="day__info">
-          <span class="day__counter">${value}</span>
-          <time class="day__date" datetime="2019-03-18">${dueDate}</time>
-        </div>
-        <ul class="trip-events__list">
-        </ul>
-      </li>`;
-  };
 
-  const tripDaysMarkup = events.map((it, index) =>
-    createTripDaysMarkup(index + 1, it.dateFrom)
-  ).join(`\n`);
-
-  return `${tripDaysMarkup}`;
+const createDayDateMarkup = (event) => {
+  const {id, dateFrom} = event;
+  return `<li class="trip-days__item  day">
+            <div class="day__info">
+              <span class="day__counter">${id}</span>
+              <time class="day__date" datetime="2019-03-18">${MONTH_NAMES[dayCounterFormat(dateFrom)]}</time>
+            </div>
+            <ul class="trip-events__list">
+            </ul>
+          </li>`;
 };
 
+const createTripDaysMarkup = (event) => {
+  const markup = createDayDateMarkup(event);
+  return `${markup}`;
+};
+
+
 export default class TripDays {
-  constructor(events) {
+  constructor(event) {
     this._element = null;
-    this._events = events;
+    this._event = event;
   }
 
   getTemplate() {
-    return createTripDays(this._events);
+    return createTripDaysMarkup(this._event);
   }
 
   getElement() {

@@ -16,6 +16,10 @@ export const getTimeFormatDHM = (dateMs) => {
   return date;
 };
 
+export const dayCounterFormat = (date) => {
+  return date.getMonth();
+};
+
 const getDateTimeFormat = (date) => {
   return `${date.getFullYear()}-${castTimeFormat(1 + date.getMonth())}-${date.getDate()}`;
 };
