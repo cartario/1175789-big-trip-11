@@ -10,6 +10,29 @@ const createTripEvent = (event) => {
     basePrice,
   } = event;
 
+  // Привет. Ну смотри, у тебя есть отсортированные eventы в порядке возрастания.
+
+//Мы запускаем цикл по event, в котором начинаем подсчет порядоквых номеров.
+
+//Будет что-то типо такого:
+//const renderTripEvents = (events) => {
+  //let dayFrom;
+  // let daysCount = 0;
+  // let tripDay;
+
+// for (const event of events) {
+// if (dayFrom !== event.dateFrom.getDate()) {
+  // dayFrom = event.dateFrom.getDate();
+  // daysCount++;
+  // dayFrom = event.dateFrom.getDate();
+  // renderElement(tripDays, new MainTripDay(event, daysCount).getElement());
+  // tripDay = document.querySelectorAll(`.trip-events__list`);
+  // }
+
+//  renderElement(tripDay[daysCount - 1], new MainTripDayEvent(event).getElement());
+//  }
+// };
+
   const isDateCorrect = (dateTo - dateFrom) > 0;
   const startTime = getTimeFormat(dateFrom);
   const dateStart = getDateTimeFormat(dateFrom);
