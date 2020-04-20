@@ -90,22 +90,29 @@ const renderEvent = (tripEventsList, event) => {
 };
 
 const renderTripDays = (events) => {
-  let dayFrom;
+
   let dayCount = 0;
   let tripDayEventsList;
 
-  for (const event of events) {
+  for (const day of allDays) {
+    const dayEvents = [];
     dayCount++;
-    dayFrom = event.dateFrom;
 
-    const tripDayComponent = new TripDayComponent(event, dayCount);
-    tripDayEventsList = tripDayComponent.getElement().querySelectorAll(`.trip-events__list`);
+    for (const event of sortedEventsByDate) {
+      const date = `${event.dateFrom.getFullYear()}.${event.dateFrom.getMonth()}.${event.dateFrom.getDate()}`;
+      if (day === date) {
+      dayEvents.push(event);
 
-    console.log(sortedEventsByDate);
+      const tripDayComponent = new TripDayComponent(event, dayCount);
+      render(tripDaysComponent.getElement(), tripDayComponent.getElement(), RenderPosition.BEFOREEND);
 
-    render(tripDaysComponent.getElement(), tripDayComponent.getElement(), RenderPosition.BEFOREEND);
+      tripDayEventsList = tripDayComponent.getElement().querySelectorAll(`.trip-events__list`);
 
-    tripDayEventsList.forEach((it) => renderEvent(it, event))
+        for (const eventDay of dayEvents) {
+          tripDayEventsList.forEach((it) => renderEvent(it, eventDay));
+        }
+      }
+    }
   }
 };
 
