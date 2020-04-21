@@ -6,14 +6,11 @@ import TripDayComponent from "./components/trip-day.js";
 import SortComponent from "./components/sort.js";
 import EventComponent from "./components/event.js";
 import EventEditComponent from "./components/event-edit.js";
-
 import {generateEvents} from "./mock/event.js";
 import {generateFilters} from "./mock/filter.js";
-
-
 import {RenderPosition, render} from "./utils.js";
 
-const TOTAL_EVENTS = 5;
+const TOTAL_EVENTS = 22;
 
 const events = generateEvents(TOTAL_EVENTS);
 
@@ -26,39 +23,19 @@ const tripEvents = document.querySelector(`.trip-events`);
 
 const tripDaysComponent = new TripDaysComponent();
 
-// группирует ф-ии отрисовки меню
 const renderMenu = () => {
   render(tripMain, new TripInfoComponent(events).getElement(), RenderPosition.AFTERBEGIN);
   render(tripControlsElement, new TripTabsComponent().getElement(), RenderPosition.BEFOREEND);
   render(tripControlsElement, new FiltersComponent(filters).getElement(), RenderPosition.BEFOREEND);
 };
 
-// ф-я сортировки по дате
-const getSortedEventsByDate = (events) => {
+const getSortedEventsByDate = () => {
+
   const sortedEvents = [...events];
   return sortedEvents.slice().sort((a, b) => a.dateFrom.getTime() - b.dateFrom.getTime());
 };
 
-const sortedEventsByDate = getSortedEventsByDate(events);
-
-// массив уникальных дат, получает множество дат
-const getAllDays = (eventsList) => {
-  const eventDays = new Set();
-  eventsList.forEach((event) => {
-    const date = `${event.dateFrom.getFullYear()}.${event.dateFrom.getMonth()}.${event.dateFrom.getDate()}`
-
-    // проверка га уникальность, добавляет дату вмассив, если она не повторяется
-    if (!eventDays.has(date)){
-      eventDays.add(date)
-    }
-  })
-  return eventDays;
-};
-
-const allDays = getAllDays(sortedEventsByDate);
-/////////////////////////////////////////////////////////////////
-// преобразует множество в массив
-// console.log([...allDays]);
+const sortedEventsByDate = getSortedEventsByDate();
 
 const renderEvent = (tripEventsList, event) => {
   const eventComponent = new EventComponent(event);
@@ -85,45 +62,30 @@ const renderEvent = (tripEventsList, event) => {
     replaceEditToEvent();
   });
 
-  // отрисовка eventComponent в dom-elemente tripEventsList
   render(tripEventsList, eventComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
-const renderTripDays = (events) => {
+const renderTripDays = () => {
 
   let dayCount = 0;
-  let tripDayEventsList;
+  let tripDayEventsList = null;
+  let prevDate = null;
 
-  for (const day of allDays) {
-    const dayEvents = [];
-    dayCount++;
+  for (const event of sortedEventsByDate) {
+    const dateFrom = event.dateFrom.getDate();
 
-    for (const event of sortedEventsByDate) {
-      const date = `${event.dateFrom.getFullYear()}.${event.dateFrom.getMonth()}.${event.dateFrom.getDate()}`;
-      if (day === date) {
-      dayEvents.push(event);
-
+    if (prevDate !== dateFrom) {
+      dayCount++;
+      prevDate = dateFrom;
       const tripDayComponent = new TripDayComponent(event, dayCount);
+      tripDayEventsList = tripDayComponent.getElement().querySelector(`.trip-events__list`);
       render(tripDaysComponent.getElement(), tripDayComponent.getElement(), RenderPosition.BEFOREEND);
-
-      tripDayEventsList = tripDayComponent.getElement().querySelectorAll(`.trip-events__list`);
-
-        for (const eventDay of dayEvents) {
-          tripDayEventsList.forEach((it) => renderEvent(it, eventDay));
-        }
-      }
     }
+    renderEvent(tripDayEventsList, event);
   }
 };
 
-renderTripDays(sortedEventsByDate);
-
-//////////////////////////////////////////////////
-// рендит сортировку
+renderTripDays();
 render(tripEvents, new SortComponent().getElement(), RenderPosition.BEFOREEND);
-
-// рендит trip-days в tripEvents
 render(tripEvents, tripDaysComponent.getElement(), RenderPosition.BEFOREEND);
-
-// рендит меню
 renderMenu();
