@@ -1,6 +1,6 @@
-import {getDateTimeFormat, getTimeFormat} from "../utils.js";
+import {getDateTimeFormat, getTimeFormat, getTimeFormatDHM, createElement} from "../utils.js";
 
-export const createTripEvent = (event) => {
+const createTripEvent = (event) => {
   const {
     eventType,
     destination,
@@ -15,16 +15,14 @@ export const createTripEvent = (event) => {
   const dateStart = getDateTimeFormat(dateFrom);
   const endTime = getTimeFormat(dateTo);
   const dateEnd = getDateTimeFormat(dateTo);
-  const durationTime = isDateCorrect ? `${(dateTo - dateFrom) / 60000}M` : `дата окончания меньше даты начала`;
+  const durationTime = isDateCorrect ? getTimeFormatDHM(dateTo - dateFrom) : `дата окончания меньше даты начала`;
 
   const selectedOffers = (title, price) => {
-    return `
-    <li class="event__offer">
+    return `<li class="event__offer">
       <span class="event__offer-title">${title}</span>
       +
       €&nbsp;<span class="event__offer-price">${price}</span>
-    </li>
-    `;
+    </li>`;
   };
 
   const selectedOffersMarkup = () => {
@@ -33,10 +31,7 @@ export const createTripEvent = (event) => {
 
   const offersMarkup = selectedOffersMarkup();
 
-  return (`
-
-    <li class="trip-events__item">
-      <div class="event">
+  return (`<li class="trip-events__item"><div class="event">
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42"
           src="img/icons/${eventType}.png" alt="Event type icon">
@@ -66,7 +61,27 @@ export const createTripEvent = (event) => {
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
         </button>
-      </div>
-    </li>
-  `);
+      </div></li>`);
 };
+
+export default class Event {
+  constructor(event) {
+    this._element = null;
+    this._event = event;
+  }
+
+  getTemplate() {
+    return createTripEvent(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
