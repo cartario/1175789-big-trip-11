@@ -41,6 +41,14 @@ const renderEvent = (tripEventsList, event) => {
   const eventComponent = new EventComponent(event);
   const eventEditComponent = new EventEditComponent(event);
 
+  const onEscKeyDown = (evt) => {
+    const isEscKey = evt.key === `Escape` || evt.ket === `Esc`;
+    if (isEscKey) {
+      replaceEditToEvent();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
   // находит кнопку в dom-elementе eventComponent
   const eventRollupBtn = eventComponent.getElement().querySelector(`.event__rollup-btn`);
   const eventEditRollupBtn = eventEditComponent.getElement().querySelector(`.event__rollup-btn`);
@@ -56,10 +64,12 @@ const renderEvent = (tripEventsList, event) => {
 
   eventRollupBtn.addEventListener(`click`, function () {
     replaceEventToEdit();
+    document.addEventListener(`keydown`, onEscKeyDown);
   });
 
   eventEditRollupBtn.addEventListener(`click`, function () {
     replaceEditToEvent();
+    document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
   render(tripEventsList, eventComponent.getElement(), RenderPosition.BEFOREEND);
