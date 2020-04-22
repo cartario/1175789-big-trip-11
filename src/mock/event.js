@@ -63,10 +63,18 @@ const generateEvent = () => {
 };
 
 // генерит пустой массив обьектов общей структуры случайной длины
+
+const dataIsEmptySize = 0;
+
 const generateEvents = (count) => {
-  return new Array(count)
-  .fill(``)
-  .map(generateEvent);
+  if (count === null || count === dataIsEmptySize) {
+    return dataIsEmptySize;
+  }
+
+  const result = new Array(count)
+    .fill(``)
+    .map(generateEvent);
+  return result;
 };
 
 export {generateEvent, generateEvents};
