@@ -10,6 +10,7 @@ import NoEventsComponent from "./components/no-events.js";
 import {generateEvents} from "./mock/event.js";
 import {generateFilters} from "./mock/filter.js";
 import {RenderPosition, render} from "./utils.js";
+import AbstractComponent from "./components/abstract-component.js";
 
 const TOTAL_EVENTS = 15;
 const events = generateEvents(TOTAL_EVENTS);
