@@ -9,7 +9,7 @@ import EventEditComponent from "./components/event-edit.js";
 import NoEventsComponent from "./components/no-events.js";
 import {generateEvents} from "./mock/event.js";
 import {generateFilters} from "./mock/filter.js";
-import {RenderPosition, render} from "./utils/render.js";
+import {RenderPosition, render, replace} from "./utils/render.js";
 
 const TOTAL_EVENTS = 15;
 const events = generateEvents(TOTAL_EVENTS);
@@ -64,11 +64,11 @@ const renderEvent = (tripEventsList, event) => {
 
   // реализация замены
   const replaceEventToEdit = () => {
-    tripEventsList.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
+    replace(tripEventsList, eventEditComponent.getElement(), eventComponent.getElement());
   };
 
   const replaceEditToEvent = () => {
-    tripEventsList.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
+    replace(tripEventsList, eventComponent.getElement(), eventEditComponent.getElement());
   };
 
   eventRollupBtn.addEventListener(`click`, function () {
