@@ -1,5 +1,5 @@
 import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
-import {createElement} from "../utils.js";
+import AbstractComponent from "./abstract-component.js";
 
 const eventTypeToggle = () => {
   return `<label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -153,24 +153,12 @@ const createEventEditTemplate = (event) => {
 };
 
 
-export default class EventEdit {
+export default class EventEdit extends AbstractComponent {
   constructor(event) {
-    this._element = null;
+    super();
     this._event = event;
   }
-
   getTemplate() {
     return createEventEditTemplate(this._event);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

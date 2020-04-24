@@ -1,4 +1,5 @@
-import {getDateTimeFormat, getTimeFormat, getTimeFormatDHM, createElement} from "../utils.js";
+import {getDateTimeFormat, getTimeFormat, getTimeFormatDHM} from "../utils.js";
+import AbstractComponent from "./abstract-component.js";
 
 const createTripEvent = (event) => {
   const {
@@ -64,24 +65,12 @@ const createTripEvent = (event) => {
       </div></li>`);
 };
 
-export default class Event {
+export default class Event extends AbstractComponent {
   constructor(event) {
-    this._element = null;
+    super();
     this._event = event;
   }
-
   getTemplate() {
     return createTripEvent(this._event);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

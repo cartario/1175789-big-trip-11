@@ -1,5 +1,6 @@
 import {MONTH_NAMES} from "../const.js";
-import {createElement, dayCounterFormat} from "../utils.js";
+import {dayCounterFormat} from "../utils.js";
+import AbstractComponent from "./abstract-component.js";
 
 
 const createTripDayMarkup = (event, dayCounter) => {
@@ -14,25 +15,13 @@ const createTripDayMarkup = (event, dayCounter) => {
           </li>`;
 };
 
-export default class TripDay {
+export default class TripDay extends AbstractComponent {
   constructor(event, dayCounter) {
-    this._element = null;
+    super();
     this._event = event;
     this._dayCounter = dayCounter;
   }
-
   getTemplate() {
     return createTripDayMarkup(this._event, this._dayCounter);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
