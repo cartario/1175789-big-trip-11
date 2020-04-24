@@ -27,17 +27,17 @@ const tripDaysComponent = new TripDaysComponent();
 const noEventComponent = new NoEventsComponent();
 
 const renderBoard = () => {
-  render(tripControlsElement, new TripTabsComponent().getElement(), RenderPosition.BEFOREEND);
-  render(tripControlsElement, new FiltersComponent(filters).getElement(), RenderPosition.BEFOREEND);
+  render(tripControlsElement, new TripTabsComponent(), RenderPosition.BEFOREEND);
+  render(tripControlsElement, new FiltersComponent(filters), RenderPosition.BEFOREEND);
 
   if (!isEventsExist) {
-    render(tripEvents, noEventComponent.getElement(), RenderPosition.BEFOREEND);
+    render(tripEvents, noEventComponent, RenderPosition.BEFOREEND);
     return;
   }
 
-  render(tripEvents, new SortComponent().getElement(), RenderPosition.BEFOREEND);
-  render(tripEvents, tripDaysComponent.getElement(), RenderPosition.BEFOREEND);
-  render(tripMain, new TripInfoComponent(events).getElement(), RenderPosition.AFTERBEGIN);
+  render(tripEvents, new SortComponent(), RenderPosition.BEFOREEND);
+  render(tripEvents, tripDaysComponent, RenderPosition.BEFOREEND);
+  render(tripMain, new TripInfoComponent(events), RenderPosition.AFTERBEGIN);
 };
 
 const getSortedEventsByDate = () => {
@@ -81,7 +81,7 @@ const renderEvent = (tripEventsList, event) => {
     document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
-  render(tripEventsList, eventComponent.getElement(), RenderPosition.BEFOREEND);
+  render(tripEventsList, eventComponent, RenderPosition.BEFOREEND);
 };
 
 const renderTripDays = () => {
@@ -97,7 +97,7 @@ const renderTripDays = () => {
       prevDate = dateFrom;
       const tripDayComponent = new TripDayComponent(event, dayCount);
       tripDayEventsList = tripDayComponent.getElement().querySelector(`.trip-events__list`);
-      render(tripDaysComponent.getElement(), tripDayComponent.getElement(), RenderPosition.BEFOREEND);
+      render(tripDaysComponent.getElement(), tripDayComponent, RenderPosition.BEFOREEND);
     }
     renderEvent(tripDayEventsList, event);
   }
