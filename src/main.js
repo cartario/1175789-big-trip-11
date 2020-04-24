@@ -62,22 +62,13 @@ const renderEvent = (tripEventsList, event) => {
   const eventRollupBtn = eventComponent.getElement().querySelector(`.event__rollup-btn`);
   const eventEditRollupBtn = eventEditComponent.getElement().querySelector(`.event__rollup-btn`);
 
-  // реализация замены
-  const replaceEventToEdit = () => {
-    replace(tripEventsList, eventEditComponent.getElement(), eventComponent.getElement());
-  };
-
-  const replaceEditToEvent = () => {
-    replace(tripEventsList, eventComponent.getElement(), eventEditComponent.getElement());
-  };
-
   eventRollupBtn.addEventListener(`click`, function () {
-    replaceEventToEdit();
+    replace(eventEditComponent, eventComponent);
     document.addEventListener(`keydown`, onEscKeyDown);
   });
 
   eventEditRollupBtn.addEventListener(`click`, function () {
-    replaceEditToEvent();
+    replace(eventComponent, eventEditComponent);
     document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
