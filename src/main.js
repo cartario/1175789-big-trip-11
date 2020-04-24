@@ -59,17 +59,14 @@ const renderEvent = (tripEventsList, event) => {
     }
   };
 
-  const eventRollupBtn = eventComponent.getElement().querySelector(`.event__rollup-btn`);
-  const eventEditRollupBtn = eventEditComponent.getElement().querySelector(`.event__rollup-btn`);
-
-  eventRollupBtn.addEventListener(`click`, function () {
+  eventComponent.setRollupBtnClickHandler(() => {
     replace(eventEditComponent, eventComponent);
     document.addEventListener(`keydown`, onEscKeyDown);
   });
 
-  eventEditRollupBtn.addEventListener(`click`, function () {
+  eventEditComponent.setRollupBtnClickHandler(() => {
     replace(eventComponent, eventEditComponent);
-    document.removeEventListener(`keydown`, onEscKeyDown);
+    document.addEventListener(`keydown`, onEscKeyDown);
   });
 
   render(tripEventsList, eventComponent, RenderPosition.BEFOREEND);
