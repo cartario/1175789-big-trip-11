@@ -1,5 +1,5 @@
 import {MONTH_NAMES} from "../const.js";
-import {dayCounterFormat} from "../utils.js";
+import {dayCounterFormat} from "../utils/common.js";
 import AbstractComponent from "./abstract-component.js";
 
 

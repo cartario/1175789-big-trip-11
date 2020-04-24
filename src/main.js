@@ -54,7 +54,7 @@ const renderEvent = (tripEventsList, event) => {
   const onEscKeyDown = (evt) => {
     const isEscKey = evt.key === `Escape` || evt.ket === `Esc`;
     if (isEscKey) {
-      replaceEditToEvent();
+      replace(eventComponent, eventEditComponent);
       document.removeEventListener(`keydown`, onEscKeyDown);
     }
   };

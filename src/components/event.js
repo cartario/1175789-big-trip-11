@@ -1,4 +1,4 @@
-import {getDateTimeFormat, getTimeFormat, getTimeFormatDHM} from "../utils.js";
+import {getDateTimeFormat, getTimeFormat, getTimeFormatDHM} from "../utils/common.js";
 import AbstractComponent from "./abstract-component.js";
 
 const createTripEvent = (event) => {

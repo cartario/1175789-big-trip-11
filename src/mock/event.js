@@ -1,5 +1,5 @@
 import {EVENT_TYPES, DESTINATION_POINTS, DESCRIPTION_ITEMS} from "../const.js";
-import {getRandomInt, getRandomArrayItem, getShuffleArray, getRandomTime} from "../utils.js";
+import {getRandomInt, getRandomArrayItem, getShuffleArray, getRandomTime} from "../utils/common.js";
 
 
 const offerItems = [{
