@@ -1,3 +1,4 @@
+import BoardComponent from "./components/board.js";
 import TripInfoComponent from "./components/trip-info.js";
 import FiltersComponent from "./components/filters.js";
 import TripDaysComponent from "./components/trip-days.js";
@@ -20,17 +21,23 @@ const filters = generateFilters();
 // ключевые узлы
 const tripMain = document.querySelector(`.trip-main`);
 const tripControlsElement = document.querySelector(`.trip-controls`);
-const tripEvents = document.querySelector(`.trip-events`);
+document.querySelector(`.trip-events`).remove();
+
+const boardContainer = document.querySelectorAll(`.page-body__container`)[1];
+
+const boardComponent = new BoardComponent();
+
+render(boardContainer, boardComponent, RenderPosition.BEFOREEND);
 
 render(tripControlsElement, new TripTabsComponent(), RenderPosition.BEFOREEND);
 render(tripControlsElement, new FiltersComponent(filters), RenderPosition.BEFOREEND);
-render(tripEvents, new SortComponent(), RenderPosition.BEFOREEND);
-render(tripMain, new TripInfoComponent(events), RenderPosition.AFTERBEGIN);
+
 
 const tripDaysComponent = new TripDaysComponent();
 const noEventComponent = new NoEventsComponent();
 
 const renderBoard = (events) => {
+
   const isEventsExist = !!events;
 
   const getSortedEventsByDate = () => {
@@ -40,11 +47,12 @@ const renderBoard = (events) => {
   const sortedEventsByDate = isEventsExist ? getSortedEventsByDate() : [];
 
   if (!isEventsExist) {
-    render(tripEvents, noEventComponent, RenderPosition.BEFOREEND);
+    render(boardComponent.getElement(), noEventComponent, RenderPosition.BEFOREEND);
     return;
   }
-  render(tripEvents, tripDaysComponent, RenderPosition.BEFOREEND);
-
+  render(boardComponent.getElement(), new SortComponent(), RenderPosition.BEFOREEND);
+  render(boardComponent.getElement(), tripDaysComponent, RenderPosition.BEFOREEND);
+  render(tripMain, new TripInfoComponent(events), RenderPosition.AFTERBEGIN);
   renderTripDays(sortedEventsByDate);
 };
 
