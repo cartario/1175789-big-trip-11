@@ -1,5 +1,5 @@
 import {RenderPosition, render, replace} from "../utils/render.js";
-import SortComponent from "../components/sort.js";
+import SortComponent, {SortType} from "../components/sort.js";
 import TripDaysComponent from "../components/trip-days.js";
 import TripInfoComponent from "../components/trip-info.js";
 import TripDayComponent from "../components/trip-day.js";
@@ -37,6 +37,12 @@ export default class TripController {
       render(this._container.getElement(), this._tripDaysComponent, RenderPosition.BEFOREEND);
       render(tripMain, new TripInfoComponent(events), RenderPosition.AFTERBEGIN);
       renderTripDays(sortedEventsByDate);
+
+      this._sortComponent.setSortTypeChangeHandler(() => {
+        this._tripDaysComponent.getElement().innerHTML = ``;
+        renderTripDays(sortedEventsByDate);
+
+      });
     };
 
     const renderTripDays = (sortedEventsByDate) => {
