@@ -1,8 +1,8 @@
-import {createElement} from "../utils.js";
+import AbstractComponent from "./abstract-component.js";
 
-const createTripInfoTemplate = (events) => {
+const createTripInfoTemplate = (eventsList) => {
 
-  const totalPrice = events.reduce((acc, event) => {
+  const totalPrice = eventsList.reduce((acc, event) => {
     return acc + event.basePrice;
   }, 0);
 
@@ -20,24 +20,12 @@ const createTripInfoTemplate = (events) => {
   );
 };
 
-export default class TripInfo {
+export default class TripInfo extends AbstractComponent {
   constructor(events) {
-    this._element = null;
+    super();
     this._events = events;
   }
-
   getTemplate() {
     return createTripInfoTemplate(this._events);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
