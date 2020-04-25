@@ -6,7 +6,7 @@ import {generateEvents} from "./mock/event.js";
 import {generateFilters} from "./mock/filter.js";
 import {RenderPosition, render} from "./utils/render.js";
 
-const TOTAL_EVENTS = 5;
+const TOTAL_EVENTS = 15;
 const events = generateEvents(TOTAL_EVENTS);
 const filters = generateFilters();
 
