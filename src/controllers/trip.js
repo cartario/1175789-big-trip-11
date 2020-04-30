@@ -6,6 +6,7 @@ import TripDayComponent from "../components/trip-day.js";
 import EventComponent from "../components/event.js";
 import EventEditComponent from "../components/event-edit.js";
 import NoEventsComponent from "../components/no-events.js";
+import PointController from "./point.js";
 
 export default class TripController {
   constructor(container) {
