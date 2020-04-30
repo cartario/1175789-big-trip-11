@@ -5,7 +5,7 @@ export default class PointController extends AbstractComponent {
     this._container = container;
   }
 
-  render(event) {
+  render(event){
 
   }
 }
