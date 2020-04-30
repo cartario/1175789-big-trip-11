@@ -1,5 +1,5 @@
 import {RenderPosition, render, replace} from "../utils/render.js";
-import SortComponent from "../components/sort.js";
+import SortComponent, {SortType} from "../components/sort.js";
 import TripDaysComponent from "../components/trip-days.js";
 import TripInfoComponent from "../components/trip-info.js";
 import TripDayComponent from "../components/trip-day.js";
@@ -15,6 +15,25 @@ export default class TripController {
     this._noEventComponent = new NoEventsComponent();
     this._sortComponent = new SortComponent();
 
+  }
+
+  getSortedType(eventsList, sortType, from, to) {
+    let sortedEvents = [];
+    const showingEvents = eventsList.slice();
+
+    switch (sortType) {
+      case SortType.DEFAULT:
+        sortedEvents = showingEvents;
+        break;
+      case SortType.TIME:
+        sortedEvents = showingEvents.sort((a, b) => a.dateTo - a.dateFrom - b.dateTo - b.dateFrom);
+        break;
+      case SortType.PRICE:
+        sortedEvents = showingEvents.sort((a, b) => a.basePrice - b.basePrice);
+        break;
+    }
+
+    return sortedEvents.slice(from, to);
   }
 
   render(events) {
@@ -38,6 +57,12 @@ export default class TripController {
       render(this._container.getElement(), this._tripDaysComponent, RenderPosition.BEFOREEND);
       render(tripMain, new TripInfoComponent(events), RenderPosition.AFTERBEGIN);
       renderTripDays(sortedEventsByDate);
+
+      this._sortComponent.setSortTypeChangeHandler((sortType) => {
+        this._tripDaysComponent.getElement().innerHTML = ``;
+        const sortedEvents = this.getSortedType(events, sortType, 0, events.length);
+        renderTripDays(sortedEvents);
+      });
     };
 
     const renderTripDays = (sortedEventsByDate) => {
