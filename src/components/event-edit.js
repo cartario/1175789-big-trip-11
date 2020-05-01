@@ -1,5 +1,5 @@
 import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const eventTypeToggle = () => {
   return `<label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -153,7 +153,7 @@ const createEventEditTemplate = (event) => {
 };
 
 
-export default class EventEdit extends AbstractComponent {
+export default class EventEdit extends AbstractSmartComponent {
   constructor(event) {
     super();
     this._event = event;
@@ -170,5 +170,10 @@ export default class EventEdit extends AbstractComponent {
   setFavoriteClickHandler(handler) {
     this.getElement().querySelector(`.event__favorite-icon`)
     .addEventListener(`click`, handler);
+
+  }
+
+  rerender() {
+    super.rerender();
   }
 }

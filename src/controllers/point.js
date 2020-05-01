@@ -8,37 +8,37 @@ export default class PointController extends AbstractComponent {
     super();
     this._container = container;
     this._onDataChange = onDataChange;
+    this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._eventComponent = null;
     this._eventEditComponent = null;
 
   }
 
+  _onEscKeyDown(evt) {
+    const isEscKey = evt.key === `Escape` || evt.ket === `Esc`;
+    if (isEscKey) {
+      replace(this._eventComponent, this._eventEditComponent);
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
+    }
+  }
+
   render(event) {
     this._eventComponent = new EventComponent(event);
     this._eventEditComponent = new EventEditComponent(event);
-
-    const onEscKeyDown = (evt) => {
-      const isEscKey = evt.key === `Escape` || evt.ket === `Esc`;
-      if (isEscKey) {
-        replace(this._eventComponent, this._eventEditComponent);
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
     this._eventComponent.setRollupBtnClickHandler(() => {
       replace(this._eventEditComponent, this._eventComponent);
-      document.addEventListener(`keydown`, onEscKeyDown);
+      document.addEventListener(`keydown`, this._onEscKeyDown);
     });
 
     this._eventEditComponent.setRollupBtnClickHandler(() => {
       replace(this._eventComponent, this._eventEditComponent);
-      document.addEventListener(`keydown`, onEscKeyDown);
+      document.addEventListener(`keydown`, this._onEscKeyDown);
+
     });
 
     this._eventEditComponent.setFavoriteClickHandler(() => {
       this._onDataChange(this, event, Object.assign({}, event, {
         isFavorite: !event.isFavorite,
-
       }));
     });
 
