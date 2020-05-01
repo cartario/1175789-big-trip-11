@@ -157,6 +157,7 @@ export default class EventEdit extends AbstractComponent {
   constructor(event) {
     super();
     this._event = event;
+    this.setFavoriteClickHandler();
   }
   getTemplate() {
     return createEventEditTemplate(this._event);
@@ -164,5 +165,10 @@ export default class EventEdit extends AbstractComponent {
 
   setRollupBtnClickHandler(handler) {
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
+  }
+
+  setFavoriteClickHandler(handler) {
+    this.getElement().querySelector(`.event__favorite-icon`)
+    .addEventListener(`click`, handler);
   }
 }

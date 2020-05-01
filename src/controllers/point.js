@@ -4,9 +4,10 @@ import EventEditComponent from "../components/event-edit.js";
 import {RenderPosition, render, replace} from "../utils/render.js";
 
 export default class PointController extends AbstractComponent {
-  constructor(container) {
+  constructor(container, onDataChange) {
     super();
     this._container = container;
+    this._onDataChange = onDataChange;
     this._eventComponent = null;
     this._eventEditComponent = null;
 
@@ -32,6 +33,13 @@ export default class PointController extends AbstractComponent {
     this._eventEditComponent.setRollupBtnClickHandler(() => {
       replace(this._eventComponent, this._eventEditComponent);
       document.addEventListener(`keydown`, onEscKeyDown);
+    });
+
+    this._eventEditComponent.setFavoriteClickHandler(() => {
+      this._onDataChange(this, event, Object.assign({}, event, {
+        isFavorite: !event.isFavorite,
+
+      }));
     });
 
     render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
