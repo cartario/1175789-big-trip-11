@@ -201,7 +201,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
         this.rerender();
       });
-  });
+    });
   }
 }
 

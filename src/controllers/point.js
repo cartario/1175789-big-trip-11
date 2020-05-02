@@ -3,6 +3,11 @@ import EventComponent from "../components/event.js";
 import EventEditComponent from "../components/event-edit.js";
 import {RenderPosition, render, replace} from "../utils/render.js";
 
+const Mode = {
+  DEFAULT: `default`,
+  EDIT: `edit`,
+};
+
 export default class PointController extends AbstractComponent {
   constructor(container, onDataChange, onViewChange) {
     super();
@@ -12,6 +17,7 @@ export default class PointController extends AbstractComponent {
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._eventComponent = null;
     this._eventEditComponent = null;
+    this._mode = Mode.DEFAULT;
 
   }
 
@@ -28,11 +34,14 @@ export default class PointController extends AbstractComponent {
     this._eventEditComponent = new EventEditComponent(event);
     this._eventComponent.setRollupBtnClickHandler(() => {
       this._replaceEditToEvent();
+      this._mode = Mode.EDIT;
+
     });
 
     this._eventEditComponent.setRollupBtnClickHandler(() => {
       replace(this._eventComponent, this._eventEditComponent);
       document.addEventListener(`keydown`, this._onEscKeyDown);
+
 
     });
 
