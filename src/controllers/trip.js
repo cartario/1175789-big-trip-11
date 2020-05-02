@@ -37,6 +37,8 @@ export default class TripController {
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     this._onDataChange = this._onDataChange.bind(this);
+    this._onViewChange = this._onViewChange.bind(this);
+    this._showedEventControllers = [];
   }
 
   render(events) {
@@ -72,9 +74,8 @@ export default class TripController {
         render(this._tripDaysComponent.getElement(), tripDayComponent, RenderPosition.BEFOREEND);
       }
 
-      const pointController = new PointController(tripDayEventsList, this._onDataChange);
+      const pointController = new PointController(tripDayEventsList, this._onDataChange, this._onViewChange);
       pointController.render(event);
-
     }
   }
 
@@ -82,6 +83,7 @@ export default class TripController {
     this._tripDaysComponent.getElement().innerHTML = ``;
     const sortedEvents = getSortedType(this._events, sortType, 0, this._events.length);
     this.renderTripDays(sortedEvents);
+
   }
 
   _onDataChange(pointController, oldData, newData) {
@@ -95,4 +97,9 @@ export default class TripController {
 
     pointController.render(this._events[index]);
   }
+
+  _onViewChange() {
+    this._showedEventControllers.forEach((it) => it.setDefaultView());
+  }
+
 }

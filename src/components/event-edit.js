@@ -36,17 +36,17 @@ const createEventEditTemplate = (event) => {
     isFavorite,
   } = event;
 
-  const eventTypeToggle = () => {
-    return `<label class="event__type  event__type-btn" for="event-type-toggle-1">
+  const eventTypeToggle = (id) => {
+    return `<label class="event__type  event__type-btn" for="event-type-toggle-${id}">
     <span class="visually-hidden">Choose event type</span>
     <img class="event__type-icon" width="17" height="17"
     src="img/icons/${eventType.name}.png" alt="Event type icon">
   </label>
-  <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+  <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox">
   `;
   };
 
-  const eventTypeToggleMarkup = eventTypeToggle();
+  const eventTypeToggleMarkup = eventTypeToggle(id);
 
   const eventTransferMarkup = EVENT_TYPES.slice(0, 7).map((it) => createEventTransferMarkup(it.name)).join(`\n`);
   const eventActivityMarkup = EVENT_TYPES.slice(7).map((it) => createEventActivityMarkup(it.name)).join(`\n`);
@@ -158,6 +158,8 @@ export default class EventEdit extends AbstractSmartComponent {
     super();
     this._event = event;
     this.setFavoriteClickHandler();
+    this._subscribeOnEvents();
+    this._submitHandler = null;
   }
   getTemplate() {
     return createEventEditTemplate(this._event);
@@ -173,7 +175,34 @@ export default class EventEdit extends AbstractSmartComponent {
 
   }
 
+  setSubmitHandler(handler) {
+    this.getElement().addEventListener(`click`, handler);
+    this.getElement()
+      .addEventListener(`submit`, handler);
+
+    this._submitHandler = handler;
+  }
+
+  recoveryListeners() {
+    this.setSubmitHandler(this._submitHandler);
+    this._subscribeOnEvents();
+  }
+
   rerender() {
     super.rerender();
   }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelectorAll(`.event__type-input`).forEach((input) => {
+      input.addEventListener(`change`, (evt) => {
+        this._event.eventType.name = evt.target.value;
+
+        this.rerender();
+      });
+  });
+  }
 }
+
+
