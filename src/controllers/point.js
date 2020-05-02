@@ -42,7 +42,6 @@ export default class PointController extends AbstractComponent {
       replace(this._eventComponent, this._eventEditComponent);
       document.addEventListener(`keydown`, this._onEscKeyDown);
 
-
     });
 
     this._eventEditComponent.setFavoriteClickHandler(() => {
