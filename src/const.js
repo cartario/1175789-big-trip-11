@@ -1,43 +1,53 @@
 const EVENT_TYPES = [
   {
     name: `Taxi`,
-    group: `Transfer`
+    group: `Transfer`,
+    offers: ``,
   },
   {
     name: `Bus`,
-    group: `Transfer`
+    group: `Transfer`,
+    offers: ``,
   },
   {
     name: `Train`,
-    group: `Transfer`
+    group: `Transfer`,
+    offers: ``,
   },
   {
     name: `Ship`,
-    group: `Transfer`
+    group: `Transfer`,
+    offers: ``,
   },
   {
     name: `Transport`,
-    group: `Transfer`
+    group: `Transfer`,
+    offers: ``,
   },
   {
     name: `Drive`,
-    group: `Transfer`
+    group: `Transfer`,
+    offers: ``,
   },
   {
     name: `Flight`,
-    group: `Transfer`
+    group: `Transfer`,
+    offers: ``,
   },
   {
     name: `Check-in`,
-    group: `Activity`
+    group: `Activity`,
+    offers: ``,
   },
   {
     name: `Sightseeing`,
-    group: `Activity`
+    group: `Activity`,
+    offers: ``,
   },
   {
     name: `Restaurant`,
-    group: `Activity`
+    group: `Activity`,
+    offers: ``,
   }
 ];
 

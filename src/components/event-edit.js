@@ -37,6 +37,7 @@ const createEventEditTemplate = (event) => {
   } = event;
 
   const isShowingDestination = Math.random() > 0.5;
+  const isOffersExist = offers.length > 0;
 
   const eventTypeToggle = () => {
     return `<label class="event__type  event__type-btn" for="event-type-toggle-${id}">
@@ -69,11 +70,11 @@ const createEventEditTemplate = (event) => {
 
   const destinationTimeMarkup = createDestinationTime();
 
-  const creatAvaibleOffers = (offer, price) => {
+  const creatAvaibleOffers = (offer, price, index) => {
     const isChecked = Math.random() > 0.5;
     return `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-luggage" ${isChecked ? `checked` : ``}>
-        <label class="event__offer-label" for="event-offer-${id}">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${index}" type="checkbox" name="event-offer-luggage" ${isChecked ? `checked` : ``}>
+        <label class="event__offer-label" for="event-offer-${index}">
           <span class="event__offer-title">${offer}</span>
           +
           €&nbsp;<span class="event__offer-price">${price}</span>
@@ -81,7 +82,7 @@ const createEventEditTemplate = (event) => {
       </div>`;
   };
 
-  const availableOffersMarkup = offers.map((it) => creatAvaibleOffers(it.title, it.price)).join(`\n`);
+  const availableOffersMarkup = offers.map((it, i) => creatAvaibleOffers(it.title, it.price, i)).join(`\n`);
 
   const createDestinationMarkup = () => {
     const createEventPhotos = (url) => {
@@ -165,17 +166,18 @@ const createEventEditTemplate = (event) => {
           <span class="visually-hidden">Open event</span>
         </button>
       </header>
-
       <section class="event__details">
+        ${isOffersExist ? `
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
           <div class="event__available-offers">
 
             ${availableOffersMarkup}
 
           </div>
-        </section>
+          </section>
+        ` : ``}
+
 
             ${destinationMarkup}
 

@@ -1,5 +1,5 @@
 import {EVENT_TYPES, DESTINATION_POINTS, DESCRIPTION_ITEMS} from "../const.js";
-import {getRandomInt, getRandomArrayItem, getShuffleArray, getRandomTime} from "../utils/common.js";
+import {getRandomInt, getRandomArray, getRandomArrayItem, getRandomTime} from "../utils/common.js";
 
 
 const offerItems = [{
@@ -22,6 +22,8 @@ const offerItems = [{
   price: 40,
 }];
 
+export const offersForTypes = EVENT_TYPES.map((it) => Object.assign({}, it, {offers: getRandomArray(offerItems)}));
+
 const generatePhotos = (count) => {
   const arr = [];
   for (let i = 0; i < count; i++) {
@@ -41,8 +43,8 @@ const generateDestination = () => {
 const generateEvent = () => {
   return {
     id: getRandomInt(0, 10),
-    eventType: getRandomArrayItem(EVENT_TYPES),
-    offers: getShuffleArray(offerItems, getRandomInt(0, offerItems.length)),
+    eventType: getRandomArrayItem(offersForTypes),
+    offers: getRandomArrayItem(offersForTypes).offers,
     dateFrom: getRandomTime(),
     dateTo: getRandomTime(),
     destination: generateDestination(),
