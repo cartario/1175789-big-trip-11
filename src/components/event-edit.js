@@ -1,18 +1,6 @@
 import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
-const eventTypeToggle = () => {
-  return `<label class="event__type  event__type-btn" for="event-type-toggle-1">
-    <span class="visually-hidden">Choose event type</span>
-    <img class="event__type-icon" width="17" height="17"
-    src="img/icons/${EVENT_TYPES[0]}.png" alt="Event type icon">
-  </label>
-  <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
-  `;
-};
-
-const eventTypeToggleMarkup = eventTypeToggle();
-
 const createEventTransferMarkup = (type, id = 1) => {
   return `<legend class="visually-hidden">Transfer</legend>
   <div class="event__type-item">
@@ -48,8 +36,20 @@ const createEventEditTemplate = (event) => {
     isFavorite,
   } = event;
 
-  const eventTransferMarkup = EVENT_TYPES.slice(0, 7).map((it) => createEventTransferMarkup(it)).join(`\n`);
-  const eventActivityMarkup = EVENT_TYPES.slice(7).map((it) => createEventActivityMarkup(it)).join(`\n`);
+  const eventTypeToggle = () => {
+    return `<label class="event__type  event__type-btn" for="event-type-toggle-1">
+    <span class="visually-hidden">Choose event type</span>
+    <img class="event__type-icon" width="17" height="17"
+    src="img/icons/${eventType.name}.png" alt="Event type icon">
+  </label>
+  <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+  `;
+  };
+
+  const eventTypeToggleMarkup = eventTypeToggle();
+
+  const eventTransferMarkup = EVENT_TYPES.slice(0, 7).map((it) => createEventTransferMarkup(it.name)).join(`\n`);
+  const eventActivityMarkup = EVENT_TYPES.slice(7).map((it) => createEventActivityMarkup(it.name)).join(`\n`);
 
   const createDestinationTime = () => {
     return `<div class="event__field-group  event__field-group--time">
@@ -102,7 +102,7 @@ const createEventEditTemplate = (event) => {
 
         <div class="event__field-group  event__field-group--destination">
           <label class="event__label  event__type-output" for="event-destination-${id}">
-            ${eventType} to
+            ${eventType.name} ${eventType.group === `Transfer` ? `to` : `in` }
           </label>
           <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.name}" list="destination-list-${id}">
           <datalist id="destination-list-${id}">

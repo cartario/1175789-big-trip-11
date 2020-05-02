@@ -1,5 +1,45 @@
-const EVENT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`,
-  `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
+const EVENT_TYPES = [
+  {
+    name: `Taxi`,
+    group: `Transfer`
+  },
+  {
+    name: `Bus`,
+    group: `Transfer`
+  },
+  {
+    name: `Train`,
+    group: `Transfer`
+  },
+  {
+    name: `Ship`,
+    group: `Transfer`
+  },
+  {
+    name: `Transport`,
+    group: `Transfer`
+  },
+  {
+    name: `Drive`,
+    group: `Transfer`
+  },
+  {
+    name: `Flight`,
+    group: `Transfer`
+  },
+  {
+    name: `Check-in`,
+    group: `Activity`
+  },
+  {
+    name: `Sightseeing`,
+    group: `Activity`
+  },
+  {
+    name: `Restaurant`,
+    group: `Activity`
+  }
+];
 
 const DESTINATION_POINTS = [`Amsterdam`, `Paris`, `Geneva`, `Moscow`, `Sochi`];
 
