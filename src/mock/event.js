@@ -22,30 +22,19 @@ const offerItems = [{
   price: 40,
 }];
 
-// генерит массив фотографий лимитированной длинны
-const generatePhotosArray = () => {
-  return new Array(getRandomInt(1, 20))
-    .fill(``);
+const generatePhotos = (count) => {
+  const arr = [];
+  for (let i = 0; i < count; i++) {
+    arr.push(`http://picsum.photos/248/152?r=${Math.random()}`);
+  }
+  return arr.slice(getRandomInt(0, count));
 };
 
-const photosArray = generatePhotosArray();
-
-// генерит структуру photos
-const generatePhotosObject = () => {
-  return photosArray.map(() => {
-    return {
-      src: `http://picsum.photos/248/152?r=${Math.random()}`,
-      description: getRandomArrayItem(DESCRIPTION_ITEMS),
-    };
-  });
-};
-
-// генерит структуру Destination
 const generateDestination = () => {
   return {
     name: getRandomArrayItem(DESTINATION_POINTS),
     description: getRandomArrayItem(DESCRIPTION_ITEMS),
-    photos: generatePhotosObject()};
+    photos: generatePhotos(10)};
 };
 
 // генерит общую структуру одного обьекта

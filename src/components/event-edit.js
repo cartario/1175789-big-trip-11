@@ -36,7 +36,9 @@ const createEventEditTemplate = (event) => {
     isFavorite,
   } = event;
 
-  const eventTypeToggle = (id) => {
+  const isShowingDestination = Math.random() > 0.5;
+
+  const eventTypeToggle = () => {
     return `<label class="event__type  event__type-btn" for="event-type-toggle-${id}">
     <span class="visually-hidden">Choose event type</span>
     <img class="event__type-icon" width="17" height="17"
@@ -46,7 +48,7 @@ const createEventEditTemplate = (event) => {
   `;
   };
 
-  const eventTypeToggleMarkup = eventTypeToggle(id);
+  const eventTypeToggleMarkup = eventTypeToggle();
 
   const eventTransferMarkup = EVENT_TYPES.slice(0, 7).map((it) => createEventTransferMarkup(it.name)).join(`\n`);
   const eventActivityMarkup = EVENT_TYPES.slice(7).map((it) => createEventActivityMarkup(it.name)).join(`\n`);
@@ -67,11 +69,11 @@ const createEventEditTemplate = (event) => {
 
   const destinationTimeMarkup = createDestinationTime();
 
-  const creatAvaibleOffers = (offer, price, index) => {
+  const creatAvaibleOffers = (offer, price) => {
     const isChecked = Math.random() > 0.5;
     return `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${index}-1" type="checkbox" name="event-offer-luggage" ${isChecked ? `checked` : ``}>
-        <label class="event__offer-label" for="event-offer-${index}-1">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-luggage" ${isChecked ? `checked` : ``}>
+        <label class="event__offer-label" for="event-offer-${id}">
           <span class="event__offer-title">${offer}</span>
           +
           €&nbsp;<span class="event__offer-price">${price}</span>
@@ -79,7 +81,33 @@ const createEventEditTemplate = (event) => {
       </div>`;
   };
 
-  const availableOffersMarkup = offers.map((it, i) => creatAvaibleOffers(it.title, it.price, i)).join(`\n`);
+  const availableOffersMarkup = offers.map((it) => creatAvaibleOffers(it.title, it.price)).join(`\n`);
+
+  const createDestinationMarkup = () => {
+    const createEventPhotos = (url) => {
+      return `<img class="event__photo" src="${url}" alt="Event photo">`;
+    };
+
+    const eventPhotosMarkup = destination.photos.map((it) => createEventPhotos(it)).join(`\n`);
+
+    return `${isShowingDestination ? `
+        <section class="event__section  event__section--destination">
+          <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+          <p class="event__destination-description">${destination.name}
+          is a city in ${destination.description}
+          </p>
+
+          <div class="event__photos-container">
+            <div class="event__photos-tape">
+
+              ${eventPhotosMarkup}
+
+            </div>
+          </div>
+        </section>` : ``}`;
+  };
+
+  const destinationMarkup = createDestinationMarkup();
 
   return (`<li class="trip-events__item"><form class="event  event--edit" action="#" method="post">
       <header class="event__header">
@@ -148,6 +176,9 @@ const createEventEditTemplate = (event) => {
 
           </div>
         </section>
+
+            ${destinationMarkup}
+
       </section>
     </form></li>`);
 };
