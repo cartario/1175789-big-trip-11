@@ -17,14 +17,15 @@ const createEventActivityMarkup = (type, id = 1) => {
     </div>`;
 };
 
-const createOptionsDestination = (city) => {
-  return `<option value="${city}"></option>
+const createOptionsDestination = (citi) => {
+  return `<option value="${citi}"></option>
     `;
 };
 
 const optionsDestinationMarkup = DESTINATION_POINTS.map((it) => createOptionsDestination(it)).join(`\n`);
 
-const createEventEditTemplate = (event) => {
+const createEventEditTemplate = (event, options) => {
+
   const {
     id,
     offers,
@@ -35,6 +36,9 @@ const createEventEditTemplate = (event) => {
     basePrice,
     isFavorite,
   } = event;
+
+  const {type, city, availableOffers} = options;
+
 
   const isShowingDestination = Math.random() > 0.5;
   const isOffersExist = offers.length > 0;
@@ -193,9 +197,18 @@ export default class EventEdit extends AbstractSmartComponent {
     this.setFavoriteClickHandler();
     this._subscribeOnEvents();
     this._submitHandler = null;
+    this._type = event.eventType.name;
+    this._city = event.destination.name;
+    this._availableOffers = event.eventType.offers;
+
   }
   getTemplate() {
-    return createEventEditTemplate(this._event);
+    return createEventEditTemplate(this._event, {
+      type: this._type,
+      city: this._city,
+      availableOffers: this._availableOffers,
+    });
+
   }
 
   setRollupBtnClickHandler(handler) {
@@ -237,5 +250,3 @@ export default class EventEdit extends AbstractSmartComponent {
     });
   }
 }
-
-

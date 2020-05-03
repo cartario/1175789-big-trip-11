@@ -77,6 +77,7 @@ export default class TripController {
 
       const pointController = new PointController(tripDayEventsList, this._onDataChange, this._onViewChange);
       pointController.render(event);
+      this._showedEventControllers = this._showedEventControllers.concat(event);
     }
   }
 
