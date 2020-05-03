@@ -1,4 +1,5 @@
 import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
+import {offersForTypes} from "../mock/event.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const createEventTransferMarkup = (type, id = 1) => {
@@ -241,6 +242,7 @@ export default class EventEdit extends AbstractSmartComponent {
     element.querySelectorAll(`.event__type-input`).forEach((input) => {
       input.addEventListener(`change`, (evt) => {
         this._event.eventType.name = evt.target.value;
+        this._event.eventType.offers = offersForTypes.find((it) => it.name === evt.target.value);
 
         this.rerender();
       });
