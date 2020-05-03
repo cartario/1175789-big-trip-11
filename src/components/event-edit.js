@@ -24,7 +24,7 @@ const createOptionsDestination = (citi) => {
 
 const optionsDestinationMarkup = DESTINATION_POINTS.map((it) => createOptionsDestination(it)).join(`\n`);
 
-const createEventEditTemplate = (event, options) => {
+const createEventEditTemplate = (event) => {
 
   const {
     id,
@@ -36,9 +36,6 @@ const createEventEditTemplate = (event, options) => {
     basePrice,
     isFavorite,
   } = event;
-
-  const {type, city, availableOffers} = options;
-
 
   const isShowingDestination = Math.random() > 0.5;
   const isOffersExist = offers.length > 0;

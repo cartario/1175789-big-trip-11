@@ -30,15 +30,18 @@ export default class PointController extends AbstractComponent {
   }
 
   render(event) {
+    const oldEventComponent = this._eventComponent;
+    const oldEventEditComponent = this._eventEditComponent;
+
     this._eventComponent = new EventComponent(event);
     this._eventEditComponent = new EventEditComponent(event);
 
     this._eventComponent.setRollupBtnClickHandler(() => {
-      this._replaceEditToEvent();
+      this._replaceEventToEdit();
     });
 
     this._eventEditComponent.setRollupBtnClickHandler(() => {
-      this._replaceEventToEdit();
+      this._replaceEditToEvent();
     });
 
     this._eventEditComponent.setFavoriteClickHandler(() => {
@@ -47,20 +50,26 @@ export default class PointController extends AbstractComponent {
       }));
     });
 
-    render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
+    if (oldEventEditComponent && oldEventComponent) {
+      replace(this._eventComponent, oldEventComponent);
+      replace(this._eventEditComponent, oldEventEditComponent);
+    } else {
+      render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
+    }
   }
 
   _replaceEventToEdit() {
-    replace(this._eventComponent, this._eventEditComponent);
+    this._onViewChange();
+    replace(this._eventEditComponent, this._eventComponent);
     document.addEventListener(`keydown`, this._onEscKeyDown);
     this._mode = Mode.EDIT;
   }
 
   _replaceEditToEvent() {
-    this._onViewChange();
-    replace(this._eventEditComponent, this._eventComponent);
+
+    replace(this._eventComponent, this._eventEditComponent);
     document.addEventListener(`keydown`, this._onEscKeyDown);
-    this._mode = Mode.DEFAULT;
+
   }
 
   setDefaultView() {
