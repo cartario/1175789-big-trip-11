@@ -32,13 +32,12 @@ export default class PointController extends AbstractComponent {
   render(event) {
     this._eventComponent = new EventComponent(event);
     this._eventEditComponent = new EventEditComponent(event);
+
     this._eventComponent.setRollupBtnClickHandler(() => {
       this._replaceEditToEvent();
-      this._mode = Mode.EDIT;
-
     });
 
-    this._eventComponent.setRollupBtnClickHandler(() => {
+    this._eventEditComponent.setRollupBtnClickHandler(() => {
       this._replaceEventToEdit();
     });
 

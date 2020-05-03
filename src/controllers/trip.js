@@ -40,6 +40,7 @@ export default class TripController {
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._showedEventControllers = [];
+
   }
 
   render(events) {
@@ -77,7 +78,8 @@ export default class TripController {
 
       const pointController = new PointController(tripDayEventsList, this._onDataChange, this._onViewChange);
       pointController.render(event);
-      this._showedEventControllers = this._showedEventControllers.concat(event);
+      this._showedEventControllers = this._showedEventControllers.concat(pointController);
+
     }
   }
 
@@ -105,3 +107,4 @@ export default class TripController {
   }
 
 }
+
