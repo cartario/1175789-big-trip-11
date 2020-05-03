@@ -247,5 +247,13 @@ export default class EventEdit extends AbstractSmartComponent {
         this.rerender();
       });
     });
+
+    element.querySelectorAll(`.event__input--destination`).forEach((input) => {
+      input.addEventListener(`change`, (evt) => {
+        this._event.destination.name = evt.target.value;
+
+        this.rerender();
+      });
+    });
   }
 }
