@@ -243,9 +243,14 @@ export default class EventEdit extends AbstractSmartComponent {
     element.querySelectorAll(`.event__type-input`).forEach((input) => {
       input.addEventListener(`change`, (evt) => {
         const newEventType = evt.target.value;
-        this._event.eventType.name = newEventType;
+        const newEventTypeObj = EVENT_TYPES.find((it) => it.name === newEventType);
+
+        this._event.eventType = {
+          name: newEventType,
+          group: newEventTypeObj.group,
+        };
+
         this._event.offers = EVENT_TYPES.find((it) => it.name === newEventType).offers;
-        this._event.offers.group = EVENT_TYPES.find((it) => it.name === newEventType).offers;
 
         this.rerender();
       });
