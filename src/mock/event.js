@@ -1,28 +1,6 @@
 import {EVENT_TYPES, DESTINATION_POINTS, DESCRIPTION_ITEMS} from "../const.js";
-import {getRandomInt, getRandomArray, getRandomArrayItem, getRandomTime} from "../utils/common.js";
+import {getRandomInt, getRandomArrayItem, getRandomTime} from "../utils/common.js";
 
-
-const offerItems = [{
-  title: `Order Uber`,
-  price: 20,
-}, {
-  title: `Add luggage`,
-  price: 30,
-}, {
-  title: `Switch to comfort class`,
-  price: 100,
-}, {
-  title: `Add meal`,
-  price: 15,
-}, {
-  title: `Choose seats`,
-  price: 5,
-}, {
-  title: `Travel by train`,
-  price: 40,
-}];
-
-export const offersForTypes = EVENT_TYPES.map((it) => Object.assign({}, it, {offers: getRandomArray(offerItems)}));
 
 const generatePhotos = (count) => {
   const arr = [];
@@ -43,8 +21,8 @@ const generateDestination = () => {
 const generateEvent = () => {
   return {
     id: getRandomInt(0, 10),
-    eventType: getRandomArrayItem(offersForTypes),
-    offers: getRandomArrayItem(offersForTypes).offers,
+    eventType: getRandomArrayItem(EVENT_TYPES),
+    offers: getRandomArrayItem(EVENT_TYPES).offers,
     dateFrom: getRandomTime(),
     dateTo: getRandomTime(),
     destination: generateDestination(),
@@ -52,8 +30,6 @@ const generateEvent = () => {
     isFavorite: Math.random() > 0.5,
   };
 };
-
-// генерит пустой массив обьектов общей структуры случайной длины
 
 const dataIsEmptySize = 0;
 

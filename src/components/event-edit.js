@@ -1,5 +1,5 @@
 import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
-import {offersForTypes} from "../mock/event.js";
+
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const createEventTransferMarkup = (type, id = 1) => {
@@ -40,6 +40,7 @@ const createEventEditTemplate = (event) => {
 
   const isShowingDestination = Math.random() > 0.5;
   const isOffersExist = offers.length > 0;
+  const preposition = eventType.group === `Transfer` ? `to` : `in`;
 
   const eventTypeToggle = () => {
     return `<label class="event__type  event__type-btn" for="event-type-toggle-${id}">
@@ -133,7 +134,7 @@ const createEventEditTemplate = (event) => {
 
         <div class="event__field-group  event__field-group--destination">
           <label class="event__label  event__type-output" for="event-destination-${id}">
-            ${eventType.name} ${eventType.group === `Transfer` ? `to` : `in` }
+            ${eventType.name} ${preposition}
           </label>
           <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.name}" list="destination-list-${id}">
           <datalist id="destination-list-${id}">
@@ -241,8 +242,10 @@ export default class EventEdit extends AbstractSmartComponent {
 
     element.querySelectorAll(`.event__type-input`).forEach((input) => {
       input.addEventListener(`change`, (evt) => {
-        this._event.eventType.name = evt.target.value;
-        this._event.eventType.offers = offersForTypes.find((it) => it.name === evt.target.value);
+        const newEventType = evt.target.value;
+        this._event.eventType.name = newEventType;
+        this._event.offers = EVENT_TYPES.find((it) => it.name === newEventType).offers;
+        this._event.offers.group = EVENT_TYPES.find((it) => it.name === newEventType).offers;
 
         this.rerender();
       });
@@ -250,7 +253,8 @@ export default class EventEdit extends AbstractSmartComponent {
 
     element.querySelectorAll(`.event__input--destination`).forEach((input) => {
       input.addEventListener(`change`, (evt) => {
-        this._event.destination.name = evt.target.value;
+        const newCity = evt.target.value;
+        this._event.destination.name = newCity;
 
         this.rerender();
       });
