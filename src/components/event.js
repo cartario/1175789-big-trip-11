@@ -1,4 +1,4 @@
-import {getDateTimeFormat, getTimeFormat, getTimeFormatDHM} from "../utils/common.js";
+import {formatTime, formatDate, getFormattedTimeDuration} from "../utils/common.js";
 import AbstractComponent from "./abstract-component.js";
 
 const createTripEvent = (event) => {
@@ -12,11 +12,12 @@ const createTripEvent = (event) => {
   } = event;
 
   const isDateCorrect = (dateTo - dateFrom) > 0;
-  const startTime = getTimeFormat(dateFrom);
-  const dateStart = getDateTimeFormat(dateFrom);
-  const endTime = getTimeFormat(dateTo);
-  const dateEnd = getDateTimeFormat(dateTo);
-  const durationTime = isDateCorrect ? getTimeFormatDHM(dateTo - dateFrom) : `дата окончания меньше даты начала`;
+  const startTime = formatTime(dateFrom);
+  const endTime = formatTime(dateTo);
+  const dateStart = formatDate(dateFrom);
+  const dateEnd = formatDate(dateTo);
+
+  const durationTime = isDateCorrect ? getFormattedTimeDuration(dateFrom, dateTo) : `дата окончания меньше даты начала`;
 
   const selectedOffers = (title, price) => {
     return `<li class="event__offer">
