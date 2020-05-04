@@ -1,4 +1,5 @@
 import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
+// import {formatDate} from "../utils/common.js";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
@@ -60,6 +61,7 @@ const createEventEditTemplate = (event) => {
   const eventActivityMarkup = EVENT_TYPES.slice(7).map((it) => createEventActivityMarkup(it.name)).join(`\n`);
 
   const createDestinationTime = () => {
+
     return `<div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-${id}">
           From
@@ -195,21 +197,18 @@ export default class EventEdit extends AbstractSmartComponent {
   constructor(event) {
     super();
     this._event = event;
+    this._startDate = event.dateFrom;
+    this._endDate = event.dateTo;
     this.setFavoriteClickHandler();
     this._subscribeOnEvents();
     this._submitHandler = null;
     this._rollupBtnClickHandler = null;
-    this._type = event.eventType.name;
-    this._city = event.destination.name;
-    this._availableOffers = event.eventType.offers;
+    this._flatpickr = null;
+    this._applyFlatpickr();
 
   }
   getTemplate() {
-    return createEventEditTemplate(this._event, {
-      type: this._type,
-      city: this._city,
-      availableOffers: this._availableOffers,
-    });
+    return createEventEditTemplate(this._event);
 
   }
 
@@ -240,6 +239,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
   rerender() {
     super.rerender();
+    this._applyFlatpickr();
 
   }
 
@@ -269,6 +269,29 @@ export default class EventEdit extends AbstractSmartComponent {
 
         this.rerender();
       });
+    });
+  }
+
+  _applyFlatpickr() {
+
+    const dateFormat = `d/m/y H:i`;
+    const enableTime = true;
+    if (this._flatpickr) {
+      this._flatpickr.destroy();
+      this._flatpickr = null;
+    }
+
+    const dateElements = this.getElement().querySelectorAll(`.event__input--time`);
+    this._flatpickr = flatpickr(dateElements[0], {
+      enableTime,
+      dateFormat,
+      defaultDate: this._startDate,
+    });
+
+    this._flatpickr = flatpickr(dateElements[1], {
+      enableTime,
+      dateFormat,
+      defaultDate: this._endDate,
     });
   }
 }
