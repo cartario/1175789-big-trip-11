@@ -46,7 +46,7 @@ const createEventEditTemplate = (event) => {
     return `<label class="event__type  event__type-btn" for="event-type-toggle-${id}">
     <span class="visually-hidden">Choose event type</span>
     <img class="event__type-icon" width="17" height="17"
-    src="img/icons/${eventType.name}.png" alt="Event type icon">
+    src="img/icons/${eventType.name.toLowerCase()}.png" alt="Event type icon">
   </label>
   <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox">
   `;
@@ -196,6 +196,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this.setFavoriteClickHandler();
     this._subscribeOnEvents();
     this._submitHandler = null;
+    this._rollupBtnClickHandler = null;
     this._type = event.eventType.name;
     this._city = event.destination.name;
     this._availableOffers = event.eventType.offers;
@@ -212,6 +213,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
   setRollupBtnClickHandler(handler) {
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
+    this._rollupBtnClickHandler = handler;
   }
 
   setFavoriteClickHandler(handler) {
@@ -221,20 +223,22 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   setSubmitHandler(handler) {
-    this.getElement().addEventListener(`click`, handler);
-    this.getElement()
-      .addEventListener(`submit`, handler);
+
+    this.getElement().addEventListener(`submit`, handler);
 
     this._submitHandler = handler;
+
   }
 
   recoveryListeners() {
     this.setSubmitHandler(this._submitHandler);
     this._subscribeOnEvents();
+    this.setRollupBtnClickHandler(this._rollupBtnClickHandler);
   }
 
   rerender() {
     super.rerender();
+
   }
 
   _subscribeOnEvents() {
