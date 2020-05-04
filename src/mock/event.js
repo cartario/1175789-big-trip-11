@@ -1,51 +1,20 @@
 import {EVENT_TYPES, DESTINATION_POINTS, DESCRIPTION_ITEMS} from "../const.js";
-import {getRandomInt, getRandomArrayItem, getShuffleArray, getRandomTime} from "../utils/common.js";
+import {getRandomInt, getRandomArrayItem, getRandomTime} from "../utils/common.js";
 
 
-const offerItems = [{
-  title: `Order Uber`,
-  price: 20,
-}, {
-  title: `Add luggage`,
-  price: 30,
-}, {
-  title: `Switch to comfort class`,
-  price: 100,
-}, {
-  title: `Add meal`,
-  price: 15,
-}, {
-  title: `Choose seats`,
-  price: 5,
-}, {
-  title: `Travel by train`,
-  price: 40,
-}];
-
-// генерит массив фотографий лимитированной длинны
-const generatePhotosArray = () => {
-  return new Array(getRandomInt(1, 20))
-    .fill(``);
+const generatePhotos = (count) => {
+  const arr = [];
+  for (let i = 0; i < count; i++) {
+    arr.push(`http://picsum.photos/248/152?r=${Math.random()}`);
+  }
+  return arr.slice(getRandomInt(0, count));
 };
 
-const photosArray = generatePhotosArray();
-
-// генерит структуру photos
-const generatePhotosObject = () => {
-  return photosArray.map(() => {
-    return {
-      src: `http://picsum.photos/248/152?r=${Math.random()}`,
-      description: getRandomArrayItem(DESCRIPTION_ITEMS),
-    };
-  });
-};
-
-// генерит структуру Destination
 const generateDestination = () => {
   return {
     name: getRandomArrayItem(DESTINATION_POINTS),
     description: getRandomArrayItem(DESCRIPTION_ITEMS),
-    photos: generatePhotosObject()};
+    photos: generatePhotos(10)};
 };
 
 // генерит общую структуру одного обьекта
@@ -53,7 +22,7 @@ const generateEvent = () => {
   return {
     id: getRandomInt(0, 10),
     eventType: getRandomArrayItem(EVENT_TYPES),
-    offers: getShuffleArray(offerItems, getRandomInt(0, offerItems.length)),
+    offers: getRandomArrayItem(EVENT_TYPES).offers,
     dateFrom: getRandomTime(),
     dateTo: getRandomTime(),
     destination: generateDestination(),
@@ -61,8 +30,6 @@ const generateEvent = () => {
     isFavorite: Math.random() > 0.5,
   };
 };
-
-// генерит пустой массив обьектов общей структуры случайной длины
 
 const dataIsEmptySize = 0;
 

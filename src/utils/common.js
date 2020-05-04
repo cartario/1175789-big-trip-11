@@ -46,6 +46,10 @@ const getShuffleArray = (arr, value) => {
   return copyArr.sort(() => Math.random() - 0.5).slice(0, value);
 };
 
+export const getRandomArray = (array) => {
+  return (array) ? array.slice(0, getRandomInt(-1, array.length) + 1) : ``;
+};
+
 // генерит случайные dateFrom, dateTo
 const getRandomTime = () => {
   const targetTime = new Date();

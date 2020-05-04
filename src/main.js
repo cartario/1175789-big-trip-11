@@ -1,7 +1,7 @@
 import BoardComponent from "./components/board.js";
 import FiltersComponent from "./components/filters.js";
 import TripTabsComponent from "./components/trip-tabs.js";
-import TripController from "./controllers/board.js";
+import TripController from "./controllers/trip.js";
 import {generateEvents} from "./mock/event.js";
 import {generateFilters} from "./mock/filter.js";
 import {RenderPosition, render} from "./utils/render.js";
