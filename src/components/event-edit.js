@@ -1,4 +1,6 @@
 import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
 
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
