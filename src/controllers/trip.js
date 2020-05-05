@@ -29,8 +29,9 @@ const getSortedEventsByDate = (events) => {
 };
 
 export default class TripController {
-  constructor(container) {
+  constructor(container, pointsModel) {
     this._container = container;
+    this._pointsModel = pointsModel;
     this._events = [];
     this._tripDaysComponent = new TripDaysComponent();
     this._noEventComponent = new NoEventsComponent();
@@ -43,13 +44,15 @@ export default class TripController {
 
   }
 
-  render(events) {
-    this._events = events;
-    const tripMain = document.querySelector(`.trip-main`);
-    const isEventsExist = !!this._events;
-    const sortedEventsByDate = isEventsExist ? getSortedEventsByDate(this._events) : [];
+  render() {
+    // заполняет данными из модели
+    const events = this._pointsModel.getPoints();
 
-    if (!isEventsExist) {
+    const tripMain = document.querySelector(`.trip-main`);
+    const isEventsExist = !!events;
+    const sortedEventsByDate = isEventsExist ? getSortedEventsByDate(events) : [];
+
+    if (events.length === 0) {
       render(this._container.getElement(), this._noEventComponent, RenderPosition.BEFOREEND);
       return;
     }
@@ -85,27 +88,21 @@ export default class TripController {
 
   _onSortTypeChange(sortType) {
     this._tripDaysComponent.getElement().innerHTML = ``;
-    const sortedEvents = getSortedType(this._events, sortType, 0, this._events.length);
+    const sortedEvents = getSortedType(this._pointsModel.getPoints(), sortType, 0, this._pointsModel.getPoints().length);
     this.renderTripDays(sortedEvents);
 
   }
 
   _onDataChange(pointController, oldData, newData) {
-    const index = this._events.findIndex((it) => it === oldData);
+    const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
 
-    if (index === -1) {
-      return;
+    if (isSuccess) {
+      pointController.render(newData);
     }
-
-    this._events = [].concat(this._events.slice(0, index), newData, this._events.slice(index + 1));
-
-    pointController.render(this._events[index]);
   }
 
   _onViewChange() {
     this._showedEventControllers.forEach((it) => it.setDefaultView());
-
   }
-
 }
 
