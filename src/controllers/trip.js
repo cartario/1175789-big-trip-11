@@ -6,7 +6,6 @@ import TripDayComponent from "../components/trip-day.js";
 import NoEventsComponent from "../components/no-events.js";
 import PointController from "./point.js";
 
-
 const getSortedType = (eventsList, sortType, from, to) => {
   let sortedEvents = [];
   const showingEvents = eventsList.slice();
