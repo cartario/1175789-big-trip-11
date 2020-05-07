@@ -1,5 +1,11 @@
 import {getRandomArray} from "./utils/common.js";
 
+export const FilterType = {
+  EVERYTHING: `everything`,
+  PAST: `past`,
+  FUTURE: `future`,
+}
+
 const offers = [{
   title: `Order Uber`,
   price: 20,

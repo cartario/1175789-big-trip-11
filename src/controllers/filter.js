@@ -1,11 +1,9 @@
 import FiltersComponent from "../components/filters.js";
 import {RenderPosition, render} from "../utils/render.js";
+import {getEventsByFilter} from "../utils/filter.js";
+import {FilterType} from "../const.js";
 
-const FilterType = {
-  EVERYTHING: `everything`,
-  PAST: `past`,
-  FUTURE: `future`,
-}
+
 
 export default class FilterController {
   constructor(container, pointsModel) {
@@ -13,6 +11,9 @@ export default class FilterController {
     this._pointsModel = pointsModel;
     this._filterComponent = null;
     this._activeFilterType = FilterType.EVERYTHING;
+    this._onDataChange = this._onDataChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
+    this._pointsModel.setDataChangeHandler(this._onDataChange);
 
   }
 
@@ -25,8 +26,28 @@ export default class FilterController {
       }
     });
 
-    this._filterComponent = new FiltersComponent(filters);
+    const oldComponent = this._filterComponent;
 
-    render(this._container, this._filterComponent, RenderPosition.BEFOREEND);
+    this._filterComponent = new FiltersComponent(filters);
+    this._filterComponent.setFilterChangeHandler(this._onFilterChange);
+
+    if (oldComponent) {
+
+      replace (this._filterComponent, oldComponent)
+
+    } else {
+
+      render(this._container, this._filterComponent, RenderPosition.BEFOREEND);
+
+    }
+  }
+
+  _onDataChange() {
+    this.render();
+  }
+
+  _onFilterChange(filterType) {
+    this._activeFilterType = filterType;
+    this._pointsModel.setFilter(filterType);
   }
 }

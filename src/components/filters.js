@@ -31,4 +31,12 @@ export default class Filters extends AbstractComponent {
   getTemplate() {
     return createTripFiltersTemplate(this._filters);
   }
+
+  setFilterChangeHandler(handler) {
+    this.getElement().addEventListener(`change`, (evt) => {
+      handler(evt.target.value)
+console.log(`ok`)
+    });
+
+  }
 }

@@ -1,7 +1,7 @@
 import AbstractComponent from "../components/abstract-component.js";
 import EventComponent from "../components/event.js";
 import EventEditComponent from "../components/event-edit.js";
-import {RenderPosition, render, replace} from "../utils/render.js";
+import {RenderPosition, render, replace, remove} from "../utils/render.js";
 
 const Mode = {
   DEFAULT: `default`,
@@ -76,5 +76,11 @@ export default class PointController extends AbstractComponent {
     if (this._mode !== Mode.DEFAULT) {
       this._replaceEditToEvent();
     }
+  }
+
+  destroy() {
+    // remove(this._eventEditComponent);
+    // remove(this._eventComponent);
+    // document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 }

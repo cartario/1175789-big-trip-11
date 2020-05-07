@@ -1,4 +1,4 @@
-import {RenderPosition, render} from "../utils/render.js";
+import {RenderPosition, render, remove} from "../utils/render.js";
 import SortComponent, {SortType} from "../components/sort.js";
 import TripDaysComponent from "../components/trip-days.js";
 import TripInfoComponent from "../components/trip-info.js";
@@ -40,7 +40,8 @@ export default class TripController {
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._showedEventControllers = [];
-
+    this._onFilterChange = this._onFilterChange.bind(this);
+    this._pointsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
   render() {
@@ -92,6 +93,10 @@ export default class TripController {
 
   }
 
+  _onViewChange() {
+    this._showedEventControllers.forEach((it) => it.setDefaultView());
+  }
+
   _onDataChange(pointController, oldData, newData) {
     const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
 
@@ -100,8 +105,17 @@ export default class TripController {
     }
   }
 
-  _onViewChange() {
-    this._showedEventControllers.forEach((it) => it.setDefaultView());
+  _onFilterChange() {
+    this._showedEventControllers.forEach((eventController) => eventController.destroy());
   }
+
+  // _updateEvents() {
+  //   this._removeEvents();
+  // }
+
+  // _removeEvents() {
+  //   this._showedEventControllers.forEach((eventController) => eventController.destroy());
+  //   this._showedEventControllers = [];
+  // }
 }
 
