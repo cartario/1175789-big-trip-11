@@ -4,6 +4,7 @@ import TripDaysComponent from "../components/trip-days.js";
 import TripInfoComponent from "../components/trip-info.js";
 import TripDayComponent from "../components/trip-day.js";
 import NoEventsComponent from "../components/no-events.js";
+import FilterController from "./filter.js";
 import PointController from "./point.js";
 
 const getSortedType = (eventsList, sortType, from, to) => {
@@ -35,16 +36,22 @@ export default class TripController {
     this._tripDaysComponent = new TripDaysComponent();
     this._noEventComponent = new NoEventsComponent();
     this._sortComponent = new SortComponent();
+    this._tripInfoComponent = null;
+
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._showedEventControllers = [];
+    this._filterController = null;
+
     this._onFilterChange = this._onFilterChange.bind(this);
     this._pointsModel.setFilterChangeHandler(this._onFilterChange);
+
   }
 
   render() {
+    const tripControlsElement = document.querySelector(`.trip-controls`);
     // заполняет данными из модели
     const events = this._pointsModel.getPoints();
 
@@ -57,9 +64,14 @@ export default class TripController {
       return;
     }
 
+    this._filterController = new FilterController(tripControlsElement, this._pointsModel);
+    this._filterController.render();
+
     render(this._container.getElement(), this._sortComponent, RenderPosition.BEFOREEND);
     render(this._container.getElement(), this._tripDaysComponent, RenderPosition.BEFOREEND);
-    render(tripMain, new TripInfoComponent(events), RenderPosition.AFTERBEGIN);
+
+    this._tripInfoComponent = new TripInfoComponent(events);
+    render(tripMain, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
     this.renderTripDays(sortedEventsByDate);
   }
 
@@ -106,16 +118,25 @@ export default class TripController {
   }
 
   _onFilterChange() {
-    this._showedEventControllers.forEach((eventController) => eventController.destroy());
+    this._updateEvents();
   }
 
-  // _updateEvents() {
-  //   this._removeEvents();
-  // }
+  _updateEvents() {
+    this._removeEvents();
+    this.render();
+  }
 
-  // _removeEvents() {
-  //   this._showedEventControllers.forEach((eventController) => eventController.destroy());
-  //   this._showedEventControllers = [];
-  // }
+  _removeEvents() {
+    this._showedEventControllers.forEach((eventController) => eventController.destroy());
+    this.destroy();
+    this._showedEventControllers = [];
+  }
+
+  destroy() {
+    remove(this._tripDaysComponent);
+    remove(this._noEventComponent);
+    remove(this._tripInfoComponent);
+    // this._filterController.destroy();
+  }
 }
 

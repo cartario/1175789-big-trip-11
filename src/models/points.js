@@ -36,22 +36,21 @@ export default class Points {
     return true;
   }
 
-  _callHandlers(handlers) {
-    handlers.forEach((handler) => handler());
+  setDataChangeHandler(handler) {
+    this._dataChangeHandlers.push(handler);
   }
 
   setFilter(filterType) {
     this._activeFilterType = filterType;
-    this._callHandlers(this._filterChangeHandlers);
 
+    this._callHandlers(this._filterChangeHandlers);
   }
 
   setFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
-
   }
 
-  setDataChangeHandler(handler) {
-    this._dataChangeHandlers.push(handler);
+  _callHandlers(handlers) {
+    handlers.forEach((handler) => handler());
   }
 }

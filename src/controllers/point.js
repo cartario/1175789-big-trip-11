@@ -79,8 +79,8 @@ export default class PointController extends AbstractComponent {
   }
 
   destroy() {
-    // remove(this._eventEditComponent);
-    // remove(this._eventComponent);
-    // document.removeEventListener(`keydown`, this._onEscKeyDown);
+    remove(this._eventEditComponent);
+    remove(this._eventComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 }

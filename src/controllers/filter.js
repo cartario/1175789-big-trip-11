@@ -1,29 +1,27 @@
 import FiltersComponent from "../components/filters.js";
-import {RenderPosition, render} from "../utils/render.js";
+import {RenderPosition, render, replace, remove} from "../utils/render.js";
 import {getEventsByFilter} from "../utils/filter.js";
 import {FilterType} from "../const.js";
 
-
-
 export default class FilterController {
-  constructor(container, pointsModel) {
+  constructor(container, model) {
     this._container = container;
-    this._pointsModel = pointsModel;
     this._filterComponent = null;
     this._activeFilterType = FilterType.EVERYTHING;
     this._onDataChange = this._onDataChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
-    this._pointsModel.setDataChangeHandler(this._onDataChange);
-
+    this._pointsModel = model;
   }
 
   render() {
+    const allEvents = this._pointsModel.getAllPoints();
     const filters = Object.values(FilterType).map((filterType) => {
       return {
         name: filterType,
-        count: ``,
+        count: getEventsByFilter(allEvents, filterType).length,
         checked: filterType === this._activeFilterType,
-      }
+      };
+
     });
 
     const oldComponent = this._filterComponent;
@@ -33,7 +31,7 @@ export default class FilterController {
 
     if (oldComponent) {
 
-      replace (this._filterComponent, oldComponent)
+      replace(this._filterComponent, oldComponent);
 
     } else {
 
@@ -49,5 +47,9 @@ export default class FilterController {
   _onFilterChange(filterType) {
     this._activeFilterType = filterType;
     this._pointsModel.setFilter(filterType);
+  }
+
+  destroy() {
+    remove(this._filterComponent);
   }
 }
