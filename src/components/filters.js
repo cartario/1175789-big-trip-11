@@ -37,6 +37,5 @@ export default class Filters extends AbstractComponent {
       handler(evt.target.value);
 
     });
-
   }
 }

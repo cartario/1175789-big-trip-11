@@ -1,5 +1,4 @@
 import BoardComponent from "./components/board.js";
-import TripTabsComponent from "./components/trip-tabs.js";
 import TripController from "./controllers/trip.js";
 import PointsModel from "./models/points.js";
 import {generateEvents} from "./mock/event.js";
@@ -21,12 +20,8 @@ const boardComponent = new BoardComponent();
 
 // связывает главный контроллер и модель
 const tripController = new TripController(boardComponent, pointsModel);
-// const filterController = new FilterController(tripControlsElement, pointsModel);
 
 render(boardContainer, boardComponent, RenderPosition.BEFOREEND);
-render(tripControlsElement, new TripTabsComponent(), RenderPosition.BEFOREEND);
 
 tripController.render(events);
-// filterController.render();
-
-
+tripController.renderHeader(tripControlsElement);

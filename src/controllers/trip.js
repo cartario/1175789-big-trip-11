@@ -5,6 +5,7 @@ import TripInfoComponent from "../components/trip-info.js";
 import TripDayComponent from "../components/trip-day.js";
 import NoEventsComponent from "../components/no-events.js";
 import FilterController from "./filter.js";
+import TripTabsComponent from "../components/trip-tabs.js";
 import PointController from "./point.js";
 
 const getSortedType = (eventsList, sortType, from, to) => {
@@ -50,8 +51,14 @@ export default class TripController {
 
   }
 
+  renderHeader(tripControlsElement) {
+    this._filterController = new FilterController(tripControlsElement, this._pointsModel);
+
+    render(tripControlsElement, new TripTabsComponent(), RenderPosition.BEFOREEND);
+    this._filterController.render();
+  }
+
   render() {
-    const tripControlsElement = document.querySelector(`.trip-controls`);
     // заполняет данными из модели
     const events = this._pointsModel.getPoints();
 
@@ -63,9 +70,6 @@ export default class TripController {
       render(this._container.getElement(), this._noEventComponent, RenderPosition.BEFOREEND);
       return;
     }
-
-    this._filterController = new FilterController(tripControlsElement, this._pointsModel);
-    this._filterController.render();
 
     render(this._container.getElement(), this._sortComponent, RenderPosition.BEFOREEND);
     render(this._container.getElement(), this._tripDaysComponent, RenderPosition.BEFOREEND);
@@ -102,7 +106,6 @@ export default class TripController {
     this._tripDaysComponent.getElement().innerHTML = ``;
     const sortedEvents = getSortedType(this._pointsModel.getPoints(), sortType, 0, this._pointsModel.getPoints().length);
     this.renderTripDays(sortedEvents);
-
   }
 
   _onViewChange() {
@@ -119,6 +122,7 @@ export default class TripController {
 
   _onFilterChange() {
     this._updateEvents();
+    this._filterController.render();
   }
 
   _updateEvents() {
@@ -136,7 +140,6 @@ export default class TripController {
     remove(this._tripDaysComponent);
     remove(this._noEventComponent);
     remove(this._tripInfoComponent);
-    // this._filterController.destroy();
   }
 }
 

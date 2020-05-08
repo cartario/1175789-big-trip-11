@@ -13,13 +13,17 @@ export default class Points {
     return getEventsByFilter(this._points, this._activeFilterType);
   }
 
+  setDataChangeHandler(handler) {
+    this._dataChangeHandlers.push(handler);
+  }
+
   getAllPoints() {
     return this._points;
   }
 
   setPoints(points) {
     this._points = Array.from(points);
-    // this._callHandlers(this._dataChangeHandlers);
+    this._callHandlers(this._dataChangeHandlers);
   }
 
   updatePoint(id, point) {

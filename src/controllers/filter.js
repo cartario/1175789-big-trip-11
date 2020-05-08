@@ -1,5 +1,5 @@
 import FiltersComponent from "../components/filters.js";
-import {RenderPosition, render, replace, remove} from "../utils/render.js";
+import {RenderPosition, render, replace} from "../utils/render.js";
 import {getEventsByFilter} from "../utils/filter.js";
 import {FilterType} from "../const.js";
 
@@ -11,6 +11,7 @@ export default class FilterController {
     this._onDataChange = this._onDataChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
     this._pointsModel = model;
+    this._pointsModel.setDataChangeHandler(this._onDataChange);
   }
 
   render() {
@@ -47,9 +48,5 @@ export default class FilterController {
   _onFilterChange(filterType) {
     this._activeFilterType = filterType;
     this._pointsModel.setFilter(filterType);
-  }
-
-  destroy() {
-    remove(this._filterComponent);
   }
 }
