@@ -23,5 +23,5 @@ const tripController = new TripController(boardComponent, pointsModel);
 
 render(boardContainer, boardComponent, RenderPosition.BEFOREEND);
 
-tripController.render(events);
+tripController.render();
 tripController.renderHeader(tripControlsElement);

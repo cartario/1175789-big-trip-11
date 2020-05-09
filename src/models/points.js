@@ -40,7 +40,7 @@ export default class Points {
   }
 
   updatePoint(id, point) {
-    const index = this._points.find((it) => it.id === id);
+    const index = this._points.findIndex((it) => it.id === id);
 
     if (index === -1) {
       return false;
