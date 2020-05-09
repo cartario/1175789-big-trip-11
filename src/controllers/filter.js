@@ -30,6 +30,7 @@ export default class FilterController {
     this._filterComponent = new FiltersComponent(filters);
     this._filterComponent.setFilterChangeHandler(this._onFilterChange);
 
+
     if (oldComponent) {
 
       replace(this._filterComponent, oldComponent);
@@ -48,5 +49,6 @@ export default class FilterController {
   _onFilterChange(filterType) {
     this._activeFilterType = filterType;
     this._pointsModel.setFilter(filterType);
+
   }
 }
