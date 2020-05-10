@@ -3,9 +3,20 @@ import EventComponent from "../components/event.js";
 import EventEditComponent from "../components/event-edit.js";
 import {RenderPosition, render, replace, remove} from "../utils/render.js";
 
-const Mode = {
+export const Mode = {
   DEFAULT: `default`,
   EDIT: `edit`,
+};
+
+export const EmptyEvent = {
+  id: `default`,
+  eventType: `default`,
+  offers: `default`,
+  dateFrom: `default`,
+  dateTo: `default`,
+  destination: `default`,
+  basePrice: `default`,
+  isFavorite: false,
 };
 
 export default class PointController extends AbstractComponent {

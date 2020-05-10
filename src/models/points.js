@@ -51,4 +51,22 @@ export default class Points {
 
     return true;
   }
+
+  removeEvent(id) {
+    const index = this._points.findIndex((it) => (it.id === id));
+
+    if (index === -1) {
+      return false;
+    }
+
+    this._points = [].concat(this._points.slice(0, index));
+    this._callHandlers(this._dataChangeHandlers);
+
+    return true;
+  }
+
+  addEvent(point) {
+    this._points = [].concat(point, this._points);
+    this._callHandlers(this._dataChangeHandlers);
+  }
 }

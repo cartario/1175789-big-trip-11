@@ -6,7 +6,7 @@ import TripDayComponent from "../components/trip-day.js";
 import NoEventsComponent from "../components/no-events.js";
 import FilterController from "./filter.js";
 import TripTabsComponent from "../components/trip-tabs.js";
-import PointController from "./point.js";
+import PointController, {Mode as EventControllerMode, EmptyEvent} from "./point.js";
 
 const getSortedType = (eventsList, sortType, from, to) => {
   let sortedEvents = [];
@@ -49,7 +49,6 @@ export default class TripController {
 
     this._onFilterChange = this._onFilterChange.bind(this);
     this._pointsModel.setFilterChangeHandler(this._onFilterChange);
-    this._pointsModel.setDataChangeHandler(this._onDataChange);
 
   }
 
@@ -88,6 +87,10 @@ export default class TripController {
     this._tripInfoComponent = new TripInfoComponent(events);
     render(tripMain, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
     this.renderTripDays(sortedEventsByDate);
+
+    console.log(this._pointsModel._points);
+    this._pointsModel.addEvent(EmptyEvent);
+    console.log(this._pointsModel._points);
   }
 
   renderTripDays(sortedEventsByDate) {
@@ -125,10 +128,26 @@ export default class TripController {
   }
 
   _onDataChange(pointController, oldData, newData) {
-    const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
-
-    if (isSuccess) {
-      pointController.render(newData);
+    // добавление
+    if (newData === EmptyEvent) {
+      this._creatingEvent = null;
+      if (newData = null) {
+        pointController.destroy();
+        this._updateEvents();
+      } else {
+        this._pointsModel.addEvent(newData);
+        pointController.render(newData, EventControllerMode.DEFAULT);
+      }
+      // удаление
+    } else if (newData === null) {
+      this._pointsModel.removeEvent(oldData.id);
+      this._updateEvents();
+      // обновление
+    } else {
+      const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
+      if (isSuccess) {
+        pointController.render(newData, EventControllerMode.DEFAULT);
+      }
     }
   }
 
