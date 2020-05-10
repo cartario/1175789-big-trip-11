@@ -88,9 +88,9 @@ export default class TripController {
     render(tripMain, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
     this.renderTripDays(sortedEventsByDate);
 
-    console.log(this._pointsModel._points);
-    this._pointsModel.addEvent(EmptyEvent);
-    console.log(this._pointsModel._points);
+    // console.log(this._pointsModel._points);
+    // this._pointsModel.addEvent(EmptyEvent);
+    // console.log(this._pointsModel._points);
   }
 
   renderTripDays(sortedEventsByDate) {
@@ -149,6 +149,8 @@ export default class TripController {
         pointController.render(newData, EventControllerMode.DEFAULT);
       }
     }
+
+    console.log(this._pointsModel)
   }
 
   _onFilterChange() {

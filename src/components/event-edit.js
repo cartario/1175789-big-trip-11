@@ -1,9 +1,20 @@
 import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
-// import {formatDate} from "../utils/common.js";
+// import {parseFormData} from "../utils/common.js";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
 import AbstractSmartComponent from "./abstract-smart-component.js";
+
+const parseFormData = (formData) => {
+  return {
+    destination: formData.get(`event-destination`),
+    offer: !!(formData.get(`event-offer-luggage`)),
+    dateFrom: formData.get(`event-start-time`),
+    dateTo: formData.get(`event-end-time`),
+    basePrice: formData.get(`event-price`),
+    isFavorite: !!(formData.get(`event-favorite`)),
+  };
+};
 
 const createEventTransferMarkup = (type, id = 1) => {
   return `<legend class="visually-hidden">Transfer</legend>
@@ -202,11 +213,12 @@ export default class EventEdit extends AbstractSmartComponent {
     this.setFavoriteClickHandler();
     this._subscribeOnEvents();
     this._submitHandler = null;
+    this._deleteButtonClickHandler = null;
     this._rollupBtnClickHandler = null;
     this._flatpickr = null;
     this._applyFlatpickr();
-
   }
+
   getTemplate() {
     return createEventEditTemplate(this._event);
 
@@ -220,21 +232,23 @@ export default class EventEdit extends AbstractSmartComponent {
   setFavoriteClickHandler(handler) {
     this.getElement().querySelector(`.event__favorite-icon`)
     .addEventListener(`click`, handler);
-
   }
 
-  setSubmitHandler(handler) {
-
-    this.getElement().addEventListener(`submit`, handler);
-
+  setSubmitClickHandler(handler) {
+    this.getElement().querySelector(`form`).addEventListener(`submit`, handler);
     this._submitHandler = handler;
+  }
 
+  setDeleteButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, handler);
+    this._deleteButtonClickHandler = handler;
   }
 
   recoveryListeners() {
-    this.setSubmitHandler(this._submitHandler);
+    this.setSubmitClickHandler(this._submitHandler);
     this._subscribeOnEvents();
     this.setRollupBtnClickHandler(this._rollupBtnClickHandler);
+      this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
   }
 
   rerender() {
@@ -260,6 +274,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
         this.rerender();
       });
+
     });
 
     element.querySelectorAll(`.event__input--destination`).forEach((input) => {
@@ -294,4 +309,20 @@ export default class EventEdit extends AbstractSmartComponent {
       defaultDate: this._endDate,
     });
   }
+
+  getData() {
+    const form = this.getElement().querySelector(`.event--edit`);
+    const formData = new FormData(form);
+    console.log(formData)
+    return parseFormData(formData);
+  }
+
+  removeElement() {
+    if (this._flatpickr) {
+      this._flatpickr.destroy();
+      this._flatpickr = null;
+    }
+    super.removeElement();
+  }
+
 }

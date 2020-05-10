@@ -33,6 +33,7 @@ export default class PointController extends AbstractComponent {
   }
 
   _onEscKeyDown(evt) {
+
     const isEscKey = evt.key === `Escape` || evt.ket === `Esc`;
     if (isEscKey) {
       replace(this._eventComponent, this._eventEditComponent);
@@ -40,7 +41,8 @@ export default class PointController extends AbstractComponent {
     }
   }
 
-  render(event) {
+  render(event, mode) {
+    // this._mode = mode;
     const oldEventComponent = this._eventComponent;
     const oldEventEditComponent = this._eventEditComponent;
 
@@ -61,11 +63,25 @@ export default class PointController extends AbstractComponent {
       }));
     });
 
+    this._eventEditComponent.setSubmitClickHandler((evt) => {
+      // evt.preventDefault();
+      // const data = this._eventEditComponent.getData();
+      // // debugger;
+      // this._onDataChange(this, event, data);
+    });
+
+    this._eventEditComponent.setDeleteButtonClickHandler(() => {
+
+      this._onDataChange(this, event, null);
+
+    });
+
     if (oldEventEditComponent && oldEventComponent) {
       replace(this._eventComponent, oldEventComponent);
       replace(this._eventEditComponent, oldEventEditComponent);
     } else {
       render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
+
     }
   }
 
