@@ -6,16 +6,17 @@ import {RenderPosition, render, replace, remove} from "../utils/render.js";
 export const Mode = {
   DEFAULT: `default`,
   EDIT: `edit`,
+  ADDING: `adding`,
 };
 
 export const EmptyEvent = {
   id: `default`,
-  eventType: `default`,
-  offers: `default`,
-  dateFrom: `default`,
-  dateTo: `default`,
-  destination: `default`,
-  basePrice: `default`,
+  eventType: {name: `Taxi`},
+  offers: [{offers: {title: `title`, price: `price`}}],
+  dateFrom: new Date(),
+  dateTo: new Date(),
+  destination: {destination: ``, photos: []},
+  basePrice: null,
   isFavorite: false,
 };
 
@@ -42,7 +43,7 @@ export default class PointController extends AbstractComponent {
   }
 
   render(event, mode) {
-    // this._mode = mode;
+    this._mode = mode;
     const oldEventComponent = this._eventComponent;
     const oldEventEditComponent = this._eventEditComponent;
 
@@ -50,7 +51,9 @@ export default class PointController extends AbstractComponent {
     this._eventEditComponent = new EventEditComponent(event);
 
     this._eventComponent.setRollupBtnClickHandler(() => {
+
       this._replaceEventToEdit();
+
     });
 
     this._eventEditComponent.setRollupBtnClickHandler(() => {
@@ -64,10 +67,10 @@ export default class PointController extends AbstractComponent {
     });
 
     this._eventEditComponent.setSubmitClickHandler((evt) => {
-      // evt.preventDefault();
-      // const data = this._eventEditComponent.getData();
-      // // debugger;
-      // this._onDataChange(this, event, data);
+      evt.preventDefault();
+      const data = this._eventEditComponent.getData();
+      // debugger;
+      this._onDataChange(this, event, data);
     });
 
     this._eventEditComponent.setDeleteButtonClickHandler(() => {
@@ -96,7 +99,7 @@ export default class PointController extends AbstractComponent {
 
     replace(this._eventComponent, this._eventEditComponent);
     document.addEventListener(`keydown`, this._onEscKeyDown);
-
+    this._mode = Mode.DEFAULT;
   }
 
   setDefaultView() {

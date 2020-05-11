@@ -25,3 +25,9 @@ render(boardContainer, boardComponent, RenderPosition.BEFOREEND);
 
 tripController.render();
 tripController.renderHeader(tripControlsElement);
+
+const newEventButton = document.querySelector(`.trip-main__event-add-btn`);
+newEventButton.addEventListener(`click`, () => {
+
+  tripController.createEvent();
+});

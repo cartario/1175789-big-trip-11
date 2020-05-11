@@ -2,7 +2,7 @@ import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
 // import {parseFormData} from "../utils/common.js";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
-
+import {encode} from "he";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const parseFormData = (formData) => {
@@ -248,7 +248,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this.setSubmitClickHandler(this._submitHandler);
     this._subscribeOnEvents();
     this.setRollupBtnClickHandler(this._rollupBtnClickHandler);
-      this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
+    this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
   }
 
   rerender() {
@@ -313,7 +313,6 @@ export default class EventEdit extends AbstractSmartComponent {
   getData() {
     const form = this.getElement().querySelector(`.event--edit`);
     const formData = new FormData(form);
-    console.log(formData)
     return parseFormData(formData);
   }
 
