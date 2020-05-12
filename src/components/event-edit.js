@@ -6,10 +6,15 @@ import {encode} from "he";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const parseFormData = (formData) => {
+  const selectedType = formData.get(`selectedType`);
   return {
-    eventType: formData.get(`event-type`),
+    eventType: {
+      name: selectedType,
+      group: ``,
+      offers: formData.get(`event-offer-luggage`),
+    },
     destination: formData.get(`event-destination`),
-    offer: !!(formData.get(`event-offer-luggage`)),
+
     dateFrom: formData.get(`event-start-time`),
     dateTo: formData.get(`event-end-time`),
     basePrice: formData.get(`event-price`),
@@ -92,7 +97,7 @@ const createEventEditTemplate = (event) => {
   const creatAvaibleOffers = (offer, price, index) => {
     const isChecked = Math.random() > 0.5;
     return `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${index}" type="checkbox" name="event-offer-luggage" ${isChecked ? `checked` : ``}>
+        <input class="event__offer-checkbox  visually-hidden" value="${offer}" id="event-offer-${index}" type="checkbox" name="event-offer-luggage" ${isChecked ? `checked` : ``}>
         <label class="event__offer-label" for="event-offer-${index}">
           <span class="event__offer-title">${offer}</span>
           +
@@ -265,8 +270,7 @@ export default class EventEdit extends AbstractSmartComponent {
       input.addEventListener(`change`, (evt) => {
         const newEventType = evt.target.value;
         const newEventTypeObj = EVENT_TYPES.find((it) => it.name === newEventType);
-        evt.target.setAttribute(`checked`, true);
-// debugger;
+
         this._event.eventType = {
           name: newEventType,
           group: newEventTypeObj.group,
@@ -313,7 +317,13 @@ export default class EventEdit extends AbstractSmartComponent {
 
   getData() {
     const form = this.getElement().querySelector(`.event--edit`);
+    const selectedType = document.querySelector(`.event__type-output`)
+    .textContent.trim().split(` `)[0].toLowerCase();
+
+
     const formData = new FormData(form);
+    formData.append(`selectedType`, selectedType);
+
     return parseFormData(formData);
   }
 
