@@ -7,6 +7,7 @@ import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const parseFormData = (formData) => {
   return {
+    eventType: formData.get(`event-type`),
     destination: formData.get(`event-destination`),
     offer: !!(formData.get(`event-offer-luggage`)),
     dateFrom: formData.get(`event-start-time`),
@@ -264,7 +265,8 @@ export default class EventEdit extends AbstractSmartComponent {
       input.addEventListener(`change`, (evt) => {
         const newEventType = evt.target.value;
         const newEventTypeObj = EVENT_TYPES.find((it) => it.name === newEventType);
-
+        evt.target.setAttribute(`checked`, true);
+// debugger;
         this._event.eventType = {
           name: newEventType,
           group: newEventTypeObj.group,
@@ -274,7 +276,6 @@ export default class EventEdit extends AbstractSmartComponent {
 
         this.rerender();
       });
-
     });
 
     element.querySelectorAll(`.event__input--destination`).forEach((input) => {
