@@ -8,7 +8,9 @@ import AbstractSmartComponent from "./abstract-smart-component.js";
 const parseFormData = (formData) => {
   const selectedType = formData.get(`selectedType`);
   const checkedOffers = formData.get(`checkedOffers`);
-  console.log(Array.from(checkedOffers.split(`,`)))
+  const photos = formData.get(`photos`);
+
+
   return {
     eventType: {
       name: selectedType,
@@ -16,7 +18,7 @@ const parseFormData = (formData) => {
     },
     destination: {
       name: formData.get(`event-destination`),
-      photos: ``
+      photos: Array.from(photos.split(`,`)),
     },
     offers: Array.from(checkedOffers.split(`,`)),
     dateFrom: formData.get(`event-start-time`),
@@ -328,9 +330,14 @@ export default class EventEdit extends AbstractSmartComponent {
     const selectedOffers = document.querySelectorAll(`.event__offer-checkbox[checked]`);
     selectedOffers.forEach((it) => checkedOffers.push(it.getAttribute(`value`)));
 
+    let photos = [];
+    const showingPhotos = document.querySelectorAll(`.event__photo`);
+    showingPhotos.forEach((it) => photos.push(it.getAttribute(`src`)));
+
     const formData = new FormData(form);
     formData.append(`selectedType`, selectedType);
     formData.append(`checkedOffers`, checkedOffers);
+    formData.append(`photos`, photos);
 
     return parseFormData(formData);
   }
