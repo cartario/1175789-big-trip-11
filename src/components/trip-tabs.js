@@ -12,7 +12,7 @@ const createTripTabs = () => {
 export default class TripTabs extends AbstractComponent {
   constructor() {
     super();
-    this.setActiveItem(`table`);
+
   }
 
   getTemplate() {
@@ -25,7 +25,19 @@ export default class TripTabs extends AbstractComponent {
       it.classList.remove(`trip-tabs__btn--active`);
     });
 
-    const item = this.getElement().querySelector(`[menu-item = "${menuItem}"]`)
-    item.classList.add(`trip-tabs__btn--active`)
+    const item = this.getElement().querySelector(`[menu-item = "${menuItem}"]`);
+
+    if (item) {
+      item.classList.add(`trip-tabs__btn--active`);
+    }
+  }
+
+  setOnChange(handler) {
+    Array.from(this.getElement().querySelectorAll(`.trip-tabs__btn`)).forEach((it) => {
+      it.addEventListener(`click`, (evt) => {
+        const menuItem = evt.target.getAttribute(`menu-item`);
+        handler(menuItem);
+      });
+    });
   }
 }

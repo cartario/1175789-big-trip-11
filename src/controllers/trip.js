@@ -57,7 +57,25 @@ export default class TripController {
   renderHeader(tripControlsElement) {
     this._filterController = new FilterController(tripControlsElement, this._pointsModel);
 
-    render(tripControlsElement, new TripTabsComponent(), RenderPosition.BEFOREEND);
+    const MenuItem = {
+      STATS: `stats`,
+      TABLE: `table`,
+    };
+
+    const siteMenuComponent = new TripTabsComponent();
+    siteMenuComponent.setOnChange((menuItem) => {
+      siteMenuComponent.setActiveItem(menuItem);
+      switch (menuItem) {
+        case MenuItem.STATS:
+
+
+          break;
+        case MenuItem.TABLE:
+
+      }
+    });
+
+    render(tripControlsElement, siteMenuComponent, RenderPosition.BEFOREEND);
     this._filterController.render();
   }
 
@@ -130,10 +148,11 @@ export default class TripController {
   }
 
   _onDataChange(pointController, oldData, newData) {
+
     // добавление
     if (newData === EmptyEvent) {
       this._creatingEvent = null;
-      if (newData = null) {
+      if (newData === null) {
         pointController.destroy();
         this._updateEvents();
       } else {
@@ -174,6 +193,8 @@ export default class TripController {
     if (this._creatingEvent) {
       return;
     }
+    this._pointsModel.setAllFilter();
+    this._onViewChange();
     const tripDayEventsList = this._tripDaysComponent.getElement().querySelector(`.trip-events__list`);
     this._creatingEvent = new PointController(tripDayEventsList, this._onDataChange, this._onViewChange);
     this._creatingEvent.render(EmptyEvent, EventControllerMode.ADDING);

@@ -10,13 +10,15 @@ export const Mode = {
 };
 
 export const EmptyEvent = {
-  id: `default`,
+  id: 1,
   eventType: {name: `Taxi`},
-  offers: [{offers: {title: `title`, price: `price`}}],
+  offers: [{
+    title: `Default title`,
+    price: 100500}],
   dateFrom: new Date(),
   dateTo: new Date(),
-  destination: {destination: ``, photos: []},
-  basePrice: null,
+  destination: {name: `Default Moscow`, photos: []},
+  basePrice: 100900,
   isFavorite: false,
 };
 
@@ -71,6 +73,7 @@ export default class PointController extends AbstractComponent {
       const data = this._eventEditComponent.getData();
       // debugger;
       this._onDataChange(this, event, data);
+      this._replaceEditToEvent();
     });
 
     this._eventEditComponent.setDeleteButtonClickHandler(() => {
@@ -79,12 +82,23 @@ export default class PointController extends AbstractComponent {
 
     });
 
-    if (oldEventEditComponent && oldEventComponent) {
-      replace(this._eventComponent, oldEventComponent);
-      replace(this._eventEditComponent, oldEventEditComponent);
-    } else {
-      render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
+    switch (mode) {
+      case Mode.DEFAULT:
+        if (oldEventEditComponent && oldEventComponent) {
+          replace(this._eventComponent, oldEventComponent);
+          replace(this._eventEditComponent, oldEventEditComponent);
+        } else {
+          render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
+        }
+        break;
+      case Mode.ADDING:
+        if (oldEventComponent && oldEventEditComponent) {
+          remove(oldEventComponent);
+          remove(oldEventEditComponent);
+        }
 
+        render(this._container, this._eventEditComponent, RenderPosition.BEFOREEND);
+        break;
     }
   }
 
@@ -96,13 +110,18 @@ export default class PointController extends AbstractComponent {
   }
 
   _replaceEditToEvent() {
+    this._eventEditComponent.reset();
 
-    replace(this._eventComponent, this._eventEditComponent);
+    if (document.contains(this._eventEditComponent.getElement())) {
+      replace(this._eventComponent, this._eventEditComponent);
+    }
+    // replace(this._eventComponent, this._eventEditComponent);
     document.addEventListener(`keydown`, this._onEscKeyDown);
     this._mode = Mode.DEFAULT;
   }
 
   setDefaultView() {
+
     if (this._mode !== Mode.DEFAULT) {
       this._replaceEditToEvent();
     }

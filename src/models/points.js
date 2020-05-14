@@ -39,6 +39,10 @@ export default class Points {
     this._callHandlers(this._filterChangeHandlers);
   }
 
+  setAllFilter() {
+    this._activeFilterType = FilterType.EVERYTHING;
+  }
+
   updatePoint(id, point) {
     const index = this._points.findIndex((it) => it.id === id);
 
