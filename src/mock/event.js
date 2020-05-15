@@ -22,7 +22,6 @@ const generateEvent = () => {
   return {
     id: getRandomInt(0, 10),
     eventType: getRandomArrayItem(EVENT_TYPES),
-    offers: getRandomArrayItem(EVENT_TYPES).offers,
     dateFrom: getRandomTime(),
     dateTo: getRandomTime(),
     destination: generateDestination(),

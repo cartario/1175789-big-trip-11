@@ -5,22 +5,25 @@ import "flatpickr/dist/flatpickr.min.css";
 import {encode} from "he";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
-const parseFormData = (formData) => {
-  const selectedType = formData.get(`selectedType`);
-  const checkedOffers = formData.get(`checkedOffers`);
-  const photos = formData.get(`photos`);
+const parseFormData = (formData, event, selectedType, checkedOffersTitle) => {
 
+  const checkedOffers = event.eventType.offers.filter((offer) => checkedOffersTitle.includes(offer.title));
+  checkedOffers.forEach((it) => it.checked = true);
+  const uncheckedOffers = event.eventType.offers.filter((it) => it.checked === false);
 
   return {
+
     eventType: {
       name: selectedType,
+      offers: checkedOffers.concat(uncheckedOffers),
+      group: event.eventType.group,
 
     },
     destination: {
       name: formData.get(`event-destination`),
-      photos: Array.from(photos.split(`,`)),
+      photos: event.destination.photos,
     },
-    offers: Array.from(checkedOffers.split(`,`)),
+
     dateFrom: formData.get(`event-start-time`),
     dateTo: formData.get(`event-end-time`),
     basePrice: formData.get(`event-price`),
@@ -55,7 +58,6 @@ const createEventEditTemplate = (event) => {
 
   const {
     id,
-    offers,
     eventType,
     destination,
     dateFrom,
@@ -64,8 +66,12 @@ const createEventEditTemplate = (event) => {
     isFavorite,
   } = event;
 
+  const objectByType = EVENT_TYPES.filter((it) => it.name === eventType.name);
+
   const isShowingDestination = Math.random() > 0.5;
-  const isOffersExist = offers.length > 0;
+  const isOffersExist = objectByType[0].offers.length > 0;
+
+
   const preposition = eventType.group === `Transfer` ? `to` : `in`;
 
   const eventTypeToggle = () => {
@@ -100,19 +106,20 @@ const createEventEditTemplate = (event) => {
 
   const destinationTimeMarkup = createDestinationTime();
 
-  const creatAvaibleOffers = (offer, price, index) => {
-    const isChecked = Math.random() > 0.5;
+  const creatAvaibleOffers = (offer, index) => {
+    const {title, price, checked} = offer;
     return `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" value="${offer}" id="event-offer-${index}" type="checkbox" name="event-offer-luggage" ${isChecked ? `checked` : ``}>
+        <input class="event__offer-checkbox  visually-hidden" value="${title}" id="event-offer-${index}" type="checkbox" name="event-offer-${title}" ${checked ? `checked` : ``}>
         <label class="event__offer-label" for="event-offer-${index}">
-          <span class="event__offer-title">${offer}</span>
+          <span class="event__offer-title">${title}</span>
           +
           €&nbsp;<span class="event__offer-price">${price}</span>
         </label>
       </div>`;
   };
 
-  const availableOffersMarkup = offers.map((it, i) => creatAvaibleOffers(it.title, it.price, i)).join(`\n`);
+
+  const availableOffersMarkup = event.eventType.offers.map((it, i) => creatAvaibleOffers(it, i)).join(`\n`);
 
   const createDestinationMarkup = () => {
     const createEventPhotos = (url) => {
@@ -229,6 +236,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._rollupBtnClickHandler = null;
     this._flatpickr = null;
     this._applyFlatpickr();
+    // this.setActiveItem();
   }
 
   getTemplate() {
@@ -272,6 +280,14 @@ export default class EventEdit extends AbstractSmartComponent {
     this.rerender();
   }
 
+  // setActiveItem () {
+  //   Array.from(this.getElement().querySelectorAll(`.event__offer-checkbox`))
+  //   .forEach((it) => it.addEventListener(`change`, (evt) => {
+  //    console.log(it)
+  //   }))
+
+  // };
+
   _subscribeOnEvents() {
     const element = this.getElement();
 
@@ -285,7 +301,7 @@ export default class EventEdit extends AbstractSmartComponent {
           group: newEventTypeObj.group,
         };
 
-        this._event.offers = EVENT_TYPES.find((it) => it.name === newEventType).offers;
+        this._event.eventType.offers = EVENT_TYPES.find((it) => it.name === newEventType).offers;
 
         this.rerender();
       });
@@ -325,24 +341,17 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   getData() {
+    const event = this._event;
     const form = this.getElement().querySelector(`.event--edit`);
     const selectedType = document.querySelector(`.event__type-output`)
-    .textContent.trim().split(` `)[0].toLowerCase();
+    .textContent.trim().split(` `)[0];
 
-    let checkedOffers = [];
-    const selectedOffers = document.querySelectorAll(`.event__offer-checkbox[checked]`);
-    selectedOffers.forEach((it) => checkedOffers.push(it.getAttribute(`value`)));
-
-    let photos = [];
-    const showingPhotos = document.querySelectorAll(`.event__photo`);
-    showingPhotos.forEach((it) => photos.push(it.getAttribute(`src`)));
+    const checkedOffers = Array.from(this.getElement().querySelectorAll(`.event__offer-checkbox`))
+        .filter((it) => it.checked)
+        .map((offer) => offer.getAttribute(`value`));
 
     const formData = new FormData(form);
-    formData.append(`selectedType`, selectedType);
-    formData.append(`checkedOffers`, checkedOffers);
-    formData.append(`photos`, photos);
-
-    return parseFormData(formData);
+    return parseFormData(formData, event, selectedType, checkedOffers);
   }
 
   removeElement() {
@@ -352,5 +361,4 @@ export default class EventEdit extends AbstractSmartComponent {
     }
     super.removeElement();
   }
-
 }

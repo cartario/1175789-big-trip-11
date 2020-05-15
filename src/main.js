@@ -1,8 +1,12 @@
+// import API from "./api.js";
 import BoardComponent from "./components/board.js";
 import TripController from "./controllers/trip.js";
 import PointsModel from "./models/points.js";
 import {generateEvents} from "./mock/event.js";
 import {RenderPosition, render} from "./utils/render.js";
+
+// const api = new API(`Basic er883jdzbdw`);
+
 
 const TOTAL_EVENTS = 15;
 const events = generateEvents(TOTAL_EVENTS);
