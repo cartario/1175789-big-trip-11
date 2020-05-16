@@ -11,10 +11,15 @@ export const Mode = {
 
 export const EmptyEvent = {
   id: 1,
-  eventType: {name: `Taxi`},
-  offers: [{
-    title: `Default title`,
-    price: 100500}],
+  eventType: {
+    name: `Taxi`,
+    offers: [{
+      title: `Default title`,
+      price: 100500,
+      checked: false,
+    }],
+  },
+
   dateFrom: new Date(),
   dateTo: new Date(),
   destination: {name: `Default Moscow`, photos: []},
@@ -39,7 +44,10 @@ export default class PointController extends AbstractComponent {
 
     const isEscKey = evt.key === `Escape` || evt.ket === `Esc`;
     if (isEscKey) {
-      replace(this._eventComponent, this._eventEditComponent);
+      if (this._mode === Mode.ADDING) {
+        this._onDataChange(this, EmptyEvent, null);
+      }
+      this._replaceEditToEvent();
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
   }
@@ -73,7 +81,7 @@ export default class PointController extends AbstractComponent {
       const data = this._eventEditComponent.getData();
       // debugger;
       this._onDataChange(this, event, data);
-      this._replaceEditToEvent();
+      // this._replaceEditToEvent();
     });
 
     this._eventEditComponent.setDeleteButtonClickHandler(() => {
@@ -87,6 +95,7 @@ export default class PointController extends AbstractComponent {
         if (oldEventEditComponent && oldEventComponent) {
           replace(this._eventComponent, oldEventComponent);
           replace(this._eventEditComponent, oldEventEditComponent);
+          this._replaceEditToEvent();
         } else {
           render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
         }
@@ -96,7 +105,7 @@ export default class PointController extends AbstractComponent {
           remove(oldEventComponent);
           remove(oldEventEditComponent);
         }
-
+        document.addEventListener(`keydown`, this._onEscKeyDown);
         render(this._container, this._eventEditComponent, RenderPosition.BEFOREEND);
         break;
     }

@@ -10,6 +10,7 @@ export default class Points {
   }
 
   getAllPoints() {
+
     return this._points;
   }
 
@@ -41,6 +42,8 @@ export default class Points {
 
   setAllFilter() {
     this._activeFilterType = FilterType.EVERYTHING;
+    this._callHandlers(this._dataChangeHandlers);
+
   }
 
   updatePoint(id, point) {
@@ -72,5 +75,6 @@ export default class Points {
   addEvent(point) {
     this._points = [].concat(point, this._points);
     this._callHandlers(this._dataChangeHandlers);
+
   }
 }

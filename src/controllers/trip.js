@@ -80,6 +80,7 @@ export default class TripController {
   }
 
   render() {
+    // debugger;
     // заполняет данными из модели
     const events = this._pointsModel.getPoints();
 
@@ -108,9 +109,6 @@ export default class TripController {
     render(tripMain, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
     this.renderTripDays(sortedEventsByDate);
 
-
-    // this._pointsModel.addEvent(EmptyEvent);
-    // console.log(this._pointsModel._points);
   }
 
   renderTripDays(sortedEventsByDate) {
@@ -148,7 +146,6 @@ export default class TripController {
   }
 
   _onDataChange(pointController, oldData, newData) {
-
     // добавление
     if (newData === EmptyEvent) {
       this._creatingEvent = null;
@@ -156,8 +153,11 @@ export default class TripController {
         pointController.destroy();
         this._updateEvents();
       } else {
+
         this._pointsModel.addEvent(newData);
-        pointController.render(newData, EventControllerMode.DEFAULT);
+        // pointController.render(newData, EventControllerMode.DEFAULT);
+        this._updateEvents();
+
       }
       // удаление
     } else if (newData === null) {
@@ -193,7 +193,8 @@ export default class TripController {
     if (this._creatingEvent) {
       return;
     }
-    this._pointsModel.setAllFilter();
+
+    this._filterController.reset();
     this._onViewChange();
     const tripDayEventsList = this._tripDaysComponent.getElement().querySelector(`.trip-events__list`);
     this._creatingEvent = new PointController(tripDayEventsList, this._onDataChange, this._onViewChange);
