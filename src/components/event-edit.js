@@ -8,7 +8,10 @@ import AbstractSmartComponent from "./abstract-smart-component.js";
 const parseFormData = (formData, event, selectedType, checkedOffersTitle) => {
 
   const checkedOffers = event.eventType.offers.filter((offer) => checkedOffersTitle.includes(offer.title));
-  checkedOffers.forEach((it) => it.checked = true);
+  checkedOffers.forEach(function (it) {
+    it.checked = true;
+    return it.checked;
+  });
   const uncheckedOffers = event.eventType.offers.filter((it) => it.checked === false);
 
   return {
@@ -170,7 +173,7 @@ const createEventEditTemplate = (event) => {
           <label class="event__label  event__type-output" for="event-destination-${id}">
             ${eventType.name} ${preposition}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.name}" list="destination-list-${id}">
+          <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${encode(destination.name)}" list="destination-list-${id}">
           <datalist id="destination-list-${id}">
 
             ${optionsDestinationMarkup}
