@@ -4,7 +4,8 @@ import TripController from "./controllers/trip.js";
 import PointsModel from "./models/points.js";
 import {generateEvents} from "./mock/event.js";
 import {RenderPosition, render} from "./utils/render.js";
-
+import TripTabsComponent, {MenuItem} from "./components/trip-tabs.js";
+import StatsComponent from "./components/stats.js";
 // const api = new API(`Basic er883jdzbdw`);
 
 
@@ -34,4 +35,24 @@ const newEventButton = document.querySelector(`.trip-main__event-add-btn`);
 newEventButton.addEventListener(`click`, () => {
 
   tripController.createEvent();
+});
+
+const statsComponent = new StatsComponent();
+render(boardContainer, statsComponent, RenderPosition.AFTERBEGIN);
+statsComponent.hide();
+
+const siteMenuComponent = new TripTabsComponent();
+render(tripControlsElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
+
+siteMenuComponent.setOnChange((menuItem) => {
+  siteMenuComponent.setActiveItem(menuItem);
+  switch (menuItem) {
+    case MenuItem.STATS:
+      tripController.hide();
+      statsComponent.show();
+      break;
+    case MenuItem.TABLE:
+      statsComponent.hide();
+      tripController.show();
+  }
 });

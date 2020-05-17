@@ -5,9 +5,9 @@ import TripInfoComponent from "../components/trip-info.js";
 import TripDayComponent from "../components/trip-day.js";
 import NoEventsComponent from "../components/no-events.js";
 import FilterController from "./filter.js";
-import TripTabsComponent from "../components/trip-tabs.js";
+
 import PointController, {Mode as EventControllerMode, EmptyEvent} from "./point.js";
-import StatsComponent from "../components/stats.js";
+
 
 const getSortedType = (eventsList, sortType, from, to) => {
   let sortedEvents = [];
@@ -39,7 +39,7 @@ export default class TripController {
     this._noEventComponent = new NoEventsComponent();
     this._sortComponent = null;
     this._tripInfoComponent = null;
-    this._statsComponent = new StatsComponent();
+
 
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
 
@@ -58,28 +58,6 @@ export default class TripController {
 
   renderHeader(tripControlsElement) {
     this._filterController = new FilterController(tripControlsElement, this._pointsModel);
-
-    const MenuItem = {
-      STATS: `stats`,
-      TABLE: `table`,
-    };
-
-    const siteMenuComponent = new TripTabsComponent();
-    siteMenuComponent.setOnChange((menuItem) => {
-      siteMenuComponent.setActiveItem(menuItem);
-      switch (menuItem) {
-        case MenuItem.STATS:
-          this.hide();
-          // render(this._container.getElement(), this._statsComponent, RenderPosition.AFTERBEGIN)
-          this._statsComponent.rerender();
-          this._statsComponent.show();
-          break;
-        case MenuItem.TABLE:
-          this.show();
-      }
-    });
-
-    render(tripControlsElement, siteMenuComponent, RenderPosition.BEFOREEND);
     this._filterController.render();
   }
 
