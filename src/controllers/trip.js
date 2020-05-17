@@ -7,6 +7,7 @@ import NoEventsComponent from "../components/no-events.js";
 import FilterController from "./filter.js";
 import TripTabsComponent from "../components/trip-tabs.js";
 import PointController, {Mode as EventControllerMode, EmptyEvent} from "./point.js";
+import StatsComponent from "../components/stats.js";
 
 const getSortedType = (eventsList, sortType, from, to) => {
   let sortedEvents = [];
@@ -38,6 +39,7 @@ export default class TripController {
     this._noEventComponent = new NoEventsComponent();
     this._sortComponent = null;
     this._tripInfoComponent = null;
+    this._statsComponent = new StatsComponent();
 
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
 
@@ -67,11 +69,13 @@ export default class TripController {
       siteMenuComponent.setActiveItem(menuItem);
       switch (menuItem) {
         case MenuItem.STATS:
-
-
+          this.hide();
+          // render(this._container.getElement(), this._statsComponent, RenderPosition.AFTERBEGIN)
+          this._statsComponent.rerender();
+          this._statsComponent.show();
           break;
         case MenuItem.TABLE:
-
+          this.show();
       }
     });
 
@@ -206,6 +210,14 @@ export default class TripController {
     remove(this._tripDaysComponent);
     remove(this._noEventComponent);
     remove(this._tripInfoComponent);
+  }
+
+  show() {
+    this._container.show();
+  }
+
+  hide() {
+    this._container.hide();
   }
 }
 
