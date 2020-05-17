@@ -10,7 +10,7 @@ const generatePhotos = (count) => {
   return arr.slice(getRandomInt(0, count));
 };
 
-const generateDestination = () => {
+export const generateDestination = () => {
   return {
     name: getRandomArrayItem(DESTINATION_POINTS),
     description: getRandomArrayItem(DESCRIPTION_ITEMS),
