@@ -4,15 +4,6 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 // import moment from "moment";
 // import flatpickr from "flatpickr";
 
-// const transportCtx = document.querySelector(`.statistic__transport`);
-// const timeSpendCtx = document.querySelector(`.statistic__time-spend`);
-
-// // Рассчитаем высоту канваса в зависимости от того, сколько данных в него будет передаваться
-// const BAR_HEIGHT = 55;
-// moneyCtx.height = BAR_HEIGHT * 6;
-// transportCtx.height = BAR_HEIGHT * 4;
-// timeSpendCtx.height = BAR_HEIGHT * 4;
-
 const renderMoneyChart = (moneyCtx) => {
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
@@ -38,6 +29,7 @@ const renderMoneyChart = (moneyCtx) => {
           formatter: (val) => `€ ${val}`
         }
       },
+
       title: {
         display: true,
         text: `MONEY`,
@@ -78,74 +70,143 @@ const renderMoneyChart = (moneyCtx) => {
       }
     }
   });
-
 };
 
+const renderTransportChart = (transportCtx) => {
+  return new Chart(transportCtx, {
+    plugins: [ChartDataLabels],
+    type: `horizontalBar`,
+    data: {
+      labels: [`FLY`, `DRIVE`, `RIDE`],
+      datasets: [{
+        data: [4, 2, 1],
+        backgroundColor: `#ffffff`,
+        hoverBackgroundColor: `#ffffff`,
+        anchor: `start`
+      }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 13
+          },
+          color: `#000000`,
+          anchor: `end`,
+          align: `start`,
+          formatter: (val) => `${val}x`
+        },
+      },
+      title: {
+        display: true,
+        text: `TRANSPORT`,
+        fontColor: `#000000`,
+        fontSize: 23,
+        position: `left`
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: `#000000`,
+            padding: 5,
+            fontSize: 13,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          barThickness: 44,
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          minBarLength: 50
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false,
+      }
+    }
+  });
+};
 
-// const transportChart = new Chart(transportCtx, {
-//     plugins: [ChartDataLabels],
-//     type: `horizontalBar`,
-//     data: {
-//         labels: [`FLY`, `DRIVE`,  `RIDE`],
-//         datasets: [{
-//             data: [4, 2, 1],
-//             backgroundColor: `#ffffff`,
-//             hoverBackgroundColor: `#ffffff`,
-//             anchor: `start`
-//         }]
-//     },
-//     options: {
-//         plugins: {
-//             datalabels: {
-//                 font: {
-//                     size: 13
-//                 },
-//                 color: `#000000`,
-//                 anchor: 'end',
-//                 align: 'start',
-//                 formatter: (val) => `${val}x`
-//             }
-//         },
-//         title: {
-//             display: true,
-//             text: `TRANSPORT`,
-//             fontColor: `#000000`,
-//             fontSize: 23,
-//             position: `left`
-//         },
-//         scales: {
-//             yAxes: [{
-//                 ticks: {
-//                     fontColor: `#000000`,
-//                     padding: 5,
-//                     fontSize: 13,
-//                 },
-//                 gridLines: {
-//                     display: false,
-//                     drawBorder: false
-//                 },
-//                 barThickness: 44,
-//             }],
-//             xAxes: [{
-//                 ticks: {
-//                     display: false,
-//                     beginAtZero: true,
-//                 },
-//                 gridLines: {
-//                     display: false,
-//                     drawBorder: false
-//                 },
-//                 minBarLength: 50
-//             }],
-//         },
-//         legend: {
-//             display: false
-//         },
-//         tooltips: {
-//             enabled: false,
-//         }
-//     }
-// });
+const renderTimeSpentChart = (timeSpentCtx) => {
+  return new Chart(timeSpentCtx, {
+    plugins: [ChartDataLabels],
+    type: `horizontalBar`,
+    data: {
+      labels: [`FLY`, `STAY`, `DRIVE`, `LOOK`, `RIDE`],
+      datasets: [{
+        data: [400, 300, 200, 160, 100],
+        backgroundColor: `#ffffff`,
+        hoverBackgroundColor: `#ffffff`,
+        anchor: `start`
+      }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 13
+          },
+          color: `#000000`,
+          anchor: `end`,
+          align: `start`,
+          formatter: (val) => `€ ${val}`
+        }
+      },
+
+      title: {
+        display: true,
+        text: `MONEY`,
+        fontColor: `#000000`,
+        fontSize: 23,
+        position: `left`
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: `#000000`,
+            padding: 5,
+            fontSize: 13,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          barThickness: 44,
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          minBarLength: 50
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false,
+      }
+    }
+  });
+};
+
 
 const createStatsTemplate = () => {
   return `<section class="statistics">
@@ -181,10 +242,18 @@ export default class Stats extends AbstractSmartComponent {
 
   _renderCharts() {
     const element = this.getElement();
+
     const moneyCtx = element.querySelector(`.statistics__chart--money`);
+    const transportCtx = element.querySelector(`.statistics__chart--transport`);
+    const timeSpentCtx = element.querySelector(`.statistics__chart--time`);
 
     moneyCtx.height = 55 * 4;
+    transportCtx.height = 55 * 4;
+    timeSpentCtx.height = 55 * 4;
+
     renderMoneyChart(moneyCtx);
+    renderTransportChart(transportCtx);
+    renderTimeSpentChart(timeSpentCtx);
   }
 
   recoveryListeners() {}
