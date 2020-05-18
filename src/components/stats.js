@@ -4,14 +4,37 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 // import moment from "moment";
 // import flatpickr from "flatpickr";
 
-const renderMoneyChart = (moneyCtx) => {
+const getUniqTypes = (points) => {
+  let res = [];
+  points.map((point) => {
+    if (!res.includes(point.eventType.name)) {
+      res.push(point.eventType.name);
+    }
+  });
+  return res;
+};
+
+const spentMoneyByType = (points) => {
+  const types = getUniqTypes(points);
+  return types.map((type) => {
+    let moneyByType = 0;
+    points.forEach((point) => {
+      if (type === point.eventType.name) {
+        moneyByType += point.basePrice;
+      }
+    });
+    return moneyByType;
+  });
+};
+
+const renderMoneyChart = (moneyCtx, points) => {
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: [`FLY`, `STAY`, `DRIVE`, `LOOK`, `RIDE`],
+      labels: getUniqTypes(points),
       datasets: [{
-        data: [400, 300, 200, 160, 100],
+        data: spentMoneyByType(points),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -227,8 +250,9 @@ const createStatsTemplate = () => {
 };
 
 export default class Stats extends AbstractSmartComponent {
-  constructor() {
+  constructor(pointsModel) {
     super();
+    this._pointsModel = pointsModel;
     this._renderCharts();
   }
 
@@ -247,11 +271,14 @@ export default class Stats extends AbstractSmartComponent {
     const transportCtx = element.querySelector(`.statistics__chart--transport`);
     const timeSpentCtx = element.querySelector(`.statistics__chart--time`);
 
-    moneyCtx.height = 55 * 4;
-    transportCtx.height = 55 * 4;
-    timeSpentCtx.height = 55 * 4;
+    const types = getUniqTypes(this._pointsModel.getPoints());
+    const BAR_HEIGHT = 55;
 
-    renderMoneyChart(moneyCtx);
+    moneyCtx.height = BAR_HEIGHT * types.length;
+    transportCtx.height = BAR_HEIGHT * types.length;
+    timeSpentCtx.height = BAR_HEIGHT * types.length;
+
+    renderMoneyChart(moneyCtx, this._pointsModel.getPoints());
     renderTransportChart(transportCtx);
     renderTimeSpentChart(timeSpentCtx);
   }

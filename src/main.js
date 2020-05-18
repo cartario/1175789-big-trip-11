@@ -37,7 +37,7 @@ newEventButton.addEventListener(`click`, () => {
   tripController.createEvent();
 });
 
-const statsComponent = new StatsComponent();
+const statsComponent = new StatsComponent(pointsModel);
 render(boardContainer, statsComponent, RenderPosition.AFTERBEGIN);
 statsComponent.hide();
 
