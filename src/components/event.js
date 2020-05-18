@@ -5,7 +5,6 @@ const createTripEvent = (event) => {
   const {
     eventType,
     destination,
-    offers,
     dateFrom,
     dateTo,
     basePrice,
@@ -19,16 +18,17 @@ const createTripEvent = (event) => {
 
   const durationTime = isDateCorrect ? getFormattedTimeDuration(dateFrom, dateTo) : `дата окончания меньше даты начала`;
 
-  const selectedOffers = (title, price) => {
-    return `<li class="event__offer">
+  const selectedOffers = (offers) => {
+    const {title, price, checked} = offers;
+    return `${checked ? `<li class="event__offer">
       <span class="event__offer-title">${title}</span>
       +
       €&nbsp;<span class="event__offer-price">${price}</span>
-    </li>`;
+    </li>` : ``}`;
   };
 
   const selectedOffersMarkup = () => {
-    return offers.map((it) => selectedOffers(it.title, it.price)).join(`\n`);
+    return eventType.offers.map((it) => selectedOffers(it)).join(`\n`);
   };
 
   const offersMarkup = selectedOffersMarkup();

@@ -1,14 +1,20 @@
+// import API from "./api.js";
 import BoardComponent from "./components/board.js";
-import FiltersComponent from "./components/filters.js";
-import TripTabsComponent from "./components/trip-tabs.js";
 import TripController from "./controllers/trip.js";
+import PointsModel from "./models/points.js";
 import {generateEvents} from "./mock/event.js";
-import {generateFilters} from "./mock/filter.js";
 import {RenderPosition, render} from "./utils/render.js";
+import TripTabsComponent, {MenuItem} from "./components/trip-tabs.js";
+import StatsComponent from "./components/stats.js";
+// const api = new API(`Basic er883jdzbdw`);
+
 
 const TOTAL_EVENTS = 15;
 const events = generateEvents(TOTAL_EVENTS);
-const filters = generateFilters();
+const pointsModel = new PointsModel();
+
+// связывает данные и модель
+pointsModel.setPoints(events);
 
 // ключевые узлы
 const tripControlsElement = document.querySelector(`.trip-controls`);
@@ -16,10 +22,37 @@ document.querySelector(`.trip-events`).remove();
 
 const boardContainer = document.querySelectorAll(`.page-body__container`)[1];
 const boardComponent = new BoardComponent();
-const tripController = new TripController(boardComponent);
+
+// связывает главный контроллер и модель
+const tripController = new TripController(boardComponent, pointsModel);
 
 render(boardContainer, boardComponent, RenderPosition.BEFOREEND);
-render(tripControlsElement, new TripTabsComponent(), RenderPosition.BEFOREEND);
-render(tripControlsElement, new FiltersComponent(filters), RenderPosition.BEFOREEND);
 
-tripController.render(events);
+tripController.render();
+tripController.renderHeader(tripControlsElement);
+
+const newEventButton = document.querySelector(`.trip-main__event-add-btn`);
+newEventButton.addEventListener(`click`, () => {
+
+  tripController.createEvent();
+});
+
+const statsComponent = new StatsComponent(pointsModel);
+render(boardContainer, statsComponent, RenderPosition.AFTERBEGIN);
+statsComponent.hide();
+
+const siteMenuComponent = new TripTabsComponent();
+render(tripControlsElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
+
+siteMenuComponent.setOnChange((menuItem) => {
+  siteMenuComponent.setActiveItem(menuItem);
+  switch (menuItem) {
+    case MenuItem.STATS:
+      tripController.hide();
+      statsComponent.show();
+      break;
+    case MenuItem.TABLE:
+      statsComponent.hide();
+      tripController.show();
+  }
+});

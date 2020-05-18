@@ -15,7 +15,7 @@ const createFiltersMarkup = (name, isChecked) => {
 };
 
 const createTripFiltersTemplate = (filters) => {
-  const filtersMarkup = filters.map((it, i) => createFiltersMarkup(it, i === 2)).join(`\n`);
+  const filtersMarkup = filters.map((it) => createFiltersMarkup(it.name, it.checked)).join(`\n`);
 
   return (`<form class="trip-filters" action="#" method="get">
     ${filtersMarkup}
@@ -30,5 +30,12 @@ export default class Filters extends AbstractComponent {
   }
   getTemplate() {
     return createTripFiltersTemplate(this._filters);
+  }
+
+  setFilterChangeHandler(handler) {
+    this.getElement().addEventListener(`change`, (evt) => {
+      handler(evt.target.value);
+
+    });
   }
 }

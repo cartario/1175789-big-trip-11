@@ -1,9 +1,53 @@
 import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
-// import {formatDate} from "../utils/common.js";
+// import {generateDestination} from "../mock/event.js";
+// import {parseFormData} from "../utils/common.js";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
-
+import {encode} from "he";
 import AbstractSmartComponent from "./abstract-smart-component.js";
+
+const parseFormData = (formData, event, allOffers) => {
+  const selectedType = document.querySelector(`.event__type-output`)
+    .textContent.trim().split(` `)[0];
+
+  const checkedOffersTitle = Array.from(document.querySelectorAll(`.event__offer-checkbox`))
+      .filter((it) => it.checked)
+      .map((offer) => offer.getAttribute(`value`));
+
+  const getOffers = () => {
+    return allOffers.map((offer) => {
+      if (checkedOffersTitle.includes(offer.title)) {
+        return Object.assign({}, offer, {checked: true});
+      } else {
+        return Object.assign({}, offer, {checked: false});
+      }
+    });
+  };
+
+  const convertData = (dateString) => {
+    const monthIndex = dateString[3] + dateString[4];
+    const dayIndex = dateString[0] + dateString[1];
+    return monthIndex + `/` + dayIndex + dateString.slice(5);
+  };
+
+  return {
+    eventType: {
+      name: selectedType,
+      offers: getOffers(),
+      group: event.eventType.group,
+
+    },
+    destination: {
+      name: formData.get(`event-destination`),
+      photos: event.destination.photos,
+    },
+
+    dateFrom: convertData(formData.get(`event-start-time`)),
+    dateTo: convertData(formData.get(`event-end-time`)),
+    basePrice: formData.get(`event-price`),
+    isFavorite: !!(formData.get(`event-favorite`)),
+  };
+};
 
 const createEventTransferMarkup = (type, id = 1) => {
   return `<legend class="visually-hidden">Transfer</legend>
@@ -32,7 +76,6 @@ const createEventEditTemplate = (event) => {
 
   const {
     id,
-    offers,
     eventType,
     destination,
     dateFrom,
@@ -41,8 +84,12 @@ const createEventEditTemplate = (event) => {
     isFavorite,
   } = event;
 
+  const objectByType = EVENT_TYPES.filter((it) => it.name === eventType.name);
+
   const isShowingDestination = Math.random() > 0.5;
-  const isOffersExist = offers.length > 0;
+  const isOffersExist = objectByType[0].offers.length > 0;
+
+
   const preposition = eventType.group === `Transfer` ? `to` : `in`;
 
   const eventTypeToggle = () => {
@@ -77,19 +124,20 @@ const createEventEditTemplate = (event) => {
 
   const destinationTimeMarkup = createDestinationTime();
 
-  const creatAvaibleOffers = (offer, price, index) => {
-    const isChecked = Math.random() > 0.5;
+  const creatAvaibleOffers = (offer, index) => {
+    const {title, price, checked} = offer;
     return `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${index}" type="checkbox" name="event-offer-luggage" ${isChecked ? `checked` : ``}>
+        <input class="event__offer-checkbox  visually-hidden" value="${title}" id="event-offer-${index}" type="checkbox" name="event-offer-${title}" ${checked ? `checked` : ``}>
         <label class="event__offer-label" for="event-offer-${index}">
-          <span class="event__offer-title">${offer}</span>
+          <span class="event__offer-title">${title}</span>
           +
           €&nbsp;<span class="event__offer-price">${price}</span>
         </label>
       </div>`;
   };
 
-  const availableOffersMarkup = offers.map((it, i) => creatAvaibleOffers(it.title, it.price, i)).join(`\n`);
+
+  const availableOffersMarkup = event.eventType.offers.map((it, i) => creatAvaibleOffers(it, i)).join(`\n`);
 
   const createDestinationMarkup = () => {
     const createEventPhotos = (url) => {
@@ -140,7 +188,7 @@ const createEventEditTemplate = (event) => {
           <label class="event__label  event__type-output" for="event-destination-${id}">
             ${eventType.name} ${preposition}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.name}" list="destination-list-${id}">
+          <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${encode(destination.name)}" list="destination-list-${id}">
           <datalist id="destination-list-${id}">
 
             ${optionsDestinationMarkup}
@@ -155,7 +203,7 @@ const createEventEditTemplate = (event) => {
             <span class="visually-hidden">Price</span>
             €
           </label>
-          <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}">
+          <input class="event__input  event__input--price" id="event-price-${id}" type="number" name="event-price" value="${basePrice}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -197,16 +245,19 @@ export default class EventEdit extends AbstractSmartComponent {
   constructor(event) {
     super();
     this._event = event;
+    this._offers = event.eventType.offers;
     this._startDate = event.dateFrom;
     this._endDate = event.dateTo;
     this.setFavoriteClickHandler();
     this._subscribeOnEvents();
     this._submitHandler = null;
+    this._deleteButtonClickHandler = null;
     this._rollupBtnClickHandler = null;
     this._flatpickr = null;
     this._applyFlatpickr();
-
+    // this.setActiveItem();
   }
+
   getTemplate() {
     return createEventEditTemplate(this._event);
 
@@ -220,28 +271,41 @@ export default class EventEdit extends AbstractSmartComponent {
   setFavoriteClickHandler(handler) {
     this.getElement().querySelector(`.event__favorite-icon`)
     .addEventListener(`click`, handler);
-
   }
 
-  setSubmitHandler(handler) {
-
-    this.getElement().addEventListener(`submit`, handler);
-
+  setSubmitClickHandler(handler) {
+    this.getElement().querySelector(`form`).addEventListener(`submit`, handler);
     this._submitHandler = handler;
+  }
 
+  setDeleteButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, handler);
+    this._deleteButtonClickHandler = handler;
   }
 
   recoveryListeners() {
-    this.setSubmitHandler(this._submitHandler);
+    this.setSubmitClickHandler(this._submitHandler);
     this._subscribeOnEvents();
     this.setRollupBtnClickHandler(this._rollupBtnClickHandler);
+    this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
   }
 
   rerender() {
     super.rerender();
     this._applyFlatpickr();
-
   }
+
+  reset() {
+    this.rerender();
+  }
+
+  // setActiveItem () {
+  //   Array.from(this.getElement().querySelectorAll(`.event__offer-checkbox`))
+  //   .forEach((it) => it.addEventListener(`change`, (evt) => {
+  //    console.log(it)
+  //   }))
+
+  // };
 
   _subscribeOnEvents() {
     const element = this.getElement();
@@ -256,7 +320,8 @@ export default class EventEdit extends AbstractSmartComponent {
           group: newEventTypeObj.group,
         };
 
-        this._event.offers = EVENT_TYPES.find((it) => it.name === newEventType).offers;
+
+        this._event.eventType.offers = EVENT_TYPES.find((it) => it.name === newEventType).offers;
 
         this.rerender();
       });
@@ -293,5 +358,19 @@ export default class EventEdit extends AbstractSmartComponent {
       dateFormat,
       defaultDate: this._endDate,
     });
+  }
+
+  getData() {
+    const form = this.getElement().querySelector(`.event--edit`);
+    const formData = new FormData(form);
+    return parseFormData(formData, this._event, this._offers);
+  }
+
+  removeElement() {
+    if (this._flatpickr) {
+      this._flatpickr.destroy();
+      this._flatpickr = null;
+    }
+    super.removeElement();
   }
 }

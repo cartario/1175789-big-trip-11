@@ -10,7 +10,7 @@ const generatePhotos = (count) => {
   return arr.slice(getRandomInt(0, count));
 };
 
-const generateDestination = () => {
+export const generateDestination = () => {
   return {
     name: getRandomArrayItem(DESTINATION_POINTS),
     description: getRandomArrayItem(DESCRIPTION_ITEMS),
@@ -22,7 +22,6 @@ const generateEvent = () => {
   return {
     id: getRandomInt(0, 10),
     eventType: getRandomArrayItem(EVENT_TYPES),
-    offers: getRandomArrayItem(EVENT_TYPES).offers,
     dateFrom: getRandomTime(),
     dateTo: getRandomTime(),
     destination: generateDestination(),
