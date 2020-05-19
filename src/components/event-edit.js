@@ -39,7 +39,7 @@ const parseFormData = (formData, event, allOffers) => {
     },
     destination: {
       name: formData.get(`event-destination`),
-      photos: event.destination.photos,
+      pictures: event.destination.pictures,
     },
 
     dateFrom: convertData(formData.get(`event-start-time`)),
@@ -84,7 +84,7 @@ const createEventEditTemplate = (event) => {
     isFavorite,
   } = event;
 
-  const objectByType = EVENT_TYPES.filter((it) => it.name === eventType.name);
+  const objectByType = EVENT_TYPES.filter((it) => it.name.toLowerCase() === eventType.name.toLowerCase());
 
   const isShowingDestination = Math.random() > 0.5;
   const isOffersExist = objectByType[0].offers.length > 0;
@@ -144,7 +144,7 @@ const createEventEditTemplate = (event) => {
       return `<img class="event__photo" src="${url}" alt="Event photo">`;
     };
 
-    const eventPhotosMarkup = destination.photos.map((it) => createEventPhotos(it)).join(`\n`);
+    const eventPhotosMarkup = destination.pictures.map((it) => createEventPhotos(it)).join(`\n`);
 
     return `${isShowingDestination ? `
         <section class="event__section  event__section--destination">

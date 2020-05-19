@@ -14,7 +14,7 @@ export const generateDestination = () => {
   return {
     name: getRandomArrayItem(DESTINATION_POINTS),
     description: getRandomArrayItem(DESCRIPTION_ITEMS),
-    photos: generatePhotos(10)};
+    pictures: generatePhotos(10)};
 };
 
 // генерит общую структуру одного обьекта

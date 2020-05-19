@@ -1,20 +1,20 @@
-// import API from "./api.js";
+import API from "./api.js";
 import BoardComponent from "./components/board.js";
 import TripController from "./controllers/trip.js";
 import PointsModel from "./models/points.js";
+
 import {generateEvents} from "./mock/event.js";
 import {RenderPosition, render} from "./utils/render.js";
 import TripTabsComponent, {MenuItem} from "./components/trip-tabs.js";
 import StatsComponent from "./components/stats.js";
-// const api = new API(`Basic er883jdzbdw`);
 
+
+const api = new API(`Basic er83jdzbdw`);
 
 const TOTAL_EVENTS = 15;
 const events = generateEvents(TOTAL_EVENTS);
 const pointsModel = new PointsModel();
 
-// связывает данные и модель
-pointsModel.setPoints(events);
 
 // ключевые узлы
 const tripControlsElement = document.querySelector(`.trip-controls`);
@@ -28,8 +28,6 @@ const tripController = new TripController(boardComponent, pointsModel);
 
 render(boardContainer, boardComponent, RenderPosition.BEFOREEND);
 
-tripController.render();
-tripController.renderHeader(tripControlsElement);
 
 const newEventButton = document.querySelector(`.trip-main__event-add-btn`);
 newEventButton.addEventListener(`click`, () => {
@@ -55,4 +53,27 @@ siteMenuComponent.setOnChange((menuItem) => {
       statsComponent.hide();
       tripController.show();
   }
+});
+
+
+// связывает данные и модель
+pointsModel.setPoints(events);
+
+tripController.render();
+tripController.renderHeader(tripControlsElement);
+
+// api.getEvents()
+//   .then((events) => {
+//     console.log(events);
+
+//   });
+
+// api.getOffers()
+//   .then((offers) => {
+//     console.log(offers)
+//   });
+
+api.getDestinations()
+.then(() => {
+
 });

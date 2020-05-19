@@ -66,6 +66,7 @@ export default class TripController {
     // заполняет данными из модели
     const events = this._pointsModel.getPoints();
 
+
     const tripMain = document.querySelector(`.trip-main`);
     const isEventsExist = !!events;
     const sortedEventsByDate = isEventsExist ? getSortedEventsByDate(events) : [];
