@@ -1,7 +1,8 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import Chart from 'chart.js';
 import ChartDataLabels from "chartjs-plugin-datalabels";
-// import moment from "moment";
+import {EVENT_TYPES} from "../const.js";
+import moment from "moment";
 // import flatpickr from "flatpickr";
 
 const getUniqTypes = (points) => {
@@ -24,6 +25,41 @@ const spentMoneyByType = (points) => {
       }
     });
     return moneyByType;
+  });
+};
+
+const getTransportTypes = () => {
+  return EVENT_TYPES.slice(0, 7).map((point) => point.name);
+};
+
+const usedTransportType = (points) => {
+  const types = getTransportTypes();
+  return types.map((type) => {
+    let count = 0;
+    points.forEach((point) => {
+      if (type === point.eventType.name) {
+        count++;
+      }
+    });
+    return count;
+  });
+};
+
+const spentTimeDuration = (points) => {
+  const types = getUniqTypes(points);
+  return types.map((type) => {
+    let typeTimeInMiliseconds = 0;
+    points.forEach((point) => {
+      if (type === point.eventType.name) {
+        const dateFrom = moment(point.dateFrom);
+        const dateTo = moment(point.dateTo);
+
+        const ms = Math.abs(dateTo.diff(dateFrom));
+        typeTimeInMiliseconds += ms;
+      }
+    });
+    const duration = moment.duration(typeTimeInMiliseconds);
+    return parseInt(duration.asHours(), 10);
   });
 };
 
@@ -95,14 +131,14 @@ const renderMoneyChart = (moneyCtx, points) => {
   });
 };
 
-const renderTransportChart = (transportCtx) => {
+const renderTransportChart = (transportCtx, points) => {
   return new Chart(transportCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: [`FLY`, `DRIVE`, `RIDE`],
+      labels: getTransportTypes(),
       datasets: [{
-        data: [4, 2, 1],
+        data: usedTransportType(points),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -162,14 +198,14 @@ const renderTransportChart = (transportCtx) => {
   });
 };
 
-const renderTimeSpentChart = (timeSpentCtx) => {
+const renderTimeSpentChart = (timeSpentCtx, points) => {
   return new Chart(timeSpentCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: [`FLY`, `STAY`, `DRIVE`, `LOOK`, `RIDE`],
+      labels: getUniqTypes(points),
       datasets: [{
-        data: [400, 300, 200, 160, 100],
+        data: spentTimeDuration(points),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -184,13 +220,13 @@ const renderTimeSpentChart = (timeSpentCtx) => {
           color: `#000000`,
           anchor: `end`,
           align: `start`,
-          formatter: (val) => `€ ${val}`
+          formatter: (val) => `${val}H`
         }
       },
 
       title: {
         display: true,
-        text: `MONEY`,
+        text: `SPENT TIME`,
         fontColor: `#000000`,
         fontSize: 23,
         position: `left`
@@ -260,8 +296,12 @@ export default class Stats extends AbstractSmartComponent {
     return createStatsTemplate();
   }
 
-  rerender() {
+  rerender(points) {
+    this._points = points;
+
     super.rerender();
+
+    this._renderCharts();
   }
 
   _renderCharts() {
@@ -275,13 +315,19 @@ export default class Stats extends AbstractSmartComponent {
     const BAR_HEIGHT = 55;
 
     moneyCtx.height = BAR_HEIGHT * types.length;
-    transportCtx.height = BAR_HEIGHT * types.length;
+    transportCtx.height = BAR_HEIGHT * getTransportTypes().length;
     timeSpentCtx.height = BAR_HEIGHT * types.length;
 
     renderMoneyChart(moneyCtx, this._pointsModel.getPoints());
-    renderTransportChart(transportCtx);
-    renderTimeSpentChart(timeSpentCtx);
+    renderTransportChart(transportCtx, this._pointsModel.getPoints());
+    renderTimeSpentChart(timeSpentCtx, this._pointsModel.getPoints());
   }
 
   recoveryListeners() {}
+
+  show() {
+    super.show();
+
+    this.rerender(this._pointsModel);
+  }
 }
