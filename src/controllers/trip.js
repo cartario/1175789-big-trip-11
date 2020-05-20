@@ -31,7 +31,8 @@ const getSortedEventsByDate = (events) => {
 };
 
 export default class TripController {
-  constructor(container, pointsModel) {
+  constructor(container, pointsModel, api) {
+    this._api = api;
     this._container = container;
     this._pointsModel = pointsModel;
     this._events = [];
@@ -144,12 +145,16 @@ export default class TripController {
       // обновление
     } else {
 
-      const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
+      this._api.updateEvent(oldData.id, newData)
+        .then((eventsModel) => {
 
-      if (isSuccess) {
-        pointController.render(newData, EventControllerMode.DEFAULT);
-        // this._updateEvents();
-      }
+          const isSuccess = this._pointsModel.updatePoint(oldData.id, eventsModel);
+
+          if (isSuccess) {
+            pointController.render(eventsModel, EventControllerMode.DEFAULT);
+            // this._updateEvents();
+          }
+        });
     }
   }
 

@@ -29,4 +29,19 @@ export default class API {
     return fetch(`https://11.ecmascript.pages.academy/big-trip/destinations`, {headers})
       .then((response) => response.json());
   }
+
+  updateEvent(id, data) {
+    const headers = new Headers();
+    headers.append(`Authorization`, this._authorization);
+    headers.append(`Content-Type`, `application/json`);
+
+    return fetch(`https://11.ecmascript.pages.academy/big-trip/points/${id}`, {
+      method: `PUT`,
+
+      body: JSON.stringify(data.toRAW()),
+      headers,
+    })
+      .then((response) => response.json())
+      .then(Point.parsePoint);
+  }
 }

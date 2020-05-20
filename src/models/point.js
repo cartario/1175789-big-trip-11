@@ -19,4 +19,17 @@ export default class Point {
   static parsePoints(data) {
     return data.map(Point.parsePoint);
   }
+
+  toRAW() {
+    return {
+      "id": this.id,
+      "type": this.eventType.name,
+      "date_from": this.dateFrom ? this.dateFrom.toISOString() : null,
+      "date_to": this.dateTo ? this.dateTo.toISOString() : null,
+      "destination": this.destination,
+      "base_price": this.basePrice,
+      "is_favorite": this.isFavorite,
+      "offers": this.eventType.offers,
+    };
+  }
 }

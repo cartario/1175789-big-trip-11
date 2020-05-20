@@ -24,7 +24,7 @@ const boardContainer = document.querySelectorAll(`.page-body__container`)[1];
 const boardComponent = new BoardComponent();
 
 // связывает главный контроллер и модель
-const tripController = new TripController(boardComponent, pointsModel);
+const tripController = new TripController(boardComponent, pointsModel, api);
 
 render(boardContainer, boardComponent, RenderPosition.BEFOREEND);
 
