@@ -2,7 +2,7 @@ export default class Point {
   constructor(data) {
     this.id = data[`id`];
     this.eventType = {};
-    this.eventType.name = data[`type`];
+    this.eventType.name = data[`type`][0].toUpperCase() + data[`type`].slice(1);
     this.eventType.group = `Transfer`;
     this.dateFrom = data[`date_from`] ? new Date(data[`date_from`]) : null;
     this.dateTo = data[`date_to`] ? new Date(data[`date_to`]) : null;
@@ -23,7 +23,7 @@ export default class Point {
   toRAW() {
     return {
       "id": this.id,
-      "type": this.eventType.name,
+      "type": this.eventType.name.toLowerCase(),
       "date_from": this.dateFrom ? this.dateFrom.toISOString() : null,
       "date_to": this.dateTo ? this.dateTo.toISOString() : null,
       "destination": this.destination,

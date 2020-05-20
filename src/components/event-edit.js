@@ -1,5 +1,5 @@
 import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
-import {parseFormData} from "../utils/common.js";
+// import {parseFormData} from "../controllers/point.js";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import {encode} from "he";
@@ -40,7 +40,7 @@ const createEventEditTemplate = (event) => {
     isFavorite,
   } = event;
 
-  const objectByType = EVENT_TYPES.filter((it) => it.name.toLowerCase() === eventType.name.toLowerCase());
+  const objectByType = EVENT_TYPES.filter((it) => it.name === eventType.name);
 
   const isShowingDestination = Math.random() > 0.5;
   const isOffersExist = objectByType[0].offers.length > 0;
@@ -319,8 +319,9 @@ export default class EventEdit extends AbstractSmartComponent {
 
   getData() {
     const form = this.getElement().querySelector(`.event--edit`);
-    const formData = new FormData(form);
-    return parseFormData(formData, this._event, this._offers);
+    // const formData =
+    // parseFormData(formData, this._event, this._offers);
+    return new FormData(form);
   }
 
   removeElement() {
