@@ -31,6 +31,7 @@ const parseFormData = (formData, event, allOffers) => {
   };
 
   return {
+    id: event.id,
     eventType: {
       name: selectedType,
       offers: getOffers(),
@@ -40,6 +41,7 @@ const parseFormData = (formData, event, allOffers) => {
     destination: {
       name: formData.get(`event-destination`),
       pictures: event.destination.pictures,
+      description: event.destination.description,
     },
 
     dateFrom: convertData(formData.get(`event-start-time`)),
@@ -144,7 +146,7 @@ const createEventEditTemplate = (event) => {
       return `<img class="event__photo" src="${url}" alt="Event photo">`;
     };
 
-    const eventPhotosMarkup = destination.pictures.map((it) => createEventPhotos(it)).join(`\n`);
+    const eventPhotosMarkup = destination.pictures.map((it) => createEventPhotos(it.src)).join(`\n`);
 
     return `${isShowingDestination ? `
         <section class="event__section  event__section--destination">
@@ -259,6 +261,7 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   getTemplate() {
+
     return createEventEditTemplate(this._event);
 
   }

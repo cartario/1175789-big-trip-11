@@ -3,6 +3,7 @@ export default class Point {
     this.id = data[`id`];
     this.eventType = {};
     this.eventType.name = data[`type`];
+    this.eventType.group = `Transfer`;
     this.dateFrom = data[`date_from`] ? new Date(data[`date_from`]) : null;
     this.dateTo = data[`date_to`] ? new Date(data[`date_to`]) : null;
     this.destination = data[`destination`];

@@ -18,11 +18,12 @@ export const EmptyEvent = {
       price: 100500,
       checked: false,
     }],
+    group: `Transfer`,
   },
 
   dateFrom: new Date(),
   dateTo: new Date(),
-  destination: {name: `Default Moscow`, photos: []},
+  destination: {name: `Default Moscow`, pictures: [], description: ``},
   basePrice: 100900,
   isFavorite: false,
 };

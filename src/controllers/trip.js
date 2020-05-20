@@ -27,6 +27,7 @@ const getSortedType = (eventsList, sortType, from, to) => {
 };
 
 const getSortedEventsByDate = (events) => {
+
   return [...events].slice().sort((a, b) => a.dateFrom.getTime() - b.dateFrom.getTime());
 };
 
@@ -129,8 +130,9 @@ export default class TripController {
   }
 
   _onDataChange(pointController, oldData, newData) {
+
     // добавление
-    if (newData === EmptyEvent) {
+    if (oldData === EmptyEvent) {
       this._creatingEvent = null;
       if (newData === null) {
         pointController.destroy();
@@ -138,8 +140,8 @@ export default class TripController {
       } else {
 
         this._pointsModel.addEvent(newData);
-        // pointController.render(newData, EventControllerMode.DEFAULT);
-        this._updateEvents();
+        pointController.render(newData, EventControllerMode.DEFAULT);
+        // this._updateEvents();
 
       }
       // удаление
@@ -148,11 +150,15 @@ export default class TripController {
       this._updateEvents();
       // обновление
     } else {
+
       const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
+
       if (isSuccess) {
         pointController.render(newData, EventControllerMode.DEFAULT);
+        // this._updateEvents();
       }
     }
+
   }
 
   _onFilterChange() {
