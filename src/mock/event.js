@@ -1,7 +1,6 @@
 import {EVENT_TYPES, DESTINATION_POINTS, DESCRIPTION_ITEMS} from "../const.js";
 import {getRandomInt, getRandomArrayItem, getRandomTime} from "../utils/common.js";
 
-
 const generatePhotos = (count) => {
   const arr = [];
   for (let i = 0; i < count; i++) {

@@ -10,7 +10,6 @@ export default class Point {
     this.basePrice = data[`base_price`];
     this.isFavorite = Boolean(data[`is_favorite`]);
     this.eventType.offers = data[`offers`];
-
   }
 
   static parsePoint(data) {
@@ -20,5 +19,4 @@ export default class Point {
   static parsePoints(data) {
     return data.map(Point.parsePoint);
   }
-
 }

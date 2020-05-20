@@ -8,7 +8,6 @@ import FilterController from "./filter.js";
 
 import PointController, {Mode as EventControllerMode, EmptyEvent} from "./point.js";
 
-
 const getSortedType = (eventsList, sortType, from, to) => {
   let sortedEvents = [];
   const showingEvents = eventsList.slice();
@@ -40,19 +39,14 @@ export default class TripController {
     this._noEventComponent = new NoEventsComponent();
     this._sortComponent = null;
     this._tripInfoComponent = null;
-
-
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
-
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._showedEventControllers = [];
     this._filterController = null;
     this._pointController = null;
-
     this._onFilterChange = this._onFilterChange.bind(this);
     this._pointsModel.setFilterChangeHandler(this._onFilterChange);
-
     this._creatingEvent = null;
 
   }
@@ -66,7 +60,6 @@ export default class TripController {
     // debugger;
     // заполняет данными из модели
     const events = this._pointsModel.getPoints();
-
 
     const tripMain = document.querySelector(`.trip-main`);
     const isEventsExist = !!events;
@@ -158,7 +151,6 @@ export default class TripController {
         // this._updateEvents();
       }
     }
-
   }
 
   _onFilterChange() {
@@ -185,7 +177,9 @@ export default class TripController {
 
     this._filterController.reset();
     this._onViewChange();
+
     const tripDayEventsList = this._tripDaysComponent.getElement().querySelector(`.trip-events__list`);
+
     this._creatingEvent = new PointController(tripDayEventsList, this._onDataChange, this._onViewChange);
     this._creatingEvent.render(EmptyEvent, EventControllerMode.ADDING);
 
@@ -205,4 +199,3 @@ export default class TripController {
     this._container.hide();
   }
 }
-

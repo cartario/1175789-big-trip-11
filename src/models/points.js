@@ -10,7 +10,6 @@ export default class Points {
   }
 
   getAllPoints() {
-
     return this._points;
   }
 
@@ -75,6 +74,5 @@ export default class Points {
   addEvent(point) {
     this._points = [].concat(point, this._points);
     this._callHandlers(this._dataChangeHandlers);
-
   }
 }

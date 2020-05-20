@@ -2,7 +2,6 @@ import {MONTH_NAMES} from "../const.js";
 import {dayCounterFormat} from "../utils/common.js";
 import AbstractComponent from "./abstract-component.js";
 
-
 const createTripDayMarkup = (event, dayCounter) => {
   const {dateFrom} = event;
   return `<li class="trip-days__item  day">
