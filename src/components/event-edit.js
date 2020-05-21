@@ -5,6 +5,11 @@ import "flatpickr/dist/flatpickr.min.css";
 import {encode} from "he";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
+const DefaultData = {
+  deleteButtonText: `Delete`,
+  saveButtonText: `Save`,
+};
+
 const createEventTransferMarkup = (type, id = 1) => {
   return `<legend class="visually-hidden">Transfer</legend>
   <div class="event__type-item">
@@ -28,8 +33,8 @@ const createOptionsDestination = (citi) => {
 
 const optionsDestinationMarkup = DESTINATION_POINTS.map((it) => createOptionsDestination(it)).join(`\n`);
 
-const createEventEditTemplate = (event) => {
-
+const createEventEditTemplate = (event, externalData) => {
+// debugger;
   const {
     id,
     eventType,
@@ -39,6 +44,9 @@ const createEventEditTemplate = (event) => {
     basePrice,
     isFavorite,
   } = event;
+
+  const deleteButtonText = externalData.deleteButtonText;
+  const saveButtonText = externalData.saveButtonText;
 
   const objectByType = EVENT_TYPES.filter((it) => it.name === eventType.name);
 
@@ -121,6 +129,7 @@ const createEventEditTemplate = (event) => {
 
   const destinationMarkup = createDestinationMarkup();
 
+
   return (`<li class="trip-events__item"><form class="event  event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
@@ -162,8 +171,8 @@ const createEventEditTemplate = (event) => {
           <input class="event__input  event__input--price" id="event-price-${id}" type="number" name="event-price" value="${basePrice}">
         </div>
 
-        <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Delete</button>
+        <button class="event__save-btn  btn  btn--blue" type="submit">${saveButtonText}</button>
+        <button class="event__reset-btn" type="reset">${deleteButtonText}</button>
 
         <input id="event-favorite-${id}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
         <label class="event__favorite-btn" for="event-favorite-${id}">
@@ -201,6 +210,7 @@ export default class EventEdit extends AbstractSmartComponent {
   constructor(event) {
     super();
     this._event = event;
+    this._externalData = DefaultData;
     this._offers = event.eventType.offers;
     this._startDate = event.dateFrom;
     this._endDate = event.dateTo;
@@ -211,13 +221,12 @@ export default class EventEdit extends AbstractSmartComponent {
     this._rollupBtnClickHandler = null;
     this._flatpickr = null;
     this._applyFlatpickr();
+
     // this.setActiveItem();
   }
 
   getTemplate() {
-
-    return createEventEditTemplate(this._event);
-
+    return createEventEditTemplate(this._event, this._externalData);
   }
 
   setRollupBtnClickHandler(handler) {
@@ -253,6 +262,11 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   reset() {
+    this.rerender();
+  }
+
+  setData(data) {
+    this._externalData = Object.assign({}, DefaultData, data);
     this.rerender();
   }
 
@@ -322,6 +336,22 @@ export default class EventEdit extends AbstractSmartComponent {
     // const formData =
     // parseFormData(formData, this._event, this._offers);
     return new FormData(form);
+  }
+
+  lockEditForm() {
+    const allInputs = Array.from(this.getElement().querySelectorAll(`input`));
+    allInputs.forEach((it) => {
+      it.disabled = true;
+    });
+    this.getElement().querySelector(`.event__save-btn`).disabled = true;
+  }
+
+  unlockEditForm() {
+    const allInputs = Array.from(this.getElement().querySelectorAll(`input`));
+    allInputs.forEach((it) => {
+      it.disabled = false;
+    });
+    this.getElement().querySelector(`.event__save-btn`).disabled = false;
   }
 
   removeElement() {

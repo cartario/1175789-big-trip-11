@@ -126,12 +126,23 @@ export default class PointController extends AbstractComponent {
       // debugger;
       const formData = this._eventEditComponent.getData();
       const data = parseFormData(formData, event, this._offers);
+
+      this._eventEditComponent.setData({
+        saveButtonText: `Saving...`,
+      });
+
+      this._eventEditComponent.lockEditForm();
+
       this._onDataChange(this, event, data);
       // this._replaceEditToEvent();
     });
 
     this._eventEditComponent.setDeleteButtonClickHandler(() => {
+      this._eventEditComponent.setData({
+        deleteButtonText: `Deleting...`,
+      });
 
+      this._eventEditComponent.lockEditForm();
       this._onDataChange(this, event, null);
 
     });
@@ -195,6 +206,12 @@ export default class PointController extends AbstractComponent {
     setTimeout(() => {
       this._eventEditComponent.getElement().style.animation = ``;
       this._eventComponent.getElement().style.animation = ``;
+
+      this._eventEditComponent.setData({
+        saveButtonText: `Save`,
+        deleteButtonText: `Delete`,
+      });
+
     }, SHAKE_ANIMATION_TIMEOUT);
   }
 }

@@ -150,6 +150,9 @@ export default class TripController {
       //   this._pointsModel.removeEvent(oldData.id);
       //   this._updateEvents();
       // })
+      // .catch(() => {
+      //   pointController.shake();
+      // });
 
       // обновление
     } else {
