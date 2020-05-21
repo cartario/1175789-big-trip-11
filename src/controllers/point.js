@@ -114,9 +114,9 @@ export default class PointController extends AbstractComponent {
     });
 
     this._eventEditComponent.setFavoriteClickHandler(() => {
-      this._onDataChange(this, event, Object.assign({}, event, {
-        isFavorite: !event.isFavorite,
-      }));
+      const newEvent = PointModel.clone(event);
+      newEvent.isFavorite = !newEvent.isFavorite;
+      this._onDataChange(this, event, newEvent);
     });
 
     this._eventEditComponent.setSubmitClickHandler((evt) => {

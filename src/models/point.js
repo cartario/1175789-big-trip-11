@@ -32,4 +32,8 @@ export default class Point {
       "offers": this.eventType.offers,
     };
   }
+
+  static clone(data) {
+    return new Point(data.toRAW());
+  }
 }
