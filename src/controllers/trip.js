@@ -137,6 +137,9 @@ export default class TripController {
           .then((eventModel) => {
             this._pointsModel.addEvent(eventModel);
             pointController.render(eventModel, EventControllerMode.DEFAULT);
+          })
+          .catch(() => {
+            pointController.shake();
           });
         // this._updateEvents();
       }
@@ -157,6 +160,9 @@ export default class TripController {
             pointController.render(eventsModel, EventControllerMode.DEFAULT);
             // this._updateEvents();
           }
+        })
+        .catch(() => {
+          pointController.shake();
         });
     }
   }

@@ -4,6 +4,8 @@ import EventEditComponent from "../components/event-edit.js";
 import {RenderPosition, render, replace, remove} from "../utils/render.js";
 import PointModel from "../models/point.js";
 
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 export const parseFormData = (formData, event, allOffers) => {
   const selectedType = document.querySelector(`.event__type-output`)
     .textContent.trim().split(` `)[0];
@@ -184,5 +186,15 @@ export default class PointController extends AbstractComponent {
     remove(this._eventEditComponent);
     remove(this._eventComponent);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  shake() {
+    this._eventEditComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    this._eventComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._eventEditComponent.getElement().style.animation = ``;
+      this._eventComponent.getElement().style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 }
