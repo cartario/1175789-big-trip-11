@@ -64,7 +64,7 @@ export const EmptyEvent = {
 
   dateFrom: new Date(),
   dateTo: new Date(),
-  destination: {name: `Default Moscow`, pictures: [], description: ``},
+  destination: {name: `Moscow`, pictures: [], description: ``},
   basePrice: 100900,
   isFavorite: false,
 };

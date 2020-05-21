@@ -132,24 +132,27 @@ export default class TripController {
         pointController.destroy();
         this._updateEvents();
       } else {
-
-        this._pointsModel.addEvent(newData);
-        pointController.render(newData, EventControllerMode.DEFAULT);
+        // debugger;
+        this._api.createEvent(newData)
+          .then((eventModel) => {
+            this._pointsModel.addEvent(eventModel);
+            pointController.render(eventModel, EventControllerMode.DEFAULT);
+          });
         // this._updateEvents();
-
       }
       // удаление
     } else if (newData === null) {
-      this._pointsModel.removeEvent(oldData.id);
-      this._updateEvents();
+      // this._api.deleteEvent(oldData.id)
+      // .then(() => {
+      //   this._pointsModel.removeEvent(oldData.id);
+      //   this._updateEvents();
+      // })
+
       // обновление
     } else {
-
       this._api.updateEvent(oldData.id, newData)
         .then((eventsModel) => {
-
           const isSuccess = this._pointsModel.updatePoint(oldData.id, eventsModel);
-
           if (isSuccess) {
             pointController.render(eventsModel, EventControllerMode.DEFAULT);
             // this._updateEvents();

@@ -27,16 +27,6 @@ export default class API {
       .then(Point.parsePoints);
   }
 
-  getOffers() {
-    return this._load({url: `offers`})
-      .then((response) => response.json());
-  }
-
-  getDestinations() {
-    return this._load({url: `destinations`})
-      .then((response) => response.json());
-  }
-
   updateEvent(id, data) {
     return this._load({
       url: `points/${id}`,
@@ -48,6 +38,21 @@ export default class API {
     .then(Point.parsePoint);
   }
 
+  createEvent(event) {
+    return this._load({
+      url: `points`,
+      method: Method.POST,
+      body: JSON.stringify(event.toRAW()),
+      headers: new Headers({"Content-Type": `application/json`}),
+    })
+    .then((response) => response.json())
+    .then(Point.parsePoint);
+  }
+
+  deleteEvent(id) {
+    return this._load({url: `points/${id}`, method: Method.DELETE});
+  }
+
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
@@ -55,5 +60,15 @@ export default class API {
       .catch((err) => {
         throw err;
       });
+  }
+
+  getOffers() {
+    return this._load({url: `offers`})
+      .then((response) => response.json());
+  }
+
+  getDestinations() {
+    return this._load({url: `destinations`})
+      .then((response) => response.json());
   }
 }
