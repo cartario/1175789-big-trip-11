@@ -1,7 +1,6 @@
 import {EVENT_TYPES, DESTINATION_POINTS, DESCRIPTION_ITEMS} from "../const.js";
 import {getRandomInt, getRandomArrayItem, getRandomTime} from "../utils/common.js";
 
-
 const generatePhotos = (count) => {
   const arr = [];
   for (let i = 0; i < count; i++) {
@@ -14,7 +13,7 @@ export const generateDestination = () => {
   return {
     name: getRandomArrayItem(DESTINATION_POINTS),
     description: getRandomArrayItem(DESCRIPTION_ITEMS),
-    photos: generatePhotos(10)};
+    pictures: generatePhotos(10)};
 };
 
 // генерит общую структуру одного обьекта
