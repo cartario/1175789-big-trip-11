@@ -8,8 +8,9 @@ import {RenderPosition, render} from "./utils/render.js";
 import TripTabsComponent, {MenuItem} from "./components/trip-tabs.js";
 import StatsComponent from "./components/stats.js";
 
+const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
+const api = new API(`Basic er83jdzbdw`, END_POINT);
 
-const api = new API(`Basic er83jdzbdw`);
 
 // const TOTAL_EVENTS = 15;
 // const events = generateEvents(TOTAL_EVENTS);
@@ -57,10 +58,8 @@ siteMenuComponent.setOnChange((menuItem) => {
 
 api.getEvents()
   .then((events) => {
-
     // связывает данные и модель
     pointsModel.setPoints(events);
-
     tripController.render();
     tripController.renderHeader(tripControlsElement);
   });
@@ -70,7 +69,7 @@ api.getEvents()
 //     console.log(offers)
 //   });
 
-api.getDestinations()
-.then(() => {
+// api.getDestinations()
+// .then(() => {
 
-});
+// });
