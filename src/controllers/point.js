@@ -6,9 +6,13 @@ import PointModel from "../models/point.js";
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
 
-export const parseFormData = (formData, event, allOffers) => {
+export const parseFormData = (formData, event, allOffers, destinations) => {
   const selectedType = document.querySelector(`.event__type-output`)
     .textContent.trim().split(` `)[0];
+
+  const city = formData.get(`event-destination`);
+  const destination = destinations.find((it) => it.name === city);
+
 
   const checkedOffersTitle = Array.from(document.querySelectorAll(`.event__offer-checkbox`))
       .filter((it) => it.checked)
@@ -34,11 +38,7 @@ export const parseFormData = (formData, event, allOffers) => {
     "id": event.id,
     "type": selectedType,
     "offers": getOffers(),
-    "destination": Object.assign({}, event, {
-      name: formData.get(`event-destination`),
-      description: event.destination.description,
-      pictures: event.destination.pictures,
-    }),
+    "destination": destination,
     "date_from": convertData(formData.get(`event-start-time`)),
     "date_to": convertData(formData.get(`event-end-time`)),
     "base_price": Number(formData.get(`event-price`)),
@@ -53,7 +53,7 @@ export const Mode = {
 };
 
 export const EmptyEvent = {
-  id: 1,
+  id: `0`,
   eventType: {
     name: `Taxi`,
     offers: [{
@@ -72,7 +72,7 @@ export const EmptyEvent = {
 };
 
 export default class PointController extends AbstractComponent {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, destinations) {
     super();
     this._container = container;
     this._onDataChange = onDataChange;
@@ -82,6 +82,7 @@ export default class PointController extends AbstractComponent {
     this._eventEditComponent = null;
     this._mode = Mode.DEFAULT;
     this._offers = null;
+    this._destinations = destinations;
   }
 
   _onEscKeyDown(evt) {
@@ -97,7 +98,9 @@ export default class PointController extends AbstractComponent {
   }
 
   render(event, mode) {
+
     this._offers = event.eventType.offers;
+
     this._mode = mode;
     const oldEventComponent = this._eventComponent;
     const oldEventEditComponent = this._eventEditComponent;
@@ -123,9 +126,9 @@ export default class PointController extends AbstractComponent {
 
     this._eventEditComponent.setSubmitClickHandler((evt) => {
       evt.preventDefault();
-      // debugger;
+
       const formData = this._eventEditComponent.getData();
-      const data = parseFormData(formData, event, this._offers);
+      const data = parseFormData(formData, event, this._offers, this._destinations);
 
       this._eventEditComponent.setData({
         saveButtonText: `Saving...`,

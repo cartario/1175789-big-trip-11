@@ -4,6 +4,7 @@ import {getEventsByFilter} from "../utils/filter.js";
 export default class Points {
   constructor() {
     this._points = [];
+    this._destiantions = [];
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
     this._activeFilterType = FilterType.EVERYTHING;
@@ -20,6 +21,15 @@ export default class Points {
   setPoints(points) {
     this._points = Array.from(points);
     this._callHandlers(this._dataChangeHandlers);
+  }
+
+  setDestinations(destinations) {
+    this._destinations = Array.from(destinations);
+    this._callHandlers(this._dataChangeHandlers);
+  }
+
+  getDestinations() {
+    return this._destinations;
   }
 
   setDataChangeHandler(handler) {
