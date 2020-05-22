@@ -36,6 +36,7 @@ export default class TripController {
     this._container = container;
     this._pointsModel = pointsModel;
     this._events = [];
+    this._destinations = [];
     this._tripDaysComponent = new TripDaysComponent();
     this._noEventComponent = new NoEventsComponent();
     this._sortComponent = null;
@@ -49,7 +50,6 @@ export default class TripController {
     this._onFilterChange = this._onFilterChange.bind(this);
     this._pointsModel.setFilterChangeHandler(this._onFilterChange);
     this._creatingEvent = null;
-
   }
 
   renderHeader(tripControlsElement) {
@@ -105,7 +105,8 @@ export default class TripController {
         render(this._tripDaysComponent.getElement(), tripDayComponent, RenderPosition.BEFOREEND);
       }
 
-      this._pointController = new PointController(tripDayEventsList, this._onDataChange, this._onViewChange);
+      this._destinations = this._pointsModel.getDestinations();
+      this._pointController = new PointController(tripDayEventsList, this._onDataChange, this._onViewChange, this._destinations);
       this._pointController.render(event, EventControllerMode.DEFAULT);
       this._showedEventControllers = this._showedEventControllers.concat(this._pointController);
 
@@ -197,7 +198,7 @@ export default class TripController {
 
     const tripDayEventsList = this._tripDaysComponent.getElement().querySelector(`.trip-events__list`);
 
-    this._creatingEvent = new PointController(tripDayEventsList, this._onDataChange, this._onViewChange);
+    this._creatingEvent = new PointController(tripDayEventsList, this._onDataChange, this._onViewChange, this._destinations);
     this._creatingEvent.render(EmptyEvent, EventControllerMode.ADDING);
 
   }

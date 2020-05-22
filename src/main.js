@@ -69,7 +69,9 @@ api.getEvents()
 //     console.log(offers)
 //   });
 
-// api.getDestinations()
-// .then(() => {
+api.getDestinations()
+.then((destinations) => {
+  pointsModel.setDestinations(destinations);
+});
 
-// });
+
