@@ -58,10 +58,7 @@ export default class TripController {
   }
 
   render() {
-    // debugger;
-    // заполняет данными из модели
     const events = this._pointsModel.getPoints();
-
     const tripMain = document.querySelector(`.trip-main`);
     const isEventsExist = !!events;
     const sortedEventsByDate = isEventsExist ? getSortedEventsByDate(events) : [];
@@ -125,15 +122,12 @@ export default class TripController {
   }
 
   _onDataChange(pointController, oldData, newData) {
-
-    // добавление
     if (oldData === EmptyEvent) {
       this._creatingEvent = null;
       if (newData === null) {
         pointController.destroy();
         this._updateEvents();
       } else {
-        // debugger;
         this._api.createEvent(newData)
           .then((eventModel) => {
             this._pointsModel.addEvent(eventModel);
@@ -142,27 +136,22 @@ export default class TripController {
           .catch(() => {
             pointController.shake();
           });
-        // this._updateEvents();
       }
-      // удаление
     } else if (newData === null) {
-      // this._api.deleteEvent(oldData.id)
-      // .then(() => {
-      //   this._pointsModel.removeEvent(oldData.id);
-      //   this._updateEvents();
-      // })
-      // .catch(() => {
-      //   pointController.shake();
-      // });
-
-      // обновление
+      this._api.deleteEvent(oldData.id)
+      .then(() => {
+        this._pointsModel.removeEvent(oldData.id);
+        this._updateEvents();
+      })
+      .catch(() => {
+        pointController.shake();
+      });
     } else {
       this._api.updateEvent(oldData.id, newData)
         .then((eventsModel) => {
           const isSuccess = this._pointsModel.updatePoint(oldData.id, eventsModel);
           if (isSuccess) {
             pointController.render(eventsModel, EventControllerMode.DEFAULT);
-            // this._updateEvents();
           }
         })
         .catch(() => {
@@ -174,7 +163,6 @@ export default class TripController {
   _onFilterChange() {
     this._updateEvents();
     this._filterController.render();
-
   }
 
   _updateEvents() {

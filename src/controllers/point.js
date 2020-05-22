@@ -13,7 +13,6 @@ export const parseFormData = (formData, event, allOffers, destinations) => {
   const city = formData.get(`event-destination`);
   const destination = destinations.find((it) => it.name === city);
 
-
   const checkedOffersTitle = Array.from(document.querySelectorAll(`.event__offer-checkbox`))
       .filter((it) => it.checked)
       .map((offer) => offer.getAttribute(`value`));
@@ -137,7 +136,6 @@ export default class PointController extends AbstractComponent {
       this._eventEditComponent.lockEditForm();
 
       this._onDataChange(this, event, data);
-      // this._replaceEditToEvent();
     });
 
     this._eventEditComponent.setDeleteButtonClickHandler(() => {
@@ -184,13 +182,12 @@ export default class PointController extends AbstractComponent {
     if (document.contains(this._eventEditComponent.getElement())) {
       replace(this._eventComponent, this._eventEditComponent);
     }
-    // replace(this._eventComponent, this._eventEditComponent);
+
     document.addEventListener(`keydown`, this._onEscKeyDown);
     this._mode = Mode.DEFAULT;
   }
 
   setDefaultView() {
-
     if (this._mode !== Mode.DEFAULT) {
       this._replaceEditToEvent();
     }
