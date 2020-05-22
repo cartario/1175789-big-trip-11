@@ -1,5 +1,4 @@
 import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
-// import {parseFormData} from "../controllers/point.js";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import {encode} from "he";
@@ -34,7 +33,6 @@ const createOptionsDestination = (citi) => {
 const optionsDestinationMarkup = DESTINATION_POINTS.map((it) => createOptionsDestination(it)).join(`\n`);
 
 const createEventEditTemplate = (event, externalData) => {
-// debugger;
   const {
     id,
     eventType,
@@ -52,7 +50,6 @@ const createEventEditTemplate = (event, externalData) => {
 
   const isShowingDestination = Math.random() > 0.5;
   const isOffersExist = objectByType[0].offers.length > 0;
-
 
   const preposition = eventType.group === `Transfer` ? `to` : `in`;
 
@@ -100,7 +97,6 @@ const createEventEditTemplate = (event, externalData) => {
       </div>`;
   };
 
-
   const availableOffersMarkup = event.eventType.offers.map((it, i) => creatAvaibleOffers(it, i)).join(`\n`);
 
   const createDestinationMarkup = () => {
@@ -128,7 +124,6 @@ const createEventEditTemplate = (event, externalData) => {
   };
 
   const destinationMarkup = createDestinationMarkup();
-
 
   return (`<li class="trip-events__item"><form class="event  event--edit" action="#" method="post">
       <header class="event__header">
@@ -198,7 +193,6 @@ const createEventEditTemplate = (event, externalData) => {
           </section>
         ` : ``}
 
-
             ${destinationMarkup}
 
       </section>
@@ -221,8 +215,6 @@ export default class EventEdit extends AbstractSmartComponent {
     this._rollupBtnClickHandler = null;
     this._flatpickr = null;
     this._applyFlatpickr();
-
-    // this.setActiveItem();
   }
 
   getTemplate() {
@@ -270,14 +262,6 @@ export default class EventEdit extends AbstractSmartComponent {
     this.rerender();
   }
 
-  // setActiveItem () {
-  //   Array.from(this.getElement().querySelectorAll(`.event__offer-checkbox`))
-  //   .forEach((it) => it.addEventListener(`change`, (evt) => {
-  //    console.log(it)
-  //   }))
-
-  // };
-
   _subscribeOnEvents() {
     const element = this.getElement();
 
@@ -291,9 +275,7 @@ export default class EventEdit extends AbstractSmartComponent {
           group: newEventTypeObj.group,
         };
 
-
         this._event.eventType.offers = EVENT_TYPES.find((it) => it.name === newEventType).offers;
-
         this.rerender();
       });
     });
@@ -302,14 +284,12 @@ export default class EventEdit extends AbstractSmartComponent {
       input.addEventListener(`change`, (evt) => {
         const newCity = evt.target.value;
         this._event.destination.name = newCity;
-
         this.rerender();
       });
     });
   }
 
   _applyFlatpickr() {
-
     const dateFormat = `d/m/y H:i`;
     const enableTime = true;
     if (this._flatpickr) {
@@ -333,8 +313,6 @@ export default class EventEdit extends AbstractSmartComponent {
 
   getData() {
     const form = this.getElement().querySelector(`.event--edit`);
-    // const formData =
-    // parseFormData(formData, this._event, this._offers);
     return new FormData(form);
   }
 

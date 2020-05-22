@@ -3,7 +3,6 @@ import Chart from 'chart.js';
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import {EVENT_TYPES} from "../const.js";
 import moment from "moment";
-// import flatpickr from "flatpickr";
 
 const getUniqTypes = (points) => {
   let res = [];

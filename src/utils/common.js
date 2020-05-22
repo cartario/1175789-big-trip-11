@@ -1,6 +1,5 @@
 import moment from "moment";
 
-
 export const formatDate = (date) => {
   return moment(date).format(`L`);
 };
@@ -35,7 +34,6 @@ export const getRandomArray = (array) => {
   return (array) ? array.slice(0, getRandomInt(-1, array.length) + 1) : ``;
 };
 
-// генерит случайные dateFrom, dateTo
 export const getRandomTime = () => {
   const targetTime = new Date();
   const sign = Math.random() > 0.5 ? 1 : -1;
