@@ -177,18 +177,18 @@ export default class TripController {
   }
 
   createEvent() {
+
     if (this._creatingEvent) {
       return;
     }
 
     this._filterController.reset();
-    this._onViewChange();
 
     const tripDayEventsList = this._tripDaysComponent.getElement().querySelector(`.trip-events__list`);
 
     this._creatingEvent = new PointController(tripDayEventsList, this._onDataChange, this._onViewChange, this._destinations);
+    this._showedEventControllers = this._showedEventControllers.concat(this._creatingEvent);
     this._creatingEvent.render(EmptyEvent, EventControllerMode.ADDING);
-
   }
 
   destroy() {

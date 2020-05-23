@@ -5,7 +5,7 @@ import {EVENT_TYPES} from "../const.js";
 import moment from "moment";
 
 const getUniqTypes = (points) => {
-  let res = [];
+  const res = [];
   points.map((point) => {
     if (!res.includes(point.eventType.name)) {
       res.push(point.eventType.name);
