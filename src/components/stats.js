@@ -28,7 +28,8 @@ const spentMoneyByType = (points) => {
 };
 
 const getTransportTypes = () => {
-  return EVENT_TYPES.slice(0, 7).map((point) => point.name.toLowerCase());
+  return EVENT_TYPES.filter((point) => point.group === `Transfer`)
+  .map((point) => point.name);
 };
 
 const usedTransportType = (points) => {

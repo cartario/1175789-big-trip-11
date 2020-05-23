@@ -30,7 +30,7 @@ const createOptionsDestination = (citi) => {
     `;
 };
 
-const optionsDestinationMarkup = DESTINATION_POINTS.map((it) => createOptionsDestination(it)).join(`\n`);
+const optionsDestinationMarkup = DESTINATION_POINTS.map((point) => createOptionsDestination(point)).join(`\n`);
 
 const createEventEditTemplate = (event, externalData) => {
   const {
@@ -46,10 +46,10 @@ const createEventEditTemplate = (event, externalData) => {
   const deleteButtonText = externalData.deleteButtonText;
   const saveButtonText = externalData.saveButtonText;
 
-  const objectByType = EVENT_TYPES.filter((it) => it.name === eventType.name);
+  const currentType = EVENT_TYPES.filter((type) => type.name === eventType.name);
 
   const isShowingDestination = Math.random() > 0.5;
-  const isOffersExist = objectByType[0].offers.length > 0;
+  const isOffersExist = currentType[0].offers.length > 0;
 
   const preposition = eventType.group === `Transfer` ? `to` : `in`;
 
@@ -65,8 +65,11 @@ const createEventEditTemplate = (event, externalData) => {
 
   const eventTypeToggleMarkup = eventTypeToggle();
 
-  const eventTransferMarkup = EVENT_TYPES.slice(0, 7).map((it) => createEventTransferMarkup(it.name)).join(`\n`);
-  const eventActivityMarkup = EVENT_TYPES.slice(7).map((it) => createEventActivityMarkup(it.name)).join(`\n`);
+  const eventTransferMarkup = EVENT_TYPES.filter((type) => type.group === `Transfer`)
+  .map((type) => createEventTransferMarkup(type.name)).join(`\n`);
+
+  const eventActivityMarkup = EVENT_TYPES.filter((type) => type.group === `Activity`)
+  .map((type) => createEventActivityMarkup(type.name)).join(`\n`);
 
   const createDestinationTime = () => {
 
@@ -97,14 +100,14 @@ const createEventEditTemplate = (event, externalData) => {
       </div>`;
   };
 
-  const availableOffersMarkup = event.eventType.offers.map((it, i) => creatAvaibleOffers(it, i)).join(`\n`);
+  const availableOffersMarkup = event.eventType.offers.map((offer, index) => creatAvaibleOffers(offer, index)).join(`\n`);
 
   const createDestinationMarkup = () => {
     const createEventPhotos = (url) => {
       return `<img class="event__photo" src="${url}" alt="Event photo">`;
     };
 
-    const eventPhotosMarkup = destination.pictures.map((it) => createEventPhotos(it.src)).join(`\n`);
+    const eventPhotosMarkup = destination.pictures.map((picture) => createEventPhotos(picture.src)).join(`\n`);
 
     return `${isShowingDestination ? `
         <section class="event__section  event__section--destination">
@@ -270,14 +273,14 @@ export default class EventEdit extends AbstractSmartComponent {
     element.querySelectorAll(`.event__type-input`).forEach((input) => {
       input.addEventListener(`change`, (evt) => {
         const newEventType = evt.target.value;
-        const newEventTypeObj = EVENT_TYPES.find((it) => it.name === newEventType);
+        const currentNewEventType = EVENT_TYPES.find((type) => type.name === newEventType);
 
         this._event.eventType = {
           name: newEventType,
-          group: newEventTypeObj.group,
+          group: currentNewEventType.group,
         };
 
-        this._event.eventType.offers = EVENT_TYPES.find((it) => it.name === newEventType).offers;
+        this._event.eventType.offers = EVENT_TYPES.find((type) => type.name === newEventType).offers;
         this.rerender();
       });
     });
@@ -320,16 +323,16 @@ export default class EventEdit extends AbstractSmartComponent {
 
   lockEditForm() {
     const allInputs = Array.from(this.getElement().querySelectorAll(`input`));
-    allInputs.forEach((it) => {
-      it.disabled = true;
+    allInputs.forEach((input) => {
+      input.disabled = true;
     });
     this.getElement().querySelector(`.event__save-btn`).disabled = true;
   }
 
   unlockEditForm() {
     const allInputs = Array.from(this.getElement().querySelectorAll(`input`));
-    allInputs.forEach((it) => {
-      it.disabled = false;
+    allInputs.forEach((input) => {
+      input.disabled = false;
     });
     this.getElement().querySelector(`.event__save-btn`).disabled = false;
   }

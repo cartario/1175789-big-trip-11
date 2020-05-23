@@ -2,6 +2,7 @@ import AbstractComponent from "../components/abstract-component.js";
 import EventComponent from "../components/event.js";
 import EventEditComponent from "../components/event-edit.js";
 import {RenderPosition, render, replace, remove} from "../utils/render.js";
+import {convertData} from "../utils/common.js";
 import PointModel from "../models/point.js";
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
@@ -11,26 +12,20 @@ export const parseFormData = (formData, event, allOffers, destinations) => {
     .textContent.trim().split(` `)[0];
 
   const city = formData.get(`event-destination`);
-  const destination = destinations.find((it) => it.name === city);
+  const destination = destinations.find((destinationCity) => destinationCity.name === city);
 
   const checkedOffersTitle = Array.from(document.querySelectorAll(`.event__offer-checkbox`))
-      .filter((it) => it.checked)
+      .filter((offerTitle) => offerTitle.checked)
       .map((offer) => offer.getAttribute(`value`));
 
   const getOffers = () => {
     return allOffers.map((offer) => {
       if (checkedOffersTitle.includes(offer.title)) {
         return Object.assign({}, offer, {checked: true});
-      } else {
-        return Object.assign({}, offer, {checked: false});
       }
-    });
-  };
+      return Object.assign({}, offer, {checked: false});
 
-  const convertData = (dateString) => {
-    const monthIndex = dateString[3] + dateString[4];
-    const dayIndex = dateString[0] + dateString[1];
-    return monthIndex + `/` + dayIndex + dateString.slice(5);
+    });
   };
 
   return new PointModel({

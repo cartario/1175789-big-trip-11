@@ -2,8 +2,8 @@ import AbstractComponent from "./abstract-component.js";
 
 const createTripInfoTemplate = (eventsList) => {
 
-  const totalPrice = eventsList.reduce((acc, event) => {
-    return acc + event.basePrice;
+  const totalPrice = eventsList.reduce((price, event) => {
+    return price + event.basePrice;
   }, 0);
 
   return (`<section class="trip-main__trip-info  trip-info">

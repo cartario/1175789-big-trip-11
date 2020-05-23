@@ -28,7 +28,7 @@ const createTripEvent = (event) => {
   };
 
   const selectedOffersMarkup = () => {
-    return eventType.offers.map((it) => selectedOffers(it)).join(`\n`);
+    return eventType.offers.map((offer) => selectedOffers(offer)).join(`\n`);
   };
 
   const offersMarkup = selectedOffersMarkup();

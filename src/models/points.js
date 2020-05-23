@@ -55,21 +55,21 @@ export default class Points {
 
   }
 
-  updatePoint(id, point) {
-    const index = this._points.findIndex((it) => it.id === id);
+  updatePoint(id, currentPoint) {
+    const index = this._points.findIndex((point) => point.id === id);
 
     if (index === -1) {
       return false;
     }
 
-    this._points = [].concat(this._points.slice(0, index), point, this._points.slice(index + 1));
+    this._points = [].concat(this._points.slice(0, index), currentPoint, this._points.slice(index + 1));
     this._callHandlers(this._dataChangeHandlers);
 
     return true;
   }
 
   removeEvent(id) {
-    const index = this._points.findIndex((it) => (it.id === id));
+    const index = this._points.findIndex((point) => (point.id === id));
 
     if (index === -1) {
       return false;
