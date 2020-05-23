@@ -124,6 +124,7 @@ export default class PointController extends AbstractComponent {
     });
 
     this._eventEditComponent.setSubmitClickHandler((evt) => {
+
       evt.preventDefault();
 
       const formData = this._eventEditComponent.getData();

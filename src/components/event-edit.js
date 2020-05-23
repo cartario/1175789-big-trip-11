@@ -208,7 +208,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._offers = event.eventType.offers;
     this._startDate = event.dateFrom;
     this._endDate = event.dateTo;
-    this.setFavoriteClickHandler();
+    this._setFavoriteClickHandler = null;
     this._subscribeOnEvents();
     this._submitHandler = null;
     this._deleteButtonClickHandler = null;
@@ -229,6 +229,7 @@ export default class EventEdit extends AbstractSmartComponent {
   setFavoriteClickHandler(handler) {
     this.getElement().querySelector(`.event__favorite-icon`)
     .addEventListener(`click`, handler);
+    this._setFavoriteClickHandler = handler;
   }
 
   setSubmitClickHandler(handler) {
@@ -242,6 +243,7 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
+    this.setFavoriteClickHandler(this._setFavoriteClickHandler);
     this.setSubmitClickHandler(this._submitHandler);
     this._subscribeOnEvents();
     this.setRollupBtnClickHandler(this._rollupBtnClickHandler);
