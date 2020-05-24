@@ -2,8 +2,10 @@ import AbstractComponent from "../components/abstract-component.js";
 import EventComponent from "../components/event.js";
 import EventEditComponent from "../components/event-edit.js";
 import {RenderPosition, render, replace, remove} from "../utils/render.js";
+import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
 import {convertData} from "../utils/common.js";
 import PointModel from "../models/point.js";
+
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
 
@@ -48,8 +50,9 @@ export const Mode = {
 
 export const EmptyEvent = {
   id: `0`,
+
   eventType: {
-    name: `Taxi`,
+    name: EVENT_TYPES[0].name,
     offers: [{
       title: `Default title`,
       price: 100500,
@@ -60,13 +63,13 @@ export const EmptyEvent = {
 
   dateFrom: new Date(),
   dateTo: new Date(),
-  destination: {name: `Moscow`, pictures: [], description: ``},
+  destination: {name: DESTINATION_POINTS[0], pictures: [], description: ``},
   basePrice: 100900,
   isFavorite: false,
 };
 
 export default class PointController extends AbstractComponent {
-  constructor(container, onDataChange, onViewChange, destinations) {
+  constructor(container, onDataChange, onViewChange, destinations, offers) {
     super();
     this._container = container;
     this._onDataChange = onDataChange;
@@ -77,6 +80,7 @@ export default class PointController extends AbstractComponent {
     this._mode = Mode.DEFAULT;
     this._offers = null;
     this._destinations = destinations;
+    this._RealOffers = offers;
   }
 
   _onEscKeyDown(evt) {
@@ -115,7 +119,7 @@ export default class PointController extends AbstractComponent {
     this._eventEditComponent.setFavoriteClickHandler(() => {
       const newEvent = PointModel.clone(event);
       newEvent.isFavorite = !newEvent.isFavorite;
-      this._onDataChange(this, event, newEvent);
+      this._onDataChange(this, event, newEvent, true);
     });
 
     this._eventEditComponent.setSubmitClickHandler((evt) => {
@@ -151,7 +155,7 @@ export default class PointController extends AbstractComponent {
           replace(this._eventEditComponent, oldEventEditComponent);
           this._replaceEditToEvent();
         } else {
-          render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
+          render(this._container, this._eventComponent, RenderPosition.AFTERBEGIN);
         }
         break;
       case Mode.ADDING:
@@ -160,7 +164,7 @@ export default class PointController extends AbstractComponent {
           remove(oldEventEditComponent);
         }
         document.addEventListener(`keydown`, this._onEscKeyDown);
-        render(this._container, this._eventEditComponent, RenderPosition.BEFOREEND);
+        render(this._container, this._eventEditComponent, RenderPosition.AFTERBEGIN);
         break;
     }
   }

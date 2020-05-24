@@ -5,6 +5,7 @@ export default class Points {
   constructor() {
     this._points = [];
     this._destiantions = [];
+    this._offers = [];
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
     this._activeFilterType = FilterType.EVERYTHING;
@@ -30,6 +31,15 @@ export default class Points {
 
   getDestinations() {
     return this._destinations;
+  }
+
+  setOffers(offers) {
+    this._offers = Array.from(offers);
+    this._callHandlers(this._dataChangeHandlers);
+  }
+
+  getOffers() {
+    return this._offers;
   }
 
   setDataChangeHandler(handler) {

@@ -35,6 +35,7 @@ export default class TripController {
     this._api = api;
     this._container = container;
     this._pointsModel = pointsModel;
+    this._offers = [];
     this._events = [];
     this._destinations = [];
     this._tripDaysComponent = new TripDaysComponent();
@@ -103,7 +104,8 @@ export default class TripController {
       }
 
       this._destinations = this._pointsModel.getDestinations();
-      this._pointController = new PointController(tripDayEventsList, this._onDataChange, this._onViewChange, this._destinations);
+      this._offers = this._pointsModel.getOffers();
+      this._pointController = new PointController(tripDayEventsList, this._onDataChange, this._onViewChange, this._destinations, this._offers);
       this._pointController.render(event, EventControllerMode.DEFAULT);
       this._showedEventControllers = this._showedEventControllers.concat(this._pointController);
 
@@ -121,7 +123,7 @@ export default class TripController {
     this._showedEventControllers.forEach((controller) => controller.setDefaultView());
   }
 
-  _onDataChange(pointController, oldData, newData) {
+  _onDataChange(pointController, oldData, newData, stayOnAddingMode) {
     if (oldData === EmptyEvent) {
       this._creatingEvent = null;
       if (newData === null) {
@@ -151,7 +153,9 @@ export default class TripController {
         .then((eventsModel) => {
           const isSuccess = this._pointsModel.updatePoint(oldData.id, eventsModel);
           if (isSuccess) {
-            pointController.render(eventsModel, EventControllerMode.DEFAULT);
+            if (stayOnAddingMode) {
+              pointController.render(eventsModel, EventControllerMode.ADDING);
+            } pointController.render(eventsModel, EventControllerMode.DEFAULT);
           }
         })
         .catch(() => {

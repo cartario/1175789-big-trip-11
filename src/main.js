@@ -58,3 +58,8 @@ api.getDestinations()
 .then((destinations) => {
   pointsModel.setDestinations(destinations);
 });
+
+api.getOffers()
+.then((offers) => {
+  pointsModel.setOffers(offers);
+});
