@@ -23,4 +23,7 @@ export const dayCounterFormat = (date) => {
   return date.getMonth();
 };
 
-
+export const getDuration = (first, second) => {
+  const diff = moment(second).diff(moment(first));
+  return moment.duration(diff);
+};
