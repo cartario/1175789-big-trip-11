@@ -2,7 +2,7 @@ import AbstractComponent from "../components/abstract-component.js";
 import EventComponent from "../components/event.js";
 import EventEditComponent from "../components/event-edit.js";
 import {RenderPosition, render, replace, remove} from "../utils/render.js";
-import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
+import {EVENT_TYPES} from "../const.js";
 import {convertData} from "../utils/common.js";
 import PointModel from "../models/point.js";
 
@@ -14,8 +14,8 @@ export const parseFormData = (formData, event, allOffers, destinations) => {
     .textContent.trim().split(` `)[0];
 
   const city = formData.get(`event-destination`);
-  const destination = destinations.find((destinationCity) => destinationCity.name === city);
 
+  const destination = destinations.find((destinationCity) => destinationCity.name === city);
   const checkedOffersTitle = Array.from(document.querySelectorAll(`.event__offer-checkbox`))
       .filter((offerTitle) => offerTitle.checked)
       .map((offer) => offer.getAttribute(`value`));
@@ -52,19 +52,15 @@ export const EmptyEvent = {
   id: `0`,
 
   eventType: {
-    name: EVENT_TYPES[0].name,
-    offers: [{
-      title: `Default title`,
-      price: 100500,
-      checked: false,
-    }],
+    name: `Flight`,
+    offers: EVENT_TYPES.filter((offer) => offer.name === `Flight`)[0].offers,
     group: `Transfer`,
   },
 
   dateFrom: new Date(),
   dateTo: new Date(),
-  destination: {name: DESTINATION_POINTS[0], pictures: [], description: ``},
-  basePrice: 100900,
+  destination: {name: `Geneva`, pictures: null, description: `Geneva is a beautiful city, with crowded streets, in a middle of Europe, middle-eastern paradise, for those who value comfort and coziness.`},
+  basePrice: ``,
   isFavorite: false,
 };
 
@@ -80,7 +76,7 @@ export default class PointController extends AbstractComponent {
     this._mode = Mode.DEFAULT;
     this._offers = null;
     this._destinations = destinations;
-    this._RealOffers = offers;
+    this._allOffers = offers;
   }
 
   _onEscKeyDown(evt) {
@@ -96,7 +92,6 @@ export default class PointController extends AbstractComponent {
   }
 
   render(event, mode) {
-
     this._offers = event.eventType.offers;
 
     this._mode = mode;
@@ -104,7 +99,7 @@ export default class PointController extends AbstractComponent {
     const oldEventEditComponent = this._eventEditComponent;
 
     this._eventComponent = new EventComponent(event);
-    this._eventEditComponent = new EventEditComponent(event);
+    this._eventEditComponent = new EventEditComponent(event, this._destinations, this._allOffers);
 
     this._eventComponent.setRollupBtnClickHandler(() => {
 

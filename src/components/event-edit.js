@@ -1,4 +1,4 @@
-import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
+import {EVENT_TYPES} from "../const.js";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import {encode} from "he";
@@ -30,9 +30,8 @@ const createOptionsDestination = (citi) => {
     `;
 };
 
-const optionsDestinationMarkup = DESTINATION_POINTS.map((point) => createOptionsDestination(point)).join(`\n`);
 
-const createEventEditTemplate = (event, externalData) => {
+const createEventEditTemplate = (event, externalData, allDestinations, allOffers) => {
   const {
     id,
     eventType,
@@ -48,7 +47,7 @@ const createEventEditTemplate = (event, externalData) => {
 
   const currentType = EVENT_TYPES.filter((type) => type.name === eventType.name);
 
-  const isShowingDestination = Math.random() > 0.5;
+  const isShowingDestination = !!destination.name;
   const isOffersExist = currentType[0].offers.length > 0;
 
   const preposition = eventType.group === `Transfer` ? `to` : `in`;
@@ -101,19 +100,23 @@ const createEventEditTemplate = (event, externalData) => {
   };
 
   const availableOffersMarkup = event.eventType.offers.map((offer, index) => creatAvaibleOffers(offer, index)).join(`\n`);
+  const currentDestination = allDestinations.filter((destinatiom) => destinatiom.name === destination.name)[0];
+
+  const optionsDestinationMarkup = allDestinations.map((point) => createOptionsDestination(point.name)).join(`\n`);
 
   const createDestinationMarkup = () => {
     const createEventPhotos = (url) => {
       return `<img class="event__photo" src="${url}" alt="Event photo">`;
     };
 
-    const eventPhotosMarkup = destination.pictures.map((picture) => createEventPhotos(picture.src)).join(`\n`);
+    const eventPhotosMarkup = destination.name ? currentDestination.pictures.map((picture) => createEventPhotos(picture.src)).join(`\n`) : ``;
 
     return `${isShowingDestination ? `
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${destination.name}
-          is a city in ${destination.description}
+          <p class="event__destination-description">
+
+           ${currentDestination.description}
           </p>
 
           <div class="event__photos-container">
@@ -151,7 +154,7 @@ const createEventEditTemplate = (event, externalData) => {
           <label class="event__label  event__type-output" for="event-destination-${id}">
             ${eventType.name} ${preposition}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${encode(destination.name)}" list="destination-list-${id}">
+          <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.name ? encode(destination.name) : ``}" list="destination-list-${id}">
           <datalist id="destination-list-${id}">
 
             ${optionsDestinationMarkup}
@@ -204,11 +207,13 @@ const createEventEditTemplate = (event, externalData) => {
 
 
 export default class EventEdit extends AbstractSmartComponent {
-  constructor(event) {
+  constructor(event, destinations, allOffers) {
     super();
     this._event = event;
     this._externalData = DefaultData;
     this._offers = event.eventType.offers;
+    this._allOffers = allOffers;
+    this._allDestinations = destinations;
     this._startDate = event.dateFrom;
     this._endDate = event.dateTo;
     this._setFavoriteClickHandler = null;
@@ -221,7 +226,7 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createEventEditTemplate(this._event, this._externalData);
+    return createEventEditTemplate(this._event, this._externalData, this._allDestinations, this._allOffers);
   }
 
   setRollupBtnClickHandler(handler) {

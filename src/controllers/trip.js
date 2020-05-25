@@ -59,6 +59,7 @@ export default class TripController {
   }
 
   render() {
+
     const events = this._pointsModel.getPoints();
     const tripMain = document.querySelector(`.trip-main`);
     const isEventsExist = !!events;
@@ -154,7 +155,8 @@ export default class TripController {
           const isSuccess = this._pointsModel.updatePoint(oldData.id, eventsModel);
           if (isSuccess) {
             if (stayOnAddingMode) {
-              pointController.render(eventsModel, EventControllerMode.ADDING);
+
+              return pointController.render(eventsModel, EventControllerMode.ADDING);
             } pointController.render(eventsModel, EventControllerMode.DEFAULT);
           }
         })

@@ -4,7 +4,7 @@ import {getEventsByFilter} from "../utils/filter.js";
 export default class Points {
   constructor() {
     this._points = [];
-    this._destiantions = [];
+    this._destinations = [];
     this._offers = [];
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
