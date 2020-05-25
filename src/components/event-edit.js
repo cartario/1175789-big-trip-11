@@ -31,7 +31,7 @@ const createOptionsDestination = (citi) => {
 };
 
 
-const createEventEditTemplate = (event, externalData, allDestinations, allOffers) => {
+const createEventEditTemplate = (event, externalData, allDestinations) => {
   const {
     id,
     eventType,
@@ -207,12 +207,11 @@ const createEventEditTemplate = (event, externalData, allDestinations, allOffers
 
 
 export default class EventEdit extends AbstractSmartComponent {
-  constructor(event, destinations, allOffers) {
+  constructor(event, destinations) {
     super();
     this._event = event;
     this._externalData = DefaultData;
     this._offers = event.eventType.offers;
-    this._allOffers = allOffers;
     this._allDestinations = destinations;
     this._startDate = event.dateFrom;
     this._endDate = event.dateTo;
@@ -226,7 +225,7 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createEventEditTemplate(this._event, this._externalData, this._allDestinations, this._allOffers);
+    return createEventEditTemplate(this._event, this._externalData, this._allDestinations);
   }
 
   setRollupBtnClickHandler(handler) {

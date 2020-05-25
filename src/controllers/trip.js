@@ -19,7 +19,7 @@ const getSortedType = (eventsList, sortType, from, to) => {
       sortedEvents = showingEvents.sort((a, b) => a.dateTo - a.dateFrom - b.dateTo - b.dateFrom);
       break;
     case SortType.PRICE:
-      sortedEvents = showingEvents.sort((a, b) => a.basePrice - b.basePrice);
+      sortedEvents = showingEvents.sort((a, b) => b.basePrice - a.basePrice);
       break;
   }
   return sortedEvents.slice(from, to);
@@ -106,7 +106,7 @@ export default class TripController {
 
       this._destinations = this._pointsModel.getDestinations();
       this._offers = this._pointsModel.getOffers();
-      this._pointController = new PointController(tripDayEventsList, this._onDataChange, this._onViewChange, this._destinations, this._offers);
+      this._pointController = new PointController(tripDayEventsList, this._onDataChange, this._onViewChange, this._destinations);
       this._pointController.render(event, EventControllerMode.DEFAULT);
       this._showedEventControllers = this._showedEventControllers.concat(this._pointController);
 
@@ -159,6 +159,7 @@ export default class TripController {
               return pointController.render(eventsModel, EventControllerMode.ADDING);
             } pointController.render(eventsModel, EventControllerMode.DEFAULT);
           }
+          return null;
         })
         .catch(() => {
           pointController.shake();

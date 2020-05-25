@@ -65,7 +65,7 @@ export const EmptyEvent = {
 };
 
 export default class PointController extends AbstractComponent {
-  constructor(container, onDataChange, onViewChange, destinations, offers) {
+  constructor(container, onDataChange, onViewChange, destinations) {
     super();
     this._container = container;
     this._onDataChange = onDataChange;
@@ -76,7 +76,6 @@ export default class PointController extends AbstractComponent {
     this._mode = Mode.DEFAULT;
     this._offers = null;
     this._destinations = destinations;
-    this._allOffers = offers;
   }
 
   _onEscKeyDown(evt) {
@@ -99,7 +98,7 @@ export default class PointController extends AbstractComponent {
     const oldEventEditComponent = this._eventEditComponent;
 
     this._eventComponent = new EventComponent(event);
-    this._eventEditComponent = new EventEditComponent(event, this._destinations, this._allOffers);
+    this._eventEditComponent = new EventEditComponent(event, this._destinations);
 
     this._eventComponent.setRollupBtnClickHandler(() => {
 
