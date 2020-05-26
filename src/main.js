@@ -47,14 +47,18 @@ siteMenuComponent.setOnChange((menuItem) => {
   }
 });
 
-api.getEvents()
-  .then((events) => {
-    pointsModel.setPoints(events);
-    tripController.render();
-    tripController.renderHeader(tripControlsElement);
-  });
-
-api.getDestinations()
+api.getOffers()
+  .then((offers) => {
+    pointsModel.setOffers(offers);
+    return api.getDestinations()
 .then((destinations) => {
   pointsModel.setDestinations(destinations);
+  return api.getEvents()
+    .then((events) => {
+      pointsModel.setPoints(events);
+      tripController.render();
+      tripController.renderHeader(tripControlsElement);
+
+    });
 });
+  });

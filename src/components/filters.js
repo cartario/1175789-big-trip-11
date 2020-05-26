@@ -15,7 +15,7 @@ const createFiltersMarkup = (name, isChecked) => {
 };
 
 const createTripFiltersTemplate = (filters) => {
-  const filtersMarkup = filters.map((it) => createFiltersMarkup(it.name, it.checked)).join(`\n`);
+  const filtersMarkup = filters.map((filter) => createFiltersMarkup(filter.name, filter.checked)).join(`\n`);
 
   return (`<form class="trip-filters" action="#" method="get">
     ${filtersMarkup}

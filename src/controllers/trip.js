@@ -1,4 +1,5 @@
 import {RenderPosition, render, remove, replace} from "../utils/render.js";
+import {getDuration} from "../utils/common.js";
 import SortComponent, {SortType} from "../components/sort.js";
 import TripDaysComponent from "../components/trip-days.js";
 import TripInfoComponent from "../components/trip-info.js";
@@ -16,10 +17,12 @@ const getSortedType = (eventsList, sortType, from, to) => {
       sortedEvents = showingEvents;
       break;
     case SortType.TIME:
-      sortedEvents = showingEvents.sort((a, b) => a.dateTo - a.dateFrom - b.dateTo - b.dateFrom);
+      sortedEvents = showingEvents.sort((a, b) => getDuration(a.dateFrom, a.dateTo) - getDuration(b.dateFrom, b.dateTo));
+
       break;
     case SortType.PRICE:
       sortedEvents = showingEvents.sort((a, b) => a.basePrice - b.basePrice);
+
       break;
   }
   return sortedEvents.slice(from, to);
@@ -35,6 +38,7 @@ export default class TripController {
     this._api = api;
     this._container = container;
     this._pointsModel = pointsModel;
+    this._offers = [];
     this._events = [];
     this._destinations = [];
     this._tripDaysComponent = new TripDaysComponent();
@@ -83,10 +87,10 @@ export default class TripController {
     this._tripInfoComponent = new TripInfoComponent(events);
     render(tripMain, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
     this.renderTripDays(sortedEventsByDate);
-
   }
 
   renderTripDays(sortedEventsByDate) {
+
     let dayCount = 0;
     let tripDayEventsList = null;
     let prevDate = null;
@@ -103,25 +107,40 @@ export default class TripController {
       }
 
       this._destinations = this._pointsModel.getDestinations();
+      this._offers = this._pointsModel.getOffers();
       this._pointController = new PointController(tripDayEventsList, this._onDataChange, this._onViewChange, this._destinations);
       this._pointController.render(event, EventControllerMode.DEFAULT);
       this._showedEventControllers = this._showedEventControllers.concat(this._pointController);
-
     }
+  }
+
+  renderSortedEvents(sortedEvents) {
+    const day = new TripDayComponent(sortedEvents[0], ``);
+    render(this._tripDaysComponent.getElement(), day, RenderPosition.BEFOREEND);
+    const pointsList = day.getElement().querySelector(`.trip-events__list`);
+    day.getElement().querySelector(`.day__date`).innerHTML = ``;
+
+    sortedEvents.map((event) => {
+      const pointController = new PointController(pointsList, this._onDataChange, this._onViewChange, this._destinations);
+      pointController.render(event, EventControllerMode.DEFAULT);
+      return pointController;
+    });
   }
 
   _onSortTypeChange(sortType) {
     this._tripDaysComponent.getElement().innerHTML = ``;
     const sortedEvents = getSortedType(this._pointsModel.getPoints(), sortType, 0, this._pointsModel.getPoints().length);
-    this.renderTripDays(sortedEvents);
-
+    if (sortType === SortType.DEFAULT) {
+      this.renderTripDays(sortedEvents);
+    }
+    this.renderSortedEvents(sortedEvents);
   }
 
   _onViewChange() {
-    this._showedEventControllers.forEach((it) => it.setDefaultView());
+    this._showedEventControllers.forEach((controller) => controller.setDefaultView());
   }
 
-  _onDataChange(pointController, oldData, newData) {
+  _onDataChange(pointController, oldData, newData, stayOnAddingMode) {
     if (oldData === EmptyEvent) {
       this._creatingEvent = null;
       if (newData === null) {
@@ -151,8 +170,12 @@ export default class TripController {
         .then((eventsModel) => {
           const isSuccess = this._pointsModel.updatePoint(oldData.id, eventsModel);
           if (isSuccess) {
-            pointController.render(eventsModel, EventControllerMode.DEFAULT);
+            if (stayOnAddingMode) {
+
+              return pointController.render(eventsModel, EventControllerMode.ADDING);
+            } pointController.render(eventsModel, EventControllerMode.DEFAULT);
           }
+          return null;
         })
         .catch(() => {
           pointController.shake();
@@ -163,6 +186,7 @@ export default class TripController {
   _onFilterChange() {
     this._updateEvents();
     this._filterController.render();
+    this._creatingEvent = null;
   }
 
   _updateEvents() {

@@ -1,4 +1,4 @@
-import {EVENT_TYPES, DESTINATION_POINTS} from "../const.js";
+import {EVENT_TYPES} from "../const.js";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import {encode} from "he";
@@ -30,9 +30,8 @@ const createOptionsDestination = (citi) => {
     `;
 };
 
-const optionsDestinationMarkup = DESTINATION_POINTS.map((it) => createOptionsDestination(it)).join(`\n`);
 
-const createEventEditTemplate = (event, externalData) => {
+const createEventEditTemplate = (event, externalData, allDestinations) => {
   const {
     id,
     eventType,
@@ -46,10 +45,10 @@ const createEventEditTemplate = (event, externalData) => {
   const deleteButtonText = externalData.deleteButtonText;
   const saveButtonText = externalData.saveButtonText;
 
-  const objectByType = EVENT_TYPES.filter((it) => it.name === eventType.name);
+  const currentType = EVENT_TYPES.filter((type) => type.name === eventType.name);
 
-  const isShowingDestination = Math.random() > 0.5;
-  const isOffersExist = objectByType[0].offers.length > 0;
+  const isShowingDestination = !!destination.name;
+  const isOffersExist = currentType[0].offers.length > 0;
 
   const preposition = eventType.group === `Transfer` ? `to` : `in`;
 
@@ -65,8 +64,11 @@ const createEventEditTemplate = (event, externalData) => {
 
   const eventTypeToggleMarkup = eventTypeToggle();
 
-  const eventTransferMarkup = EVENT_TYPES.slice(0, 7).map((it) => createEventTransferMarkup(it.name)).join(`\n`);
-  const eventActivityMarkup = EVENT_TYPES.slice(7).map((it) => createEventActivityMarkup(it.name)).join(`\n`);
+  const eventTransferMarkup = EVENT_TYPES.filter((type) => type.group === `Transfer`)
+  .map((type) => createEventTransferMarkup(type.name)).join(`\n`);
+
+  const eventActivityMarkup = EVENT_TYPES.filter((type) => type.group === `Activity`)
+  .map((type) => createEventActivityMarkup(type.name)).join(`\n`);
 
   const createDestinationTime = () => {
 
@@ -97,20 +99,24 @@ const createEventEditTemplate = (event, externalData) => {
       </div>`;
   };
 
-  const availableOffersMarkup = event.eventType.offers.map((it, i) => creatAvaibleOffers(it, i)).join(`\n`);
+  const availableOffersMarkup = event.eventType.offers.map((offer, index) => creatAvaibleOffers(offer, index)).join(`\n`);
+  const currentDestination = allDestinations.filter((destinatiom) => destinatiom.name === destination.name)[0];
+
+  const optionsDestinationMarkup = allDestinations.map((point) => createOptionsDestination(point.name)).join(`\n`);
 
   const createDestinationMarkup = () => {
     const createEventPhotos = (url) => {
       return `<img class="event__photo" src="${url}" alt="Event photo">`;
     };
 
-    const eventPhotosMarkup = destination.pictures.map((it) => createEventPhotos(it.src)).join(`\n`);
+    const eventPhotosMarkup = destination.name ? currentDestination.pictures.map((picture) => createEventPhotos(picture.src)).join(`\n`) : ``;
 
     return `${isShowingDestination ? `
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${destination.name}
-          is a city in ${destination.description}
+          <p class="event__destination-description">
+
+           ${currentDestination.description}
           </p>
 
           <div class="event__photos-container">
@@ -148,7 +154,7 @@ const createEventEditTemplate = (event, externalData) => {
           <label class="event__label  event__type-output" for="event-destination-${id}">
             ${eventType.name} ${preposition}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${encode(destination.name)}" list="destination-list-${id}">
+          <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.name ? encode(destination.name) : ``}" list="destination-list-${id}">
           <datalist id="destination-list-${id}">
 
             ${optionsDestinationMarkup}
@@ -201,11 +207,12 @@ const createEventEditTemplate = (event, externalData) => {
 
 
 export default class EventEdit extends AbstractSmartComponent {
-  constructor(event) {
+  constructor(event, destinations) {
     super();
     this._event = event;
     this._externalData = DefaultData;
     this._offers = event.eventType.offers;
+    this._allDestinations = destinations;
     this._startDate = event.dateFrom;
     this._endDate = event.dateTo;
     this._setFavoriteClickHandler = null;
@@ -218,7 +225,7 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createEventEditTemplate(this._event, this._externalData);
+    return createEventEditTemplate(this._event, this._externalData, this._allDestinations);
   }
 
   setRollupBtnClickHandler(handler) {
@@ -270,14 +277,14 @@ export default class EventEdit extends AbstractSmartComponent {
     element.querySelectorAll(`.event__type-input`).forEach((input) => {
       input.addEventListener(`change`, (evt) => {
         const newEventType = evt.target.value;
-        const newEventTypeObj = EVENT_TYPES.find((it) => it.name === newEventType);
+        const currentNewEventType = EVENT_TYPES.find((type) => type.name === newEventType);
 
         this._event.eventType = {
           name: newEventType,
-          group: newEventTypeObj.group,
+          group: currentNewEventType.group,
         };
 
-        this._event.eventType.offers = EVENT_TYPES.find((it) => it.name === newEventType).offers;
+        this._event.eventType.offers = EVENT_TYPES.find((type) => type.name === newEventType).offers;
         this.rerender();
       });
     });
@@ -320,16 +327,16 @@ export default class EventEdit extends AbstractSmartComponent {
 
   lockEditForm() {
     const allInputs = Array.from(this.getElement().querySelectorAll(`input`));
-    allInputs.forEach((it) => {
-      it.disabled = true;
+    allInputs.forEach((input) => {
+      input.disabled = true;
     });
     this.getElement().querySelector(`.event__save-btn`).disabled = true;
   }
 
   unlockEditForm() {
     const allInputs = Array.from(this.getElement().querySelectorAll(`input`));
-    allInputs.forEach((it) => {
-      it.disabled = false;
+    allInputs.forEach((input) => {
+      input.disabled = false;
     });
     this.getElement().querySelector(`.event__save-btn`).disabled = false;
   }

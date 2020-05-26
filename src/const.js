@@ -24,7 +24,7 @@ const offersSource = [{
   price: 40,
 }];
 
-const offers = offersSource.map((it) => Object.assign({}, it, {checked: Math.random() > 0.5}));
+const offers = offersSource.map((offer) => Object.assign({}, offer, {checked: Math.random() > 0.5}));
 
 const EVENT_TYPES = [
   {

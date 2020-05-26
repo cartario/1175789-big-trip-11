@@ -26,8 +26,8 @@ export default class TripTabs extends AbstractComponent {
 
   setActiveItem(menuItem) {
 
-    Array.from(this.getElement().querySelectorAll(`.trip-tabs__btn`)).forEach((it) => {
-      it.classList.remove(`trip-tabs__btn--active`);
+    Array.from(this.getElement().querySelectorAll(`.trip-tabs__btn`)).forEach((button) => {
+      button.classList.remove(`trip-tabs__btn--active`);
     });
 
     const item = this.getElement().querySelector(`[menu-item = "${menuItem}"]`);
@@ -38,8 +38,8 @@ export default class TripTabs extends AbstractComponent {
   }
 
   setOnChange(handler) {
-    Array.from(this.getElement().querySelectorAll(`.trip-tabs__btn`)).forEach((it) => {
-      it.addEventListener(`click`, (evt) => {
+    Array.from(this.getElement().querySelectorAll(`.trip-tabs__btn`)).forEach((button) => {
+      button.addEventListener(`click`, (evt) => {
         const menuItem = evt.target.getAttribute(`menu-item`);
         handler(menuItem);
       });

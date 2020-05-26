@@ -2,7 +2,10 @@ import AbstractComponent from "../components/abstract-component.js";
 import EventComponent from "../components/event.js";
 import EventEditComponent from "../components/event-edit.js";
 import {RenderPosition, render, replace, remove} from "../utils/render.js";
+import {EVENT_TYPES} from "../const.js";
+import {convertData} from "../utils/common.js";
 import PointModel from "../models/point.js";
+
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
 
@@ -11,26 +14,20 @@ export const parseFormData = (formData, event, allOffers, destinations) => {
     .textContent.trim().split(` `)[0];
 
   const city = formData.get(`event-destination`);
-  const destination = destinations.find((it) => it.name === city);
 
+  const destination = destinations.find((destinationCity) => destinationCity.name === city);
   const checkedOffersTitle = Array.from(document.querySelectorAll(`.event__offer-checkbox`))
-      .filter((it) => it.checked)
+      .filter((offerTitle) => offerTitle.checked)
       .map((offer) => offer.getAttribute(`value`));
 
   const getOffers = () => {
     return allOffers.map((offer) => {
       if (checkedOffersTitle.includes(offer.title)) {
         return Object.assign({}, offer, {checked: true});
-      } else {
-        return Object.assign({}, offer, {checked: false});
       }
-    });
-  };
+      return Object.assign({}, offer, {checked: false});
 
-  const convertData = (dateString) => {
-    const monthIndex = dateString[3] + dateString[4];
-    const dayIndex = dateString[0] + dateString[1];
-    return monthIndex + `/` + dayIndex + dateString.slice(5);
+    });
   };
 
   return new PointModel({
@@ -53,20 +50,17 @@ export const Mode = {
 
 export const EmptyEvent = {
   id: `0`,
+
   eventType: {
-    name: `Taxi`,
-    offers: [{
-      title: `Default title`,
-      price: 100500,
-      checked: false,
-    }],
+    name: `Flight`,
+    offers: EVENT_TYPES.filter((offer) => offer.name === `Flight`)[0].offers,
     group: `Transfer`,
   },
 
   dateFrom: new Date(),
   dateTo: new Date(),
-  destination: {name: `Moscow`, pictures: [], description: ``},
-  basePrice: 100900,
+  destination: {name: `Geneva`, pictures: null, description: `Geneva is a beautiful city, with crowded streets, in a middle of Europe, middle-eastern paradise, for those who value comfort and coziness.`},
+  basePrice: ``,
   isFavorite: false,
 };
 
@@ -97,7 +91,6 @@ export default class PointController extends AbstractComponent {
   }
 
   render(event, mode) {
-
     this._offers = event.eventType.offers;
 
     this._mode = mode;
@@ -105,7 +98,7 @@ export default class PointController extends AbstractComponent {
     const oldEventEditComponent = this._eventEditComponent;
 
     this._eventComponent = new EventComponent(event);
-    this._eventEditComponent = new EventEditComponent(event);
+    this._eventEditComponent = new EventEditComponent(event, this._destinations);
 
     this._eventComponent.setRollupBtnClickHandler(() => {
 
@@ -120,7 +113,7 @@ export default class PointController extends AbstractComponent {
     this._eventEditComponent.setFavoriteClickHandler(() => {
       const newEvent = PointModel.clone(event);
       newEvent.isFavorite = !newEvent.isFavorite;
-      this._onDataChange(this, event, newEvent);
+      this._onDataChange(this, event, newEvent, true);
     });
 
     this._eventEditComponent.setSubmitClickHandler((evt) => {
@@ -156,7 +149,7 @@ export default class PointController extends AbstractComponent {
           replace(this._eventEditComponent, oldEventEditComponent);
           this._replaceEditToEvent();
         } else {
-          render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
+          render(this._container, this._eventComponent, RenderPosition.AFTERBEGIN);
         }
         break;
       case Mode.ADDING:
@@ -165,7 +158,7 @@ export default class PointController extends AbstractComponent {
           remove(oldEventEditComponent);
         }
         document.addEventListener(`keydown`, this._onEscKeyDown);
-        render(this._container, this._eventEditComponent, RenderPosition.BEFOREEND);
+        render(this._container, this._eventEditComponent, RenderPosition.AFTERBEGIN);
         break;
     }
   }
