@@ -186,6 +186,7 @@ export default class TripController {
   _onFilterChange() {
     this._updateEvents();
     this._filterController.render();
+    this._creatingEvent = null;
   }
 
   _updateEvents() {
