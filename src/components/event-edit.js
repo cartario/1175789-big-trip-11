@@ -31,7 +31,7 @@ const createOptionsDestination = (citi) => {
 };
 
 
-const createEventEditTemplate = (event, externalData, allDestinations) => {
+const createEventEditTemplate = (event, externalData, allDestinations, isAddingMode) => {
   const {
     id,
     eventType,
@@ -173,19 +173,28 @@ const createEventEditTemplate = (event, externalData, allDestinations) => {
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">${saveButtonText}</button>
-        <button class="event__reset-btn" type="reset">${deleteButtonText}</button>
 
+        <button class="event__reset-btn" type="reset">
+        ${isAddingMode ? `Cancel` : `${deleteButtonText}`}
+        </button>
+
+        ${isAddingMode ? `` : `
         <input id="event-favorite-${id}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
         <label class="event__favorite-btn" for="event-favorite-${id}">
           <span class="visually-hidden">Add to favorite</span>
-          <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+          <svg class="event__favorite-icon " width="28" height="28" viewBox="0 0 28 28" >
             <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"></path>
           </svg>
         </label>
+          `}
 
-        <button class="event__rollup-btn" type="button">
+
+        ${isAddingMode ? `` : `<button class="event__rollup-btn " type="button" >
           <span class="visually-hidden">Open event</span>
-        </button>
+        </button>`}
+
+
+
       </header>
       <section class="event__details">
         ${isOffersExist ? `
@@ -207,12 +216,13 @@ const createEventEditTemplate = (event, externalData, allDestinations) => {
 
 
 export default class EventEdit extends AbstractSmartComponent {
-  constructor(event, destinations) {
+  constructor(event, destinations, isAddingMode) {
     super();
     this._event = event;
     this._externalData = DefaultData;
     this._offers = event.eventType.offers;
     this._allDestinations = destinations;
+    this._isAddingMode = isAddingMode;
     this._startDate = event.dateFrom;
     this._endDate = event.dateTo;
     this._setFavoriteClickHandler = null;
@@ -225,17 +235,23 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createEventEditTemplate(this._event, this._externalData, this._allDestinations);
+    return createEventEditTemplate(this._event, this._externalData, this._allDestinations, this._isAddingMode);
   }
 
   setRollupBtnClickHandler(handler) {
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
+    if (!this._isAddingMode) {
+      this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
+    }
+
     this._rollupBtnClickHandler = handler;
   }
 
   setFavoriteClickHandler(handler) {
-    this.getElement().querySelector(`.event__favorite-icon`)
+    if (!this._isAddingMode) {
+      this.getElement().querySelector(`.event__favorite-icon`)
     .addEventListener(`click`, handler);
+    }
+
     this._setFavoriteClickHandler = handler;
   }
 

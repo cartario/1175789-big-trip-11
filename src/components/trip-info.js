@@ -27,7 +27,7 @@ const createTripInfoTemplate = (eventsList) => {
         tripInfoContent = `${eventsList[0].destination.name} — ${eventsList[1].destination.name} — ${eventsList[2].destination.name}`;
         break;
       default:
-        tripInfoContent = `${eventsList[0].destination.name} — ... — ${eventsList[1].destination.name}`;
+        tripInfoContent = `${eventsList[0].destination.name} — ... — ${eventsList[eventsList.length - 1].destination.name}`;
         break;
     }
     return tripInfoContent;

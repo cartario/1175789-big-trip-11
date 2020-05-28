@@ -96,9 +96,9 @@ export default class PointController extends AbstractComponent {
     this._mode = mode;
     const oldEventComponent = this._eventComponent;
     const oldEventEditComponent = this._eventEditComponent;
-
+    const isAddingMode = this._mode === Mode.ADDING;
     this._eventComponent = new EventComponent(event);
-    this._eventEditComponent = new EventEditComponent(event, this._destinations);
+    this._eventEditComponent = new EventEditComponent(event, this._destinations, isAddingMode);
 
     this._eventComponent.setRollupBtnClickHandler(() => {
 
