@@ -23,4 +23,12 @@ export default class TripDay extends AbstractComponent {
   getTemplate() {
     return createTripDayMarkup(this._event, this._dayCounter);
   }
+
+  getEventsList() {
+    return this.getElement().querySelector(`.trip-events__list`);
+  }
+
+  getDayDate() {
+    return this.getElement().querySelector(`.day__date`);
+  }
 }
