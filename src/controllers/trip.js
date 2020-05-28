@@ -84,7 +84,7 @@ export default class TripController {
 
     render(this._container.getElement(), this._tripDaysComponent, RenderPosition.BEFOREEND);
 
-    this._tripInfoComponent = new TripInfoComponent(events);
+    this._tripInfoComponent = new TripInfoComponent(this._pointsModel);
     render(tripMain, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
     this.renderTripDays(sortedEventsByDate);
   }
