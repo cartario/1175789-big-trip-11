@@ -1,4 +1,6 @@
-import API from "./api.js";
+import API from "./api/index.js";
+import Provider from "./api/provider.js";
+import Store from "./api/store.js";
 import BoardComponent from "./components/board.js";
 import TripController from "./controllers/trip.js";
 import PointsModel from "./models/points.js";
@@ -7,7 +9,14 @@ import TripTabsComponent, {MenuItem} from "./components/trip-tabs.js";
 import StatsComponent from "./components/stats.js";
 
 const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
+const STORE_PREFIX = `bigtrip-localstorage`;
+const STORE_VER = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+
 const api = new API(`Basic er83jdzbdw`, END_POINT);
+const store = new Store(STORE_NAME, window.localStorage);
+
+const apiWithProvider = new Provider(api, store);
 
 const pointsModel = new PointsModel();
 
@@ -17,7 +26,7 @@ document.querySelector(`.trip-events`).remove();
 const boardContainer = document.querySelectorAll(`.page-body__container`)[1];
 const boardComponent = new BoardComponent();
 
-const tripController = new TripController(boardComponent, pointsModel, api);
+const tripController = new TripController(boardComponent, pointsModel, apiWithProvider);
 
 render(boardContainer, boardComponent, RenderPosition.BEFOREEND);
 
@@ -47,13 +56,13 @@ siteMenuComponent.setOnChange((menuItem) => {
   }
 });
 
-api.getOffers()
+apiWithProvider.getOffers()
   .then((offers) => {
     pointsModel.setOffers(offers);
-    return api.getDestinations()
+    return apiWithProvider.getDestinations()
 .then((destinations) => {
   pointsModel.setDestinations(destinations);
-  return api.getEvents()
+  return apiWithProvider.getEvents()
     .then((events) => {
       pointsModel.setPoints(events);
       tripController.render();
@@ -62,3 +71,22 @@ api.getOffers()
     });
 });
   });
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+    .then(() => {
+      // Действие, в случае успешной регистрации ServiceWorker
+    }).catch(() => {
+      // Действие, в случае ошибки при регистрации ServiceWorker
+  });
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(`[offline]`, ``);
+  apiWithProvider.sync();
+
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});
