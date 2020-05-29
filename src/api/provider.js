@@ -78,18 +78,26 @@ export default class Provider {
 
   getOffers() {
     if (isOnline()) {
-      return this._api.getOffers();
+      return this._api.getOffers()
+        .then((offers) => {
+          this._store.setOffers(offers);
+          return offers;
+        });
     }
 
-    return Promise.resolve();
+    return Promise.resolve(this._store.getOffers());
   }
 
   getDestinations() {
     if (isOnline()) {
-      return this._api.getDestinations();
+      return this._api.getDestinations()
+        .then((destinations) => {
+          this._store.setDestinations(destinations);
+          return destinations;
+        });
     }
 
-    return Promise.resolve();
+    return Promise.resolve(this._store.getDestinations());
   }
 
   sync() {

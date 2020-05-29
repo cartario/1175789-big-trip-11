@@ -1,6 +1,8 @@
 export default class Store {
   constructor(key, storage) {
     this._storeKey = key;
+    this._storeOffersKey = `offers`;
+    this._storeDestinationsKey = `destinations`;
     this._storage = storage;
   }
 
@@ -25,6 +27,30 @@ export default class Store {
         this._storeKey,
         JSON.stringify(items)
     );
+  }
+
+  getOffers() {
+    try {
+      return JSON.parse(this._storage.getItem(this._storeOffersKey)) || {};
+    } catch (err) {
+      return {};
+    }
+  }
+
+  setOffers(offers) {
+    this._storage.setItem(this._storeOffersKey, JSON.stringify(offers));
+  }
+
+  getDestinations() {
+    try {
+      return JSON.parse(this._storage.getItem(this._storeDestinationsKey)) || {};
+    } catch (err) {
+      return {};
+    }
+  }
+
+  setDestinations(destinations) {
+    this._storage.setItem(this._storeDestinationsKey, JSON.stringify(destinations));
   }
 
   removeItem(key) {
