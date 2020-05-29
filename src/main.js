@@ -23,21 +23,21 @@ const pointsModel = new PointsModel();
 const tripControlsElement = document.querySelector(`.trip-controls`);
 document.querySelector(`.trip-events`).remove();
 
-const boardContainer = document.querySelectorAll(`.page-body__container`)[1];
+const boardContainerElement = document.querySelectorAll(`.page-body__container`)[1];
 const boardComponent = new BoardComponent();
 
 const tripController = new TripController(boardComponent, pointsModel, apiWithProvider);
 
-render(boardContainer, boardComponent, RenderPosition.BEFOREEND);
+render(boardContainerElement, boardComponent, RenderPosition.BEFOREEND);
 
-const newEventButton = document.querySelector(`.trip-main__event-add-btn`);
+const newEventButtonElement = document.querySelector(`.trip-main__event-add-btn`);
 
-newEventButton.addEventListener(`click`, () => {
+newEventButtonElement.addEventListener(`click`, () => {
   tripController.createEvent();
 });
 
 const statsComponent = new StatsComponent(pointsModel);
-render(boardContainer, statsComponent, RenderPosition.AFTERBEGIN);
+render(boardContainerElement, statsComponent, RenderPosition.AFTERBEGIN);
 statsComponent.hide();
 
 const siteMenuComponent = new TripTabsComponent();
@@ -78,7 +78,7 @@ window.addEventListener(`load`, () => {
       // Действие, в случае успешной регистрации ServiceWorker
     }).catch(() => {
       // Действие, в случае ошибки при регистрации ServiceWorker
-  });
+    });
 });
 
 window.addEventListener(`online`, () => {
