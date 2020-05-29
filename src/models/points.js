@@ -34,6 +34,7 @@ export default class Points {
   }
 
   setOffers(offers) {
+
     this._offers = Array.from(offers);
     this._callHandlers(this._dataChangeHandlers);
   }

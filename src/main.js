@@ -67,7 +67,6 @@ apiWithProvider.getOffers()
       pointsModel.setPoints(events);
       tripController.render();
       tripController.renderHeader(tripControlsElement);
-
     });
 });
   });
